@@ -1,8 +1,10 @@
 import Layout from '@/app/layout'
 
 import dynamic from 'next/dynamic'
+
 const Sidebar = dynamic(() =>import('@/components/navigation/sidebar'), { ssr: false })
 const Topbar = dynamic(() => import('@/components/navigation/topbar'), { ssr: false })
+const ContentContainer = dynamic(() => import('@/components/container/content'), { ssr: false })
 
 export default function RootLayout({
   children,
@@ -13,7 +15,9 @@ export default function RootLayout({
     <section>
       <Topbar />
       <Sidebar />
-      { children }
+      <ContentContainer>
+        { children }
+      </ContentContainer>
     </section>
   )
 }

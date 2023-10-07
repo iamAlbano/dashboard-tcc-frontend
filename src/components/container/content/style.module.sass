@@ -1,0 +1,21 @@
+.container
+  margin-top: 60px
+  overflow: auto
+
+.margin200
+  animation: increaseMargin 0.2s forwards
+
+.margin70
+  animation: decreaseMargin 0.1s forwards
+
+@keyframes increaseMargin
+  0%
+    margin-left: 70px
+  100%
+    margin-left: 200px
+
+@keyframes decreaseMargin
+  0%
+    margin-left: 200px
+  100%
+    margin-left: 70px
