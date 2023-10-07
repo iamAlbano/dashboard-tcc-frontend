@@ -1,0 +1,65 @@
+@import '@/styles/_animations.sass'
+
+.title
+  width: 100%
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+  padding: 0 20px
+
+  h2
+    font-size: 1.2rem
+
+.sidebar
+  height: 100vh
+  width: 200px
+  position: fixed
+  z-index: 1
+  top: 0
+  left: 0
+  z-index: 999
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6)
+  transform: translateX(-70%)
+
+  ul
+    padding: 0
+    list-style-type: none
+
+    li
+      padding: 0
+
+      .option
+        width: 100%
+        padding: 12px 20px
+        border-radius: 0
+        text-align: inherit
+        box-shadow: none
+  
+  .submenu
+    background: rgba(199, 215, 252, 0.4)
+    padding-left: 8px
+  
+.open 
+  animation: slideIn 0.2s forwards
+
+.close
+  animation: slideOut 0.1s forwards
+
+.openDown
+  animation: slideDown 0.2s forwards
+
+.closeUp
+  animation: slideUp 0.1s forwards
+  
+@keyframes slideIn 
+  0% 
+    transform: translateX(-65%)
+  100% 
+    transform: translateX(0)
+
+@keyframes slideOut
+  0% 
+    transform: translateX(0)
+  100% 
+    transform: translateX(-65%)
