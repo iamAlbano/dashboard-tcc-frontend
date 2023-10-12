@@ -1,11 +1,11 @@
-import { theme } from '@/utils/types/accessibility'
+import { Theme } from '@/utils/types/accessibility'
 
-export const setTheme = (theme: theme): void => {
+export const setTheme = (theme: Theme): void => {
   if (typeof window !== 'undefined')
     localStorage.setItem('theme', theme)
 }
 
-export const getTheme = (): theme => {
+export const getTheme = (): Theme => {
   if (typeof window !== 'undefined') {
     var theme = localStorage.getItem('theme') || 'light'
     return theme === 'light' ? 'light' : 'dark'

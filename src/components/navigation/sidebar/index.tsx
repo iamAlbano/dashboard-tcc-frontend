@@ -5,7 +5,7 @@ import { usePathname  } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import style from './style.module.sass'
 
-import {menuOption, getMenu } from './menu'
+import {menuOption, GetMenu } from './menu'
 import { useAccessibility } from '@/context/accessibility'
 
 const Option = dynamic(() => import('./Option'))
@@ -13,7 +13,7 @@ const LockSidebar = dynamic(() => import('@/components/accessibility/lockSidebar
 
 export default function BasicDemo() {
 
-	const menu = getMenu()
+	const menu = GetMenu()
 	const router = useRouter()
 	const pathname = usePathname()
 	const { theme, lockSidebar, openedSidebar, setOpenedSidebar } = useAccessibility()

@@ -1,3 +1,4 @@
+'use client'
 import { useAccessibility  } from "@/context/accessibility"
 
 export type menuOption = {
@@ -7,7 +8,7 @@ export type menuOption = {
   items?: menuOption[]
 }
 
-export function getMenu():menuOption[] {
+export function GetMenu():menuOption[] {
 
   const { getDict } = useAccessibility()
   const dict = getDict()

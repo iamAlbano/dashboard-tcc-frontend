@@ -61,7 +61,7 @@ export default function Login() {
           </span>
           <span className="text-center mb-5">
             <span className="text-600 font-medium line-height-3">
-              Don't have an account?
+              Dont have an account?
             </span>
             <a className="font-medium no-underline ml-2 text-blue-500 cursor-pointer">
               Create today!
