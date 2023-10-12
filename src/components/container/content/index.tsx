@@ -5,13 +5,13 @@ import { useAccessibility } from '@/context/accessibility'
 
 export default function ContentContainer({ children }: { children: React.ReactNode }) {
 
-  const { theme, lockSidebar } = useAccessibility()
+  const { theme, openedSidebar } = useAccessibility()
 
   return (
     <section 
       className={`
         ${style.container} 
-        ${lockSidebar ? style.margin200 : style.margin70}
+        ${openedSidebar ? style.margin200 : style.margin70}
       `}
     >
       { children }

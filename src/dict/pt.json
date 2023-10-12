@@ -1,3 +1,53 @@
 {
-    "language": "Português"
+  "language": "Português",
+  "success": "Sucesso",
+  "cancel": "Cancelar",
+  "sidebar": {
+		"overview": "Visão Geral",
+		"products": "Produtos",
+		"sales": "Vendas",
+    "customers": "Clientes",
+    "import": "Importar"
+	},
+	"modules": {
+		"products": {
+      "title": "Produtos",
+      "description": "Visualize insights detalhados sobre seus produtos",
+      "icon": "pi pi-box",
+      "add": "Adicionar Produto",
+      "edit": "Editar Produto",
+      "delete": "Deletar Produto",
+      "search": "Pesquisar por produtos",
+      "noData": "Nenhum produto cadastrado, crie ou importe para visualizar os dados",
+      "deleteConfirmation": "Tem certeza que deseja deletar este produto?"
+    }
+	},
+  "time": {
+    "year": "Ano",
+    "month": "Mês",
+    "week": "Semana",
+    "day": "Dia",
+    "hour": "Hora",
+    "minute": "Minuto",
+    "second": "Segundo"
+  },
+  "import": {
+    "title": "Importar",
+    "description": "Importar dados",
+    "uploadPlaceholder": "Arraste e solte ou clique para fazer upload de sua planilha",
+    "selectModulePlaceholder": "Selecionar tipo de dados",
+    "buttonLabel": "Importar"
+  },
+  "productsDict": {
+    "cards": {
+      "products": "Produtos cadastrados",
+      "categories": "Categorias",
+      "sold": "Produtos vendidos este mês",
+      "review": "Nota média dos produtos"
+    },
+    "soldProducts": {
+      "title": "Produtos mais vendidos",
+      "description": "Visualize os produtos vendidos por período"
+    }
+  }
 }

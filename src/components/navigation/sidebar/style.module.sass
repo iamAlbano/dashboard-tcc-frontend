@@ -6,24 +6,50 @@
   flex-direction: row
   justify-content: space-between
   align-items: center
-  padding: 0 20px
+  padding: 0 18px
 
   h2
     font-size: 1.2rem
 
 .sidebar
-  height: 100vh
-  width: 200px
+  // Desktop
+  @media (min-width: 1024px) 
+    height: 100vh
+    width: 200px
+    transform: translateX(-70%)
+
+  // Mobile
+  @media (max-width: 1023px)
+    height: 50px
+    width: 100vw
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+
+
   position: fixed
   z-index: 1
-  top: 0
+  bottom: 0
   left: 0
   z-index: 999
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6)
-  transform: translateX(-70%)
+  
+
+  .burgerMenu 
+    font-size: 1.5rem
+    margin: 5px 5px 0 0
 
   ul
+    display: flex
+    @media (max-width: 1023px)
+      flex-direction: row
+
+    @media (min-width: 1024px)
+      flex-direction: column
+      
     padding: 0
+    margin: 10px 0 0 0
     list-style-type: none
 
     li
@@ -31,7 +57,10 @@
 
       .option
         width: 100%
-        padding: 12px 20px
+
+        @media (min-width: 1024px)
+          padding: 12px 18px 12px 10px
+          
         border-radius: 0
         text-align: inherit
         box-shadow: none
@@ -41,10 +70,12 @@
     padding-left: 8px
   
 .open 
-  animation: slideIn 0.2s forwards
+  @media (min-width: 1024px) 
+    animation: slideIn 0.2s forwards
 
 .close
-  animation: slideOut 0.1s forwards
+  @media (min-width: 1024px) 
+    animation: slideOut 0.1s forwards
 
 .openDown
   animation: slideDown 0.2s forwards

@@ -13,7 +13,7 @@ export default function LockSIdebar() {
     <Button 
       aria-label="Toggle Lock Sidebar"
       className="p-1"
-      outlined={lockSidebar}
+      outlined={!lockSidebar}
       onClick={() => setLockSidebar(!lockSidebar)}
       rounded
     >

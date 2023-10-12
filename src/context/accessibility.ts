@@ -3,35 +3,39 @@ import { create } from 'zustand'
 import en from '@/dict/en.json'
 import pt from '@/dict/pt.json'
 
-import { option } from '@/utils/types/globals'
-import { theme, dict } from '@/utils/types/accessibility'
+import { Option } from '@/utils/types/globals'
+import { Theme, Dict, Language } from '@/utils/types/accessibility'
 
 type AccessibilityState = {
-  language: string
-  languages: option[]
-  setLanguage: (language: string) => void
-  getDict: () => dict
-  theme: theme
-  setTheme: (theme: theme) => void
+  language: Language
+  languages: Option[]
+  setLanguage: (language: Language) => void
+  getDict: () => Dict
+  theme: Theme
+  setTheme: (theme: Theme) => void
+  openedSidebar: boolean
   lockSidebar: boolean
+  setOpenedSidebar: (opened: boolean) => void
   setLockSidebar: (locked: boolean) => void
 }
 
 export const useAccessibility = create<AccessibilityState>((set) => ({
-  language: 'en',
+  language: 'pt',
   theme: 'light',
   lockSidebar: false,
+  openedSidebar: false,
+  setOpenedSidebar: (opened: boolean) => set({ openedSidebar: opened }),
   languages: [
-    { label: 'English', value: 'en', onClick: () => set({ language: 'en' }) },
-    { label: 'Português', value: 'pt', onClick: () => set({ language: 'pt' }) },
+    { label: 'English', value: 'en' },
+    { label: 'Português', value: 'pt' },
   ],
-  setLanguage: (language: string) => set({ language }),
+  setLanguage: (language: Language) => set({ language }),
   getDict: () => getDict(),
-  setTheme: (theme: theme) => set({ theme }),
+  setTheme: (theme: Theme) => set({ theme }),
   setLockSidebar: (locked: boolean) => set({ lockSidebar: locked })
 }))
 
-function getDict(): dict {
+function getDict(): Dict {
   const { language } = useAccessibility.getState()
   return language === 'en' ? en : pt
 }

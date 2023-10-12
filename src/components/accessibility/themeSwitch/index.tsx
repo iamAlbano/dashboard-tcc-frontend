@@ -1,8 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
 
-import { theme } from '@/utils/types/accessibility'
-
 import { useAccessibility } from '@/context/accessibility'
 
 import { ToggleButton } from 'primereact/togglebutton';

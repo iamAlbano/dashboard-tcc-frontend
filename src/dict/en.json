@@ -1,3 +1,53 @@
 {
-  "language": "English"
+  "language": "English",
+  "success": "Success",
+  "cancel": "Cancel",
+  "sidebar": {
+    "overview": "Overview",
+    "products": "Products",
+    "sales": "Sales",
+    "customers": "Customers",
+    "import": "Import"
+  },
+  "modules": {
+    "products": {
+      "title": "Products",
+      "description": "Visualize detailed insights about your products",
+      "icon": "pi pi-box",
+      "add": "Add Product",
+      "edit": "Edit Product",
+      "delete": "Delete Product",
+      "search": "Search Products",
+      "noData": "No products registered, create or import to see insights",
+      "deleteConfirmation": "Are you sure you want to delete this product?"
+    }
+  },
+  "time": {
+    "year": "Year",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "hour": "Hour",
+    "minute": "Minute",
+    "second": "Second"
+  },
+  "import": {
+    "title": "Import",
+    "description": "Import data",
+    "uploadPlaceholder": "Drag and drop or click to upload your sheet",
+    "selectModulePlaceholder": "Select data type",
+    "buttonLabel": "Import"
+  },
+  "productsDict": {
+    "cards": {
+      "products": "Registered Products",
+      "categories": "Categories",
+      "sold": "Products sold this month",
+      "review": "Average review"
+    },
+    "soldProducts": {
+      "title": "Most sold products",
+      "description": "Visualize your sold products by period"
+    }
+  }
 }

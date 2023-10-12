@@ -1,12 +1,22 @@
+'use client'
+import { useState, useEffect } from 'react'
+
 import { button } from '@/utils/types/button'
 
 import { Button } from 'primereact/button'
 
 export default function Option (props: button) {
+
+  const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth)
+
+  useEffect(() => {
+    window.addEventListener('resize', () => setScreenWidth(window.innerWidth))
+  }, [])
+
   return (
     <>
       <Button 
-        label={props.label} 
+        label={screenWidth > 1023 ? props.label : ''} 
         icon={props.icon ?? undefined}
         iconPos={props.iconPos ?? 'left'}
         severity={props.severity}

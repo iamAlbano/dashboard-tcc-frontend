@@ -1,38 +1,42 @@
-type menuOption = {
+import { useAccessibility  } from "@/context/accessibility"
+
+export type menuOption = {
   label: string
   icon: string
+  route?: string
   items?: menuOption[]
 }
 
-export default function getMenu():menuOption[] {
+export function getMenu():menuOption[] {
+
+  const { getDict } = useAccessibility()
+  const dict = getDict()
+
 	return [
     {
-      label: 'Produtos',
+      label: dict['sidebar']['overview'],
       icon: 'pi pi-fw pi-home',
-      items: [
-        {
-          label: 'Novo produto',
-          icon: 'pi pi-fw pi-home',
-        },
-        {
-          label: 'Importar',
-          icon: 'pi pi-fw pi-file',
-        },
-      ],
+      route: '/dashboard',
     },
     {
-      label: 'Vendas',
-      icon: 'pi pi-fw pi-file',
-      items: [
-        {
-          label: 'Nova venda',
-          icon: 'pi pi-fw pi-home',
-        },
-        {
-          label: 'Importar',
-          icon: 'pi pi-fw pi-file',
-        },
-      ],
+      label: dict['sidebar']['products'],
+      icon: 'pi pi-fw pi-box',
+      route: '/dashboard/products',
     },
+    {
+      label: dict['sidebar']['customers'],
+      icon: 'pi pi-fw pi-users',
+      route: '/dashboard/customers',
+    },
+    {
+      label: dict['sidebar']['sales'],
+      icon: 'pi pi-fw pi-shopping-cart',
+      route: '/dashboard/sales',
+    },
+    {
+      label: dict['sidebar']['import'],
+      icon: 'pi pi-fw pi-upload',
+      route: '/dashboard/import',
+    }
   ]
 }

@@ -1,21 +1,15 @@
+@import '@/styles/animations.sass'
+
 .container
+  padding: 10px
   margin-top: 60px
   overflow: auto
 
 .margin200
-  animation: increaseMargin 0.2s forwards
+  @media (min-width: 1024px)
+    animation: increaseMarginFromSidebar 0.2s forwards
 
 .margin70
-  animation: decreaseMargin 0.1s forwards
+  @media (min-width: 1024px)
+    animation: decreaseMarginFromSidebar 0.1s forwards
 
-@keyframes increaseMargin
-  0%
-    margin-left: 70px
-  100%
-    margin-left: 200px
-
-@keyframes decreaseMargin
-  0%
-    margin-left: 200px
-  100%
-    margin-left: 70px
