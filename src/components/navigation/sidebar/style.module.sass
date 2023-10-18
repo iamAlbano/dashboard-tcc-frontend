@@ -78,10 +78,12 @@
     animation: slideOut 0.1s forwards
 
 .openDown
-  animation: slideDown 0.2s forwards
+  @media (min-width: 1024px) 
+    animation: slideDown 0.2s forwards
 
 .closeUp
-  animation: slideUp 0.1s forwards
+  @media (min-width: 1024px) 
+    animation: slideUp 0.1s forwards
   
 @keyframes slideIn 
   0% 

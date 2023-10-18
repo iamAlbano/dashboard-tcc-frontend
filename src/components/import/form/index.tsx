@@ -5,7 +5,7 @@ import { Option, Module } from '@/utils/types/globals'
 
 import { Dropdown, DropdownChangeEvent } from 'primereact/dropdown'
 
-import Upload from '@/components/modules/import/upload'
+import Upload from '@/components/import/upload'
 
 export default function ImportModal() {
 

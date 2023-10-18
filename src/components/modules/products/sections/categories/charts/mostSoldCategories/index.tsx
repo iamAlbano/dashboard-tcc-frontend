@@ -6,15 +6,15 @@ type IProps = {
   dates?: (Date | null)[]
 }
 
-export default function ComboDemo({ ...props }: IProps){
+export default function MostSoldProductsChart({ ...props }: IProps){
   const [chartData, setChartData] = useState({})
   const [chartOptions, setChartOptions] = useState({})
 
   const auxData =  [
     {
       type: "line",
-      label: "Bamboo watch",
-      borderColor: 'rgba(255, 99, 132, 1)',
+      label: "Sapatos",
+      borderColor: 'rgba(235, 19, 32, 1)',
       borderWidth: 2,
       fill: false,
       tension: 0.4,
@@ -22,8 +22,8 @@ export default function ComboDemo({ ...props }: IProps){
     },
     {
       type: "line",
-      label: "Black watch",
-      borderColor: 'rgba(54, 162, 235, 1)',
+      label: "Acessórios",
+      borderColor: 'rgba(54, 162, 35, 1)',
       borderWidth: 2,
       fill: false,
       tension: 0.4,
@@ -31,7 +31,7 @@ export default function ComboDemo({ ...props }: IProps){
     },
     {
       type: "line",
-      label: "Blue band",
+      label: "Vestuário",
       borderColor: 'rgba(255, 206, 86, 1)',
       borderWidth: 2,
       fill: false,
@@ -49,7 +49,7 @@ export default function ComboDemo({ ...props }: IProps){
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border")
 
     const data = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul"],
       datasets: [
         ...auxData.filter((lineData) => lineData.label.toLowerCase().includes(props.search?.toLowerCase() ?? '')),
         {
@@ -68,6 +68,10 @@ export default function ComboDemo({ ...props }: IProps){
       aspectRatio: 0.5,
       responsive: true,
       plugins: {
+        htmlLegend: {
+          // ID of the container to put the legend in
+          containerID: 'legend-container',
+        },
         legend: {
           position: "top",
           font: {
@@ -76,7 +80,7 @@ export default function ComboDemo({ ...props }: IProps){
           labels: {
             color: textColor,
           },
-        },
+        }
       },
       scales: {
         x: {
@@ -103,14 +107,12 @@ export default function ComboDemo({ ...props }: IProps){
   }, [])
 
   return (
-    <div className="card">
-      <Chart 
-        type="line" 
-        ariaLabel="most sold products by period"
-        data={chartData} 
-        options={chartOptions} 
-        unstyled
-      />
-    </div>
+    <Chart 
+      type="line" 
+      aria-label="most sold products by period"
+      data={chartData} 
+      options={chartOptions} 
+      className="w-full h-full"
+    />
   )
 }

@@ -2,7 +2,6 @@ import dynamic from 'next/dynamic'
 
 const Panel = dynamic(() => import('@/components/container/panel'), { ssr: false })
 const BreadCrumbs = dynamic(() => import('@/components/navigation/breadcrumbs'), { ssr: false })
-const ImportModal = dynamic(() => import('@/components/modules/import/modal'), { ssr: false })
 
 export default function Home() {
 	return (

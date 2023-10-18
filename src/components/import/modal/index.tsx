@@ -7,7 +7,7 @@ import { useAccessibility } from '@/context/accessibility'
 import { Button } from "primereact/button"
 import { Dialog } from "primereact/dialog"
 
-import Form from '@/components/modules/import/form'
+import Form from '@/components/import/form'
 
 export default function ImportModal() {
 

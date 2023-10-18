@@ -48,6 +48,14 @@
     "soldProducts": {
       "title": "Produtos mais vendidos",
       "description": "Visualize os produtos vendidos por período"
+    },
+    "productsTable": {
+      "title": "Todos os produtos",
+      "description": "Visualize e gerencie seus produtos"
+    },
+    "categoriesSection": {
+      "title": "Categorias",
+      "description": "Visualize as categorias de seus produtos"
     }
   }
 }

@@ -41,11 +41,11 @@ export default function InfoCards() {
   ]
 
   return (
-    <div className="flex flex-row flex-wrap">
+    <div className="flex flex-row justify-content-start flex-wrap py-3">
       {
         infos.map((info, index) => {
           return (
-            <div className="col-3" key={index}>
+            <div className="w-3 pr-3" key={index}>
               <Card color={info.color} className="flex flex-row align-items-center justify-content-between p-3">
                 <div className="flex flex-column">
                   <span className="text-3xl">{info.value}</span>

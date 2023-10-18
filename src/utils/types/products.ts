@@ -1,6 +1,8 @@
 type ProductsDict = {
   cards: ProductCardsDict,
   soldProducts: SoldProductsDict,
+  productsTable: ProductsTableDict,
+  categoriesSection: CategoriesSectionDict,
 }
 
 type ProductCardsDict = {
@@ -11,6 +13,16 @@ type ProductCardsDict = {
 }
 
 type SoldProductsDict = {
+  title: string,
+  description: string,
+}
+
+type ProductsTableDict = {
+  title: string,
+  description: string,
+}
+
+type CategoriesSectionDict = {
   title: string,
   description: string,
 }
