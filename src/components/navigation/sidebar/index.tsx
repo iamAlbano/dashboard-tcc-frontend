@@ -18,13 +18,13 @@ export default function BasicDemo() {
 	const pathname = usePathname()
 	const { theme, lockSidebar, openedSidebar, setOpenedSidebar } = useAccessibility()
   const [isHovered, setIsHovered] = useState<boolean|null>(null) // null is the initial state without animation
-	const [opened, setOpened] = useState<string|null>(null)
+	const [selectedTab, setSelectedTab] = useState<string|null>(null)
 
-	const handleSetOpenedSidebar = (opened: boolean) => {
+	const handleSetOpenedSidebar = (selectedTab: boolean) => {
 		if (lockSidebar) return
 		
-		setIsHovered(opened)
-		setOpenedSidebar(opened)
+		setIsHovered(selectedTab)
+		setOpenedSidebar(selectedTab)
 	}
 
 	function handleClick (option: menuOption) {
@@ -32,7 +32,7 @@ export default function BasicDemo() {
 			return router.push(option.route)
 		
 		if (option?.items?.length)
-			setOpened(!option?.label || opened === option.label ? null : option.label)
+			setSelectedTab(!option?.label || selectedTab === option.label ? null : option.label)
 	}
 
 	function isSelected (option: menuOption): boolean {
@@ -42,7 +42,7 @@ export default function BasicDemo() {
 				: pathname === option.route
 
 		if (option?.items?.length)
-			return opened === option.label
+			return selectedTab === option.label
 
 		return false
 	}
@@ -84,7 +84,7 @@ export default function BasicDemo() {
 								<ul 
 									className={style.submenu}>
 									{
-										(opened === option.label && option.items) && option.items.map((item, index) => (
+										(selectedTab === option.label && option.items) && option.items.map((item, index) => (
 											<li key={index}>
 												<Option 
 													label={item.label}

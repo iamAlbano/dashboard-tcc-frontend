@@ -38,7 +38,7 @@ export default function DoughnutChartDemo() {
         },
         title: {
           display: true,
-          text: "Percentuais de vendas",
+          text: "Total de vendas por categoria",
         }
       },
     }

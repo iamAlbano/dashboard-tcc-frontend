@@ -22,7 +22,7 @@ export function GetMenu():menuOption[] {
     {
       label: dict['sidebar']['products'],
       icon: 'pi pi-fw pi-box',
-      route: '/dashboard/products',
+      route: `/dashboard/${dict['sidebar']['products'].toLowerCase()}`,
     },
     {
       label: dict['sidebar']['customers'],

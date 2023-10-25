@@ -11,7 +11,7 @@ export default function PieChartDemo() {
       labels: ["Vestuário", "Acessórios", "Sapatos", "Outros"],
       datasets: [
         {
-          data: [240, 50, 100, 27],
+          data: [110, 60, 120, 27],
           backgroundColor: [
             documentStyle.getPropertyValue("--yellow-500"),
             documentStyle.getPropertyValue("--green-500"),
