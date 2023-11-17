@@ -1,48 +1,53 @@
-'use client'
-import { useState } from "react"
+"use client";
 
-import { useImport } from '@/context/import'
-import { useAccessibility } from '@/context/accessibility'
+import { useAccessibility } from "@/context/accessibility";
+import { useImport } from "@/context/import";
 
-import { Button } from "primereact/button"
-import { Dialog } from "primereact/dialog"
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
 
-import Form from '@/components/import/form'
+import Form from "@/components/import/form";
 
 export default function ImportModal() {
+  const { theme, getDict } = useAccessibility();
+  const { selectedModule, openedModal, closeImportModal, importFile } =
+    useImport();
 
-  const { theme, getDict } = useAccessibility()
-  const { openedModal, closeImportModal } = useImport()
+  const dict = getDict();
 
-  const dict = getDict()
+  function onSubmit() {
+    importFile();
+  }
 
   const footerContent = (
     <div>
       <Button
-        label={ dict?.cancel}
+        label={dict?.cancel}
         icon="pi pi-times"
         onClick={() => closeImportModal()}
         severity="danger"
         text
       />
       <Button
-        label={ dict?.import?.buttonLabel }
+        label={dict?.import?.buttonLabel}
         icon="pi pi-upload"
-        onClick={() => closeImportModal()}
+        onClick={() => onSubmit()}
         autoFocus
       />
     </div>
-  )
+  );
 
   return (
     <Dialog
-      header={dict?.import?.description}
+      header={`${dict?.import?.title} ${
+        selectedModule ? dict.modules[selectedModule].title : ""
+      }`}
       visible={openedModal}
-      style={{ width: "50vw" }}
+      style={{ width: "95vw" }}
       onHide={() => closeImportModal()}
       footer={footerContent}
     >
       <Form />
     </Dialog>
-  )
+  );
 }

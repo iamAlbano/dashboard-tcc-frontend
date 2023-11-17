@@ -1,5 +1,5 @@
 "use client";
-import LoginForm from "@/components/auth/login/form";
+import SignupForm from "@/components/auth/signup/form";
 import { useAccessibility } from "@/context/accessibility";
 import dynamic from "next/dynamic";
 
@@ -14,7 +14,7 @@ const LanguageSelect = dynamic(
   { ssr: false }
 );
 
-export default function Login() {
+export default function Signup() {
   const { theme, getDict } = useAccessibility();
   const dict = getDict();
 
@@ -30,16 +30,16 @@ export default function Login() {
         } `}
       >
         <span className="flex flex-row w-full justify-content-between align-items-center">
-          <h1 className="text-center text-primary">Login</h1>
+          <h1 className="text-center text-primary">{dict.auth.signup}</h1>
           <div className="flex flex-row justify-content-end align-items-center">
             <ThemeSwitch />
             <LanguageSelect />
           </div>
         </span>
-        <LoginForm className="gap-2" />
+        <SignupForm className="gap-3" />
         <span className="flex flex-row align-items-center justify-content-center py-3">
-          <p className="text-gray-700 mr-2">{dict.auth.dontHaveAccount}</p>
-          <Link href="/signup">{dict.auth.signup}</Link>
+          <p className="text-gray-700 mr-2">{dict.auth.alreadyHaveAccount}</p>
+          <Link href="/login">{dict.auth.login}</Link>
         </span>
       </div>
     </section>

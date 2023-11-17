@@ -1,7 +1,7 @@
-'use client'
-import { useRef, useState } from "react"
-
-import { useAccessibility } from "@/context/accessibility"
+"use client";
+import { useRef, useState } from "react";
+import { useImport } from "@/context/import";
+import { useAccessibility } from "@/context/accessibility";
 
 import {
   FileUpload,
@@ -9,58 +9,74 @@ import {
   FileUploadSelectEvent,
   FileUploadUploadEvent,
   ItemTemplateOptions,
-} from "primereact/fileupload"
+} from "primereact/fileupload";
 
-import { ProgressBar } from "primereact/progressbar"
-import { Button } from "primereact/button"
-import { Tooltip } from "primereact/tooltip"
-import { Tag } from "primereact/tag"
+import { ProgressBar } from "primereact/progressbar";
+import { Button } from "primereact/button";
+import { Tooltip } from "primereact/tooltip";
+import { Tag } from "primereact/tag";
 
 export default function TemplateDemo() {
+  const { getDict } = useAccessibility();
+  const { selectedModule, setFile } = useImport();
+  const dict = getDict();
 
-  const { getDict } = useAccessibility()
-  const dict = getDict()
-  
-  const [totalSize, setTotalSize] = useState(0)
-  const fileUploadRef = useRef<FileUpload>(null)
+  const [totalSize, setTotalSize] = useState(0);
+  const fileUploadRef = useRef<FileUpload>(null);
+
+  const onSelectFile = (e: FileUploadSelectEvent) => {
+    if (!selectedModule) return;
+    setFile(selectedModule, e.files[0]);
+  };
 
   const onTemplateSelect = (e: FileUploadUploadEvent) => {
-    let _totalSize = totalSize
-    let files = e.files
+    let _totalSize = totalSize;
+    let files = e.files;
 
     for (let i = 0; i < files.length; i++) {
-      _totalSize += files[i].size || 0
+      _totalSize += files[i].size || 0;
     }
 
-    setTotalSize(_totalSize)
-  }
+    setTotalSize(_totalSize);
+    if (!selectedModule) return;
+
+    setFile(selectedModule, e.files[0]);
+  };
 
   const onTemplateUpload = (e: FileUploadUploadEvent) => {
-    let _totalSize = 0
+    let _totalSize = 0;
 
     e.files.forEach((file) => {
-      _totalSize += file.size || 0
-    })
+      _totalSize += file.size || 0;
+    });
 
-    setTotalSize(_totalSize)
-  }
+    setTotalSize(_totalSize);
+
+    if (!selectedModule) return;
+
+    setFile(selectedModule, e.files[0]);
+  };
 
   const onTemplateRemove = (file: File, callback: Function) => {
-    setTotalSize(totalSize - file.size)
-    callback()
-  }
+    setTotalSize(totalSize - file.size);
+    callback();
+
+    if (!selectedModule) return;
+
+    setFile(selectedModule, null);
+  };
 
   const onTemplateClear = () => {
-    setTotalSize(0)
-  }
+    setTotalSize(0);
+  };
 
   const headerTemplate = (options: FileUploadHeaderTemplateOptions) => {
-    const { className, chooseButton, uploadButton, cancelButton } = options
-    const value = totalSize / 10000
+    const { className, chooseButton, uploadButton, cancelButton } = options;
+    const value = totalSize / 10000;
     const formatedValue =
       fileUploadRef && fileUploadRef?.current
         ? fileUploadRef.current.formatSize(totalSize)
-        : "0 B"
+        : "0 B";
 
     return (
       <div
@@ -75,7 +91,7 @@ export default function TemplateDemo() {
         {uploadButton}
         {cancelButton}
         <div className="flex align-items-center gap-3 ml-auto">
-          <span>{formatedValue ?? '0 B'} / 1 MB</span>
+          <span>{formatedValue ?? "0 B"} / 1 MB</span>
           <ProgressBar
             value={value}
             showValue={false}
@@ -83,11 +99,11 @@ export default function TemplateDemo() {
           ></ProgressBar>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   const itemTemplate = (inFile: object, props: ItemTemplateOptions) => {
-    const file = inFile as File
+    const file = inFile as File;
     return (
       <div className="flex align-items-center flex-wrap">
         <div className="flex align-items-center" style={{ width: "40%" }}>
@@ -108,8 +124,8 @@ export default function TemplateDemo() {
           onClick={() => onTemplateRemove(file, props.onRemove)}
         />
       </div>
-    )
-  }
+    );
+  };
 
   const emptyTemplate = () => {
     return (
@@ -127,29 +143,27 @@ export default function TemplateDemo() {
           style={{ fontSize: "1.2em", color: "var(--text-color-secondary)" }}
           className="my-5"
         >
-          { dict.import.uploadPlaceholder }
+          {dict.import.uploadPlaceholder}
         </span>
       </div>
-    )
-  }
+    );
+  };
 
   const chooseOptions = {
     label: "Upload",
     icon: "pi pi-fw pi-upload",
     className: "custom-choose-btn",
-  }
+  };
   const uploadOptions = {
     icon: "pi pi-fw pi-cloud-upload",
     iconOnly: true,
-    className:
-      "custom-upload-btn p-button-success p-button-outlined",
-  }
+    className: "custom-upload-btn p-button-success p-button-outlined",
+  };
   const cancelOptions = {
     icon: "pi pi-fw pi-times",
     iconOnly: true,
-    className:
-      "custom-cancel-btn p-button-danger p-button-outlined",
-  }
+    className: "custom-cancel-btn p-button-danger p-button-outlined",
+  };
 
   return (
     <div>
@@ -162,8 +176,9 @@ export default function TemplateDemo() {
         name="demo[]"
         url="/api/upload"
         multiple
-        accept="image/*"
-        maxFileSize={1000000}
+        accept="sheet/*"
+        maxFileSize={10000000000}
+        onSelect={onSelectFile}
         onUpload={onTemplateUpload}
         onError={onTemplateClear}
         onClear={onTemplateClear}
@@ -175,5 +190,5 @@ export default function TemplateDemo() {
         cancelOptions={cancelOptions}
       />
     </div>
-  )
+  );
 }

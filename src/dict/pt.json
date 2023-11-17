@@ -2,15 +2,47 @@
   "language": "Português",
   "success": "Sucesso",
   "cancel": "Cancelar",
+  "missingFields": "Preencha todos os campos obrigatórios",
+  "errorMessage": "Ocorreu um erro, tente novamente mais tarde",
   "sidebar": {
-		"overview": "Visão Geral",
-		"products": "Produtos",
-		"sales": "Vendas",
+    "overview": "Visão Geral",
+    "products": "Produtos",
+    "sales": "Vendas",
     "customers": "Clientes",
     "import": "Importar"
-	},
-	"modules": {
-		"products": {
+  },
+  "auth": {
+    "login": "Entrar",
+    "signup": "Cadastrar",
+    "name": "Nome",
+    "surname": "Sobrenome",
+    "email": "E-mail",
+    "password": "Senha",
+    "confirmPassword": "Confirmar Senha",
+    "forgotPassword": "Esqueceu sua senha?",
+    "resetPassword": "Redefinir Senha",
+    "passwordLengthWarning": "A senha deve ter pelo menos 6 caracteres",
+    "mismatchPassword": "As senhas não coincidem",
+    "invalidEmail": "E-mail inválido",
+    "invalidPassword": "Senha inválida",
+    "invalidCredentials": "Credenciais inválidas",
+    "dontHaveAccount": "Não tem uma conta?",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "emailAlreadyRegistered": "Email já cadastrado"
+  },
+  "modules": {
+    "sales": {
+      "title": "Vendas",
+      "description": "Visualize insights detalhados sobre suas vendas",
+      "icon": "pi pi-shopping-cart",
+      "add": "Adicionar Venda",
+      "edit": "Editar Venda",
+      "delete": "Deletar Venda",
+      "search": "Pesquisar por vendas",
+      "noData": "Nenhuma venda cadastrado, crie ou importe para visualizar os dados",
+      "deleteConfirmation": "Tem certeza que deseja deletar esta venda?"
+    },
+    "products": {
       "title": "Produtos",
       "description": "Visualize insights detalhados sobre seus produtos",
       "icon": "pi pi-box",
@@ -21,7 +53,7 @@
       "noData": "Nenhum produto cadastrado, crie ou importe para visualizar os dados",
       "deleteConfirmation": "Tem certeza que deseja deletar este produto?"
     }
-	},
+  },
   "time": {
     "year": "Ano",
     "month": "Mês",
