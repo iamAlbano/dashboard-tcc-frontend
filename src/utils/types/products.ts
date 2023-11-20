@@ -1,28 +1,35 @@
 type ProductsDict = {
-  cards: ProductCardsDict,
-  soldProducts: SoldProductsDict,
-  productsTable: ProductsTableDict,
-  categoriesSection: CategoriesSectionDict,
-}
+  cards: ProductCardsDict;
+  soldProducts: SoldProductsDict;
+  productsTable: ProductsTableDict;
+  categoriesSection: CategoriesSectionDict;
+  columns: {
+    name: string;
+    description: string;
+    category: string;
+    price: string;
+    stock: string;
+  };
+};
 
 type ProductCardsDict = {
-  products: string,
-  categories: string,
-  sold: string,
-  review: string,
-}
+  products: string;
+  categories: string;
+  sold: string;
+  review: string;
+};
 
 type SoldProductsDict = {
-  title: string,
-  description: string,
-}
+  title: string;
+  description: string;
+};
 
 type ProductsTableDict = {
-  title: string,
-  description: string,
-}
+  title: string;
+  description: string;
+};
 
 type CategoriesSectionDict = {
-  title: string,
-  description: string,
-}
+  title: string;
+  description: string;
+};

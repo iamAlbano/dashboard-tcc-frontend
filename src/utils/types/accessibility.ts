@@ -64,6 +64,10 @@ type ImportDict = {
   uploadPlaceholder: string;
   selectModulePlaceholder: string;
   buttonLabel: string;
+  totalRecords: string;
+  columnsSelectTile: string;
+  columnsSelectTooltip: string;
+  missingNameColumn: string;
 };
 
 type TimeDict = {

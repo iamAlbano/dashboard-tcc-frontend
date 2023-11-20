@@ -68,7 +68,11 @@
     "description": "Import data",
     "uploadPlaceholder": "Drag and drop or click to upload your sheet",
     "selectModulePlaceholder": "Select data type",
-    "buttonLabel": "Import"
+    "buttonLabel": "Import",
+    "totalRecords": "Total records",
+    "columnsSelectTile": "Select columns",
+    "columnsSelectTooltip": "Select the columns in your sheet that correspond to the fields below",
+    "missingNameColumn": "Please select a column that represents the name of the product"
   },
   "productsDict": {
     "cards": {
@@ -88,6 +92,13 @@
     "categoriesSection": {
       "title": "Categories",
       "description": "Visualize your categories insights"
+    },
+    "columns": {
+      "name": "Name",
+      "description": "Description",
+      "category": "Category",
+      "price": "Price",
+      "stock": "Stock"
     }
   }
 }

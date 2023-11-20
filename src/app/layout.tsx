@@ -1,3 +1,4 @@
+import Redirect from "@/components/auth/redirect";
 import { NotifyContainer } from "@/components/utils/toast";
 import "@/styles/globals.sass";
 import type { Metadata } from "next";
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <Redirect />
         <NotifyContainer />
         {children}
       </body>

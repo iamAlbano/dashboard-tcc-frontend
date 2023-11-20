@@ -68,7 +68,11 @@
     "description": "Importar dados",
     "uploadPlaceholder": "Arraste e solte ou clique para fazer upload de sua planilha",
     "selectModulePlaceholder": "Selecionar tipo de dados",
-    "buttonLabel": "Importar"
+    "buttonLabel": "Importar",
+    "totalRecords": "Total de registros",
+    "columnsSelectTile": "Selecionar colunas",
+    "columnsSelectTooltip": "Selecione as colunas da sua planilha que representam os dados abaixo",
+    "missingNameColumn": "Por favor, selecione a coluna que representa o nome do produto"
   },
   "productsDict": {
     "cards": {
@@ -88,6 +92,13 @@
     "categoriesSection": {
       "title": "Categorias",
       "description": "Visualize as categorias de seus produtos"
+    },
+    "columns": {
+      "name": "Nome",
+      "description": "Descrição",
+      "category": "Categoria",
+      "price": "Preço",
+      "stock": "Estoque"
     }
   }
 }

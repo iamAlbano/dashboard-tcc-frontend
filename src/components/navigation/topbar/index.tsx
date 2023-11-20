@@ -21,6 +21,12 @@ const LanguageSelect = dynamic(
   () => import("@/components/accessibility/languageSelect"),
   { ssr: false }
 );
+const SelectStore = dynamic(
+  () => import("@/components/utils/store/select/select-store"),
+  {
+    ssr: false,
+  }
+);
 
 export default function Topbar() {
   const router = useRouter();
@@ -59,6 +65,7 @@ export default function Topbar() {
           </>
         )}
         <Avatar />
+        <SelectStore />
         <LanguageSelect />
         <ThemeSwitch />
         <Button icon="pi pi-sign-out" onClick={handleLogout} text rounded />

@@ -1,7 +1,7 @@
 "use client";
-import { useRef, useState } from "react";
-import { useImport } from "@/context/import";
 import { useAccessibility } from "@/context/accessibility";
+import { useImport } from "@/context/import";
+import { useRef, useState } from "react";
 
 import {
   FileUpload,
@@ -11,10 +11,9 @@ import {
   ItemTemplateOptions,
 } from "primereact/fileupload";
 
-import { ProgressBar } from "primereact/progressbar";
 import { Button } from "primereact/button";
-import { Tooltip } from "primereact/tooltip";
 import { Tag } from "primereact/tag";
+import { Tooltip } from "primereact/tooltip";
 
 export default function TemplateDemo() {
   const { getDict } = useAccessibility();
@@ -88,16 +87,16 @@ export default function TemplateDemo() {
         }}
       >
         {chooseButton}
-        {uploadButton}
-        {cancelButton}
-        <div className="flex align-items-center gap-3 ml-auto">
+        {/* {uploadButton} */}
+        {/* {cancelButton} */}
+        {/* <div className="flex align-items-center gap-3 ml-auto">
           <span>{formatedValue ?? "0 B"} / 1 MB</span>
           <ProgressBar
             value={value}
             showValue={false}
             style={{ width: "10rem", height: "12px" }}
           ></ProgressBar>
-        </div>
+        </div> */}
       </div>
     );
   };

@@ -53,7 +53,7 @@ export default function SignupForm({ ...props }: Props) {
 
     const loginRes = await login(email, password);
 
-    if (!loginRes || loginRes?.status !== 200) {
+    if (!loginRes || !loginRes?.user?.id) {
       return notify(loginRes?.data?.message ?? dict.errorMessage, "error");
     }
 

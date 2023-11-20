@@ -4,11 +4,11 @@ import { create } from "zustand";
 import { Module } from "@/utils/types/globals";
 
 export type ProductsColumnsType = {
-  name: string;
-  description: string;
-  category: string;
-  price: string;
-  stock: string;
+  name: string | null;
+  description: string | null;
+  category: string | null;
+  price: string | null;
+  stock: string | null;
 };
 
 export type ImportState = {
@@ -26,6 +26,7 @@ export type ImportState = {
   importFile: () => Promise<any>;
 
   productsColumns: ProductsColumnsType;
+  setProductsColumns: (columns: ProductsColumnsType) => void;
 };
 
 export const useImport = create<ImportState>((set) => ({
@@ -42,11 +43,14 @@ export const useImport = create<ImportState>((set) => ({
   importFile: () => importFile(),
 
   productsColumns: {
-    name: "nome",
-    description: "descricao",
-    category: "categoria",
-    price: "preco",
-    stock: "estoque",
+    name: null,
+    description: null,
+    category: null,
+    price: null,
+    stock: null,
+  },
+  setProductsColumns: (columns: ProductsColumnsType) => {
+    set({ productsColumns: columns });
   },
 }));
 
@@ -55,7 +59,12 @@ function handleOpenModal(module: Module | undefined) {
 }
 
 function handleCloseModal() {
-  useImport.setState({ openedModal: false, selectedModule: null });
+  useImport.setState({
+    openedModal: false,
+    selectedModule: null,
+    productsFile: null,
+    salesFile: null,
+  });
 }
 
 function setFile(type: string, file: File | null) {
@@ -107,14 +116,17 @@ async function importProducts() {
   const productsFile = useImport.getState().productsFile;
   if (!productsFile) return;
 
+  const productsColumns = useImport.getState().productsColumns;
+  if (!productsColumns.name?.length) return;
+
   useImport.setState({ isUploading: true });
   await api.importProducts(
     productsFile,
-    "nome",
-    "descricao",
-    "categoria",
-    "preco",
-    "estoque"
+    productsColumns.name,
+    productsColumns.description,
+    productsColumns.category,
+    productsColumns.price,
+    productsColumns.stock
   );
   useImport.setState({ isUploading: false });
 

@@ -1,9 +1,9 @@
 "use client";
+import DataAccordion from "@/components/modules/dataAccordion";
 import { useAccessibility } from "@/context/accessibility";
 import { useProduct } from "@/context/product";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
-
-import DataAccordion from "@/components/modules/dataAccordion";
 import Table from "./table";
 
 import api from "@/server/api";
@@ -12,7 +12,7 @@ export default function ProductsTableSection() {
   const { getDict } = useAccessibility();
   const dict = getDict();
 
-  const { setProducts } = useProduct();
+  const { products, setProducts } = useProduct();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -32,13 +32,22 @@ export default function ProductsTableSection() {
       title={dict.productsDict.productsTable.title}
       icon="pi pi-box"
     >
-      {loading ? (
-        <section className="w-full flex justify-center">
-          <i className="pi pi-spin pi-spinner" />
-        </section>
-      ) : (
-        <Table onPageChange={(page: number) => getProducts(page)} />
-      )}
+      <>
+        {loading && (
+          <div className="flex justify-center items-center">
+            <ProgressSpinner />
+          </div>
+        )}
+        {!loading && products.length > 0 && (
+          <Table onPageChange={(page: number) => getProducts(page)} />
+        )}
+        {!loading && !products.length && (
+          <p className="text-center">
+            Nenhum produto cadastrado, faça a importação de seus dados para
+            visualizar as informações.
+          </p>
+        )}
+      </>
     </DataAccordion>
   );
 }
