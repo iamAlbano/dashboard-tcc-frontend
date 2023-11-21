@@ -2,6 +2,8 @@
   "language": "Português",
   "success": "Sucesso",
   "cancel": "Cancelar",
+  "create": "Criar",
+  "select": "Selecionar",
   "missingFields": "Preencha todos os campos obrigatórios",
   "errorMessage": "Ocorreu um erro, tente novamente mais tarde",
   "sidebar": {
@@ -100,5 +102,14 @@
       "price": "Preço",
       "stock": "Estoque"
     }
+  },
+  "store": {
+    "title": "Loja",
+    "storeName": "Nome da loja",
+    "selectStore": "Selecionar Loja",
+    "noStoreMessage": "Nenhuma loja cadastrada, crie uma para visualizar os dados",
+    "newStore": "Nova loja",
+    "createStoreMessage": "Criar loja",
+    "createSuccessMessage": "Loja criada com sucesso"
   }
 }

@@ -190,7 +190,7 @@ export default function ImportModal() {
           className={`overflow-y-auto border-1 border-gray-300 border-round p-3 
           ${style.tableContainer}`}
         >
-          <table className={style.table}>
+          <table>
             <thead>
               <tr>
                 {fileColumns.map((column) => {

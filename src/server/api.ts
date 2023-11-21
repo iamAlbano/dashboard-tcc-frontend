@@ -66,6 +66,21 @@ const api = {
         return error?.response;
       });
   },
+  async getUserStores(user_id: string): Promise<AxiosResponse> {
+    return request.get(`/store/get?user_id=${user_id}`).catch((error) => {
+      return error?.response;
+    });
+  },
+  async createStore(name: string, users: string[]): Promise<AxiosResponse> {
+    return request
+      .post("/store/create", {
+        name,
+        users,
+      })
+      .catch((error) => {
+        return error?.response;
+      });
+  },
   async getProducts(
     page: number,
     limit: number,

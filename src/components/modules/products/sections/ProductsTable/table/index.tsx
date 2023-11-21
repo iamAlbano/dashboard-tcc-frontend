@@ -1,17 +1,16 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState } from "react";
 import { useDebounce } from "primereact/hooks";
-import style from "./style.module.sass";
+import { useState } from "react";
 
 import { useProduct } from "@/context/product";
 
 const OrdenateIcon = dynamic(() => import("@/components/table/ordenateIcon"));
 
-import { Rating } from "primereact/rating";
-import { InputText } from "primereact/inputtext";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { InputText } from "primereact/inputtext";
 import { Paginator, PaginatorPageChangeEvent } from "primereact/paginator";
+import { Rating } from "primereact/rating";
 
 type Props = {
   onPageChange: (page: number) => void;
@@ -56,7 +55,7 @@ export default function ProductsTable({ onPageChange }: Props) {
         />
       </div>
 
-      <table className={style.table}>
+      <table>
         <thead>
           <tr>
             <th>

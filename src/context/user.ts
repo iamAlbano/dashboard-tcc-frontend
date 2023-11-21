@@ -3,12 +3,14 @@ import { clearToken, getToken, setToken } from "@/utils/functions/localStorage";
 import { create } from "zustand";
 
 type User = {
+  id?: string;
   name: string;
   surname: string;
   email: string;
 };
 
 type UserState = {
+  user_id?: string;
   name: string;
   surname: string;
   email: string;
@@ -26,6 +28,7 @@ type UserState = {
 };
 
 export const useUser = create<UserState>((set) => ({
+  user_id: "",
   name: "",
   surname: "",
   email: "",
@@ -48,6 +51,7 @@ const isAuth = () => {
   if (!token || !user) return false;
 
   useUser.setState({
+    user_id: user.id,
     name: user.name,
     surname: user.surname,
     email: user.email,
@@ -61,8 +65,8 @@ const setUser = (user: User) => {
     surname: user.surname,
     email: user.email,
   };
-  useUser.setState(userData);
-  setLocalUser(userData);
+  useUser.setState({ user_id: user.id, ...userData });
+  setLocalUser({ id: user.id, ...userData });
 };
 
 const setLocalUser = (user: User) => {
@@ -111,5 +115,5 @@ const login = async (email: string, password: string) => {
 const logout = () => {
   clearLocalUser();
   clearToken();
-  useUser.setState({ name: "", surname: "", email: "" });
+  useUser.setState({ user_id: "", name: "", surname: "", email: "" });
 };

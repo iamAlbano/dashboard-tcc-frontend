@@ -2,6 +2,8 @@
   "language": "English",
   "success": "Success",
   "cancel": "Cancel",
+  "create": "Create",
+  "select": "Select",
   "missingFields": "Please fill all the required fields",
   "errorMessage": "Something went wrong, please try again later",
   "sidebar": {
@@ -100,5 +102,14 @@
       "price": "Price",
       "stock": "Stock"
     }
+  },
+  "store": {
+    "title": "Store",
+    "storeName": "Store Name",
+    "selectStore": "Select Store",
+    "noStoreMessage": "You don't have any store yet, create one to start using the app",
+    "newStore": "New Store",
+    "createStoreMessage": "Create Store",
+    "createSuccessMessage": "Store created successfully"
   }
 }

@@ -6,6 +6,8 @@ export type Dict = {
   language: string;
   success: string;
   cancel: string;
+  create: string;
+  select: string;
   missingFields: string;
   errorMessage: string;
   auth: AuthDict;
@@ -16,6 +18,7 @@ export type Dict = {
   time: TimeDict;
   import: ImportDict;
   productsDict: ProductsDict;
+  store: StoreDict;
 };
 
 type AuthDict = {
@@ -78,4 +81,14 @@ type TimeDict = {
   hour: string;
   minute: string;
   second: string;
+};
+
+type StoreDict = {
+  title: string;
+  storeName: string;
+  selectStore: string;
+  newStore: string;
+  noStoreMessage: string;
+  createStoreMessage: string;
+  createSuccessMessage: string;
 };
