@@ -7,10 +7,10 @@ export default function UserInfo() {
   return (
     <div className="flex flex-row gap-1">
       <span className="desktop flex-column justify-content-center align-items-end">
-        <p className="p-0 m-0 font-semibold">
+        <p className="p-0 m-0 font-semibold white-space-nowrap">
           {name} {surname}
         </p>
-        <p className="p-0 m-0">{email}</p>
+        <p className="p-0 m-0 white-space-nowrap">{email}</p>
       </span>
       <Avatar
         size="large"

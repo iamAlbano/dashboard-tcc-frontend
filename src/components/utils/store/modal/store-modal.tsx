@@ -48,12 +48,13 @@ export default function CreateStoreModal() {
     setLoading(true);
     const res = await createStore(storeName, [user_id]);
 
-    if (res?.status === 201) {
+    if (res?.status === 201 && res?.data?.store?.id) {
       notify(dict.store.createSuccessMessage, "success");
       setStoreName("");
       setAddingStore(false);
       setOpenedCreateModal(false);
-      setSelectedStore(res.data);
+      setSelectedStore(res.data.store);
+      setStores(stores.concat(res.data.store));
     } else notify(dict.errorMessage, "error");
     setLoading(false);
   };

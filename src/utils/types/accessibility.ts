@@ -10,6 +10,8 @@ export type Dict = {
   select: string;
   missingFields: string;
   errorMessage: string;
+  monthDict: string;
+  noData: string;
   auth: AuthDict;
   sidebar: SidebarDict;
   modules: {
@@ -18,6 +20,7 @@ export type Dict = {
   time: TimeDict;
   import: ImportDict;
   productsDict: ProductsDict;
+  salesDict: SalesDict;
   store: StoreDict;
 };
 
@@ -71,6 +74,7 @@ type ImportDict = {
   columnsSelectTile: string;
   columnsSelectTooltip: string;
   missingNameColumn: string;
+  missingProductColumn: string;
 };
 
 type TimeDict = {
@@ -91,4 +95,19 @@ type StoreDict = {
   noStoreMessage: string;
   createStoreMessage: string;
   createSuccessMessage: string;
+};
+
+type MonthDict = {
+  january: string;
+  february: string;
+  march: string;
+  april: string;
+  may: string;
+  june: string;
+  july: string;
+  august: string;
+  september: string;
+  october: string;
+  november: string;
+  december: string;
 };

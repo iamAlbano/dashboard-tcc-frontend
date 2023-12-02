@@ -1,67 +1,54 @@
-import { useState, useEffect } from "react"
-import { Chart } from "primereact/chart"
+import { Chart } from "primereact/chart";
+import { useEffect, useState } from "react";
+
+export type chartData = {
+  type: "line" | "bar";
+  label: string;
+  borderColor: string;
+  borderWidth: number;
+  fill: boolean;
+  tension: number;
+  data: number[];
+};
 
 type IProps = {
-  search?: string
-  dates?: (Date | null)[]
-}
+  search?: string;
+  dates?: (Date | null)[];
+  data: chartData[];
+  chartLabels?: string[];
+};
 
-export default function MostSoldProductsChart({ ...props }: IProps){
-  const [chartData, setChartData] = useState({})
-  const [chartOptions, setChartOptions] = useState({})
-
-  const auxData =  [
-    {
-      type: "line",
-      label: "Bamboo watch",
-      borderColor: 'rgba(235, 19, 32, 1)',
-      borderWidth: 2,
-      fill: false,
-      tension: 0.4,
-      data: [50, 25, 12, 48, 56, 76, 42],
-    },
-    {
-      type: "line",
-      label: "Black watch",
-      borderColor: 'rgba(54, 62, 35, 1)',
-      borderWidth: 2,
-      fill: false,
-      tension: 0.4,
-      data: [30, 15, 17, 48, 16, 46, 62],
-    },
-    {
-      type: "line",
-      label: "Blue band",
-      borderColor: 'rgba(255, 206, 86, 1)',
-      borderWidth: 2,
-      fill: false,
-      tension: 0.4,
-      data: [10, 25, 7, 8, 36, 26, 22],
-    }
-  ]
+export default function MostSoldProductsChart({ ...props }: IProps) {
+  const [chartData, setChartData] = useState({});
+  const [chartOptions, setChartOptions] = useState({});
 
   useEffect(() => {
-    const documentStyle = getComputedStyle(document.documentElement)
-    const textColor = documentStyle.getPropertyValue("--text-color")
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue("--text-color");
     const textColorSecondary = documentStyle.getPropertyValue(
       "--text-color-secondary"
-    )
-    const surfaceBorder = documentStyle.getPropertyValue("--surface-border")
+    );
+    const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
     const data = {
-      labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul"],
+      labels: props.chartLabels,
       datasets: [
-        ...auxData.filter((lineData) => lineData.label.toLowerCase().includes(props.search?.toLowerCase() ?? '')),
-        {
+        ...props.data.filter((lineData) =>
+          lineData.label
+            .toLowerCase()
+            .includes(props.search?.toLowerCase() ?? "")
+        ),
+        // TO DO - add total products sold
+        /* {
           type: "bar",
           label: "Total de produtos vendidos",
           backgroundColor: documentStyle.getPropertyValue("--blue-300"),
           data: [61, 84, 84, 75, 97, 95, 84],
           borderColor: "white",
           borderWidth: 2,
-        },
+        }, */
       ],
-    }
+    };
 
     const options = {
       maintainAspectRatio: false,
@@ -70,7 +57,7 @@ export default function MostSoldProductsChart({ ...props }: IProps){
       plugins: {
         htmlLegend: {
           // ID of the container to put the legend in
-          containerID: 'legend-container',
+          containerID: "legend-container",
         },
         legend: {
           position: "top",
@@ -80,7 +67,7 @@ export default function MostSoldProductsChart({ ...props }: IProps){
           labels: {
             color: textColor,
           },
-        }
+        },
       },
       scales: {
         x: {
@@ -100,21 +87,21 @@ export default function MostSoldProductsChart({ ...props }: IProps){
           },
         },
       },
-    }
+    };
 
-    setChartData(data)
-    setChartOptions(options)
-  }, [])
+    setChartData(data);
+    setChartOptions(options);
+  }, []);
 
   return (
     <div className="card">
-      <Chart 
-        type="line" 
+      <Chart
+        type="line"
         aria-label="most sold products by period"
-        data={chartData} 
-        options={chartOptions} 
+        data={chartData}
+        options={chartOptions}
         unstyled
       />
     </div>
-  )
+  );
 }

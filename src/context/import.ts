@@ -11,6 +11,16 @@ export type ProductsColumnsType = {
   stock: string | null;
 };
 
+export type SalesColumnsType = {
+  product: string | null;
+  quantity: string | null;
+  price: string | null;
+  customer: string | null;
+  seller: string | null;
+  status: string | null;
+  date: string | null;
+};
+
 export type ImportState = {
   openedModal: boolean;
   selectedModule: Module | null;
@@ -23,10 +33,12 @@ export type ImportState = {
   salesFile: File | null;
   setFile: (type: string, file: File | null) => void;
 
-  importFile: () => Promise<any>;
+  importFile: (store_id: string) => Promise<any>;
 
   productsColumns: ProductsColumnsType;
   setProductsColumns: (columns: ProductsColumnsType) => void;
+  salesColumns: SalesColumnsType;
+  setSalesColumns: (columns: SalesColumnsType) => void;
 };
 
 export const useImport = create<ImportState>((set) => ({
@@ -40,7 +52,7 @@ export const useImport = create<ImportState>((set) => ({
   productsFile: null,
   salesFile: null,
   setFile: (type: string, file: File | null) => setFile(type, file),
-  importFile: () => importFile(),
+  importFile: (store_id: string) => importFile(store_id),
 
   productsColumns: {
     name: null,
@@ -51,6 +63,20 @@ export const useImport = create<ImportState>((set) => ({
   },
   setProductsColumns: (columns: ProductsColumnsType) => {
     set({ productsColumns: columns });
+  },
+
+  salesColumns: {
+    product: null,
+    quantity: null,
+    price: null,
+    customer: null,
+    seller: null,
+    status: null,
+    date: null,
+  },
+
+  setSalesColumns: (columns: SalesColumnsType) => {
+    set({ salesColumns: columns });
   },
 }));
 
@@ -78,42 +104,48 @@ function setFile(type: string, file: File | null) {
   }
 }
 
-async function importFile(): Promise<any> {
+async function importFile(store_id: string): Promise<any> {
   const productsFile = useImport.getState().productsFile;
   const salesFile = useImport.getState().salesFile;
 
+  useImport.setState({ openedModal: false });
+  await importProducts(store_id);
+  await importSales(store_id);
   handleCloseModal();
-  await importProducts();
-  await importSales();
 }
 
-async function importSales() {
+async function importSales(store_id: string) {
   if (useImport.getState().isUploading) return;
 
   const salesFile = useImport.getState().salesFile;
   if (!salesFile) return;
 
+  const salesColumns = useImport.getState().salesColumns;
+  if (!salesColumns.product?.length) return;
+
   useImport.setState({ isUploading: true });
   await api.importSales(
     salesFile,
-    "produto",
+    store_id,
+    salesColumns.product,
     null,
-    "quantidade",
-    "preco",
-    null,
-    null,
-    "status",
-    "data"
+    salesColumns.quantity,
+    salesColumns.price,
+    salesColumns.customer,
+    salesColumns.seller,
+    salesColumns.status,
+    salesColumns.date
   );
   useImport.setState({ isUploading: false });
 
   useImport.setState({ salesFile: null });
 }
 
-async function importProducts() {
+async function importProducts(store_id: string) {
   if (useImport.getState().isUploading) return;
 
   const productsFile = useImport.getState().productsFile;
+
   if (!productsFile) return;
 
   const productsColumns = useImport.getState().productsColumns;
@@ -122,6 +154,7 @@ async function importProducts() {
   useImport.setState({ isUploading: true });
   await api.importProducts(
     productsFile,
+    store_id,
     productsColumns.name,
     productsColumns.description,
     productsColumns.category,
@@ -131,4 +164,13 @@ async function importProducts() {
   useImport.setState({ isUploading: false });
 
   useImport.setState({ productsFile: null });
+  useImport.setState({
+    productsColumns: {
+      name: null,
+      description: null,
+      category: null,
+      price: null,
+      stock: null,
+    },
+  });
 }

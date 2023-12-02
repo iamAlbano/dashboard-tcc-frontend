@@ -6,12 +6,27 @@
   "select": "Selecionar",
   "missingFields": "Preencha todos os campos obrigatórios",
   "errorMessage": "Ocorreu um erro, tente novamente mais tarde",
+  "noData": "Nenhum dado encontrado",
   "sidebar": {
     "overview": "Visão Geral",
     "products": "Produtos",
     "sales": "Vendas",
     "customers": "Clientes",
     "import": "Importar"
+  },
+  "monthDict": {
+    "january": "Janeiro",
+    "february": "Fevereiro",
+    "march": "Março",
+    "april": "Abril",
+    "may": "Maio",
+    "june": "Junho",
+    "july": "Julho",
+    "august": "Agosto",
+    "september": "Setembro",
+    "october": "Outubro",
+    "november": "Novembro",
+    "december": "Dezembro"
   },
   "auth": {
     "login": "Entrar",
@@ -74,7 +89,19 @@
     "totalRecords": "Total de registros",
     "columnsSelectTile": "Selecionar colunas",
     "columnsSelectTooltip": "Selecione as colunas da sua planilha que representam os dados abaixo",
-    "missingNameColumn": "Por favor, selecione a coluna que representa o nome do produto"
+    "missingNameColumn": "Por favor, selecione a coluna que representa o nome do produto",
+    "missingProductColumn": "Por favor, selecione a coluna que representa o produto vendido"
+  },
+  "salesDict": {
+    "columns": {
+      "product": "Produto",
+      "quantity": "Quantidade",
+      "price": "Preço",
+      "seller": "Vendedor",
+      "customer": "Cliente",
+      "status": "Status",
+      "date": "Data"
+    }
   },
   "productsDict": {
     "cards": {

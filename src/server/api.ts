@@ -38,6 +38,23 @@ request.interceptors.request.use(
   }
 );
 
+fileRequest.interceptors.request.use(
+  (config) => {
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      window.location.href = "/login";
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 const api = {
   async login(email: string, password: string): Promise<AxiosResponse> {
     return request
@@ -98,16 +115,22 @@ const api = {
     });
   },
   async getMostSoldProducts(
-    totalProducts = 3,
+    store_id: string,
+    query = "",
     startDate = "2023-01-01",
-    endDate = "2023-12-31"
+    endDate = "2023-12-31",
+    limit = 3,
+    periodGroup = "month"
   ): Promise<AxiosResponse> {
     return request
-      .get("/sale/most_sold_products", {
+      .get("/product/most_sold", {
         params: {
-          total_products: totalProducts,
+          store_id: store_id,
+          query: query,
           start_date: startDate,
           end_date: endDate,
+          limit: limit,
+          period_group: periodGroup,
         },
       })
       .catch((error) => {
@@ -116,6 +139,7 @@ const api = {
   },
   async importProducts(
     products_file: File,
+    store_id: string,
     name_column: string,
     description_column?: string | null,
     category_column?: string | null,
@@ -125,6 +149,7 @@ const api = {
     return fileRequest
       .post("/import/products", {
         file: products_file,
+        store_id,
         name_column,
         description_column,
         category_column,
@@ -137,6 +162,7 @@ const api = {
   },
   async importSales(
     sales_file: File,
+    store_id: string,
     product_column: string,
     products_file?: File | null,
     quantity_column?: string | null,
@@ -149,6 +175,7 @@ const api = {
     return fileRequest
       .post("/import/sales", {
         sales_file: sales_file,
+        store_id,
         product_column,
         quantity_column,
         price_column,

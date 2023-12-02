@@ -1,7 +1,11 @@
 import Upload from "@/components/import/upload";
 import { notify } from "@/components/utils/toast";
 import { useAccessibility } from "@/context/accessibility";
-import { ProductsColumnsType, useImport } from "@/context/import";
+import {
+  ProductsColumnsType,
+  SalesColumnsType,
+  useImport,
+} from "@/context/import";
 import Papa from "papaparse";
 import { Dropdown } from "primereact/dropdown";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -17,6 +21,8 @@ export default function ImportModal() {
     openedModal,
     productsColumns,
     setProductsColumns,
+    salesColumns,
+    setSalesColumns,
     selectedModule,
     setSelectedModule,
     productsFile,
@@ -25,7 +31,9 @@ export default function ImportModal() {
 
   const dict = getDict();
 
-  const [columns, setColumns] = useState<ProductsColumnsType>(productsColumns);
+  const [columns, setColumns] = useState<
+    ProductsColumnsType | SalesColumnsType
+  >(selectedModule === "products" ? productsColumns : salesColumns);
   const [fileColumns, setFileColumns] = useState<string[]>([]);
   const [fileRows, setFileRows] = useState<any[]>([]);
 
@@ -40,13 +48,13 @@ export default function ImportModal() {
 
   useEffect(() => {
     handleGetFileColumns();
-  }, [productsFile]);
+  }, [productsFile, salesFile]);
 
   useEffect(() => {
     if (fileColumns.length === 0) return;
 
     if (selectedModule === "products") {
-      setColumns({
+      const columns = {
         name:
           productNameColumns.find((col) => fileColumns.includes(col)) ?? null,
         description:
@@ -59,7 +67,32 @@ export default function ImportModal() {
           productPriceColumns.find((col) => fileColumns.includes(col)) ?? null,
         stock:
           productStockColumns.find((col) => fileColumns.includes(col)) ?? null,
-      });
+      };
+
+      setColumns(columns as ProductsColumnsType);
+      setProductsColumns(columns as ProductsColumnsType);
+      return;
+    }
+
+    if (selectedModule === "sales") {
+      const columns = {
+        product:
+          productNameColumns.find((col) => fileColumns.includes(col)) ?? null,
+        quantity:
+          productStockColumns.find((col) => fileColumns.includes(col)) ?? null,
+        price: productPriceColumns.find((col) => fileColumns.includes(col)),
+        customer:
+          saleCustomerColumns.find((col) => fileColumns.includes(col)) ?? null,
+        seller:
+          saleSellerColumns.find((col) => fileColumns.includes(col)) ?? null,
+        status:
+          saleStatusColumns.find((col) => fileColumns.includes(col)) ?? null,
+        date: dateColumns.find((col) => fileColumns.includes(col)) ?? null,
+      };
+
+      setColumns(columns as SalesColumnsType);
+      setSalesColumns(columns as SalesColumnsType);
+      return;
     }
   }, [fileColumns]);
 
@@ -69,6 +102,9 @@ export default function ImportModal() {
     switch (selectedModule) {
       case "products":
         file = productsFile;
+        break;
+      case "sales":
+        file = salesFile;
         break;
     }
 
@@ -135,7 +171,10 @@ export default function ImportModal() {
     setColumns((prev) => newColumns);
     switch (selectedModule) {
       case "products":
-        setProductsColumns(newColumns);
+        setProductsColumns(newColumns as ProductsColumnsType);
+        break;
+      case "sales":
+        setSalesColumns(newColumns as SalesColumnsType);
         break;
     }
   };
@@ -144,6 +183,8 @@ export default function ImportModal() {
     switch (selectedModule) {
       case "products":
         return dict.productsDict.columns[column as keyof ProductsColumnsType];
+      case "sales":
+        return dict.salesDict.columns[column as keyof SalesColumnsType];
     }
   };
 
@@ -168,11 +209,13 @@ export default function ImportModal() {
                   <Dropdown
                     id={column}
                     options={fileColumns}
-                    value={columns[column as keyof ProductsColumnsType]}
+                    value={columns[column as keyof typeof columns]}
                     onChange={(e) => handleSetColumn(column, e.value)}
                     className={`${
-                      column === "name" &&
-                      !columns[column as keyof ProductsColumnsType]?.length &&
+                      ((column === "name" &&
+                        !columns[column as keyof typeof columns]?.length) ||
+                        (column === "product" &&
+                          !columns[column as keyof typeof columns]?.length)) &&
                       "border-red-500"
                     }`}
                     showClear
@@ -290,4 +333,56 @@ const productStockColumns = [
   "product_quantity",
   "quantidade_produto",
   "quantidade do produto",
+];
+
+const saleCustomerColumns = [
+  "customer",
+  "cliente",
+  "customer_name",
+  "nome_cliente",
+  "customer_name",
+  "nome_cliente",
+  "nome do cliente",
+  "customer name",
+  "nome do cliente",
+  "customer name",
+];
+
+const saleSellerColumns = [
+  "seller",
+  "vendedor",
+  "seller_name",
+  "nome_vendedor",
+  "seller_name",
+  "nome_vendedor",
+  "nome do vendedor",
+  "seller name",
+  "nome do vendedor",
+  "seller name",
+];
+
+const saleStatusColumns = [
+  "status",
+  "estado",
+  "sale_status",
+  "estado_venda",
+  "sale_status",
+  "estado_venda",
+  "estado da venda",
+  "sale status",
+  "estado da venda",
+  "sale status",
+];
+
+const dateColumns = [
+  "date",
+  "data",
+  "sale_date",
+  "data_venda",
+  "sale_date",
+  "data_venda",
+  "data da venda",
+  "sale date",
+  "data da venda",
+  "sale date",
 ];

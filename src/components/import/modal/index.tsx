@@ -2,6 +2,7 @@
 
 import { useAccessibility } from "@/context/accessibility";
 import { useImport } from "@/context/import";
+import { useStore } from "@/context/store";
 
 import { notify } from "@/components/utils/toast";
 import { Button } from "primereact/button";
@@ -17,16 +18,23 @@ export default function ImportModal() {
     closeImportModal,
     importFile,
     productsColumns,
+    salesColumns,
   } = useImport();
+  const { selectedStore } = useStore();
 
   const dict = getDict();
 
-  function onSubmit() {
+  const onSubmit = async () => {
     if (selectedModule === "products" && !productsColumns.name?.length)
       return notify(dict.import.missingNameColumn, "error");
 
-    importFile();
-  }
+    if (selectedModule === "sales" && !salesColumns.product?.length)
+      return notify(dict.import.missingProductColumn, "error");
+
+    if (!selectedStore?.id) return;
+
+    await importFile(selectedStore?.id);
+  };
 
   const footerContent = (
     <div>

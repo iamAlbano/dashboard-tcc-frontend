@@ -6,12 +6,27 @@
   "select": "Select",
   "missingFields": "Please fill all the required fields",
   "errorMessage": "Something went wrong, please try again later",
+  "noData": "No data to show",
   "sidebar": {
     "overview": "Overview",
     "products": "Products",
     "sales": "Sales",
     "customers": "Customers",
     "import": "Import"
+  },
+  "monthDict": {
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
   },
   "auth": {
     "login": "Login",
@@ -74,7 +89,19 @@
     "totalRecords": "Total records",
     "columnsSelectTile": "Select columns",
     "columnsSelectTooltip": "Select the columns in your sheet that correspond to the fields below",
-    "missingNameColumn": "Please select a column that represents the name of the product"
+    "missingNameColumn": "Please select a column that represents the name of the product",
+    "missingProductColumn": "Please select a column that represents the sold product"
+  },
+  "salesDict": {
+    "columns": {
+      "product": "Product",
+      "quantity": "Quantity",
+      "price": "Price",
+      "seller": "Seller",
+      "customer": "Customer",
+      "status": "Status",
+      "date": "Date"
+    }
   },
   "productsDict": {
     "cards": {
