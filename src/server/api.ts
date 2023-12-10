@@ -137,6 +137,29 @@ const api = {
         return error?.response;
       });
   },
+  async getMostSoldCategories(
+    store_id: string,
+    query = "",
+    startDate = "2023-01-01",
+    endDate = "2023-12-31",
+    limit = 3,
+    periodGroup = "month"
+  ): Promise<AxiosResponse> {
+    return request
+      .get("/product/most_sold_categories", {
+        params: {
+          store_id: store_id,
+          query: query,
+          start_date: startDate,
+          end_date: endDate,
+          limit: limit,
+          period_group: periodGroup,
+        },
+      })
+      .catch((error) => {
+        return error?.response;
+      });
+  },
   async importProducts(
     products_file: File,
     store_id: string,

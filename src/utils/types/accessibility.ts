@@ -10,7 +10,7 @@ export type Dict = {
   select: string;
   missingFields: string;
   errorMessage: string;
-  monthDict: string;
+  monthDict: MonthDict;
   noData: string;
   auth: AuthDict;
   sidebar: SidebarDict;

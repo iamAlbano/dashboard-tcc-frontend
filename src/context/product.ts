@@ -16,6 +16,13 @@ type ProductState = {
     endDate: string,
     periodGroup?: string
   ) => Promise<any>;
+  getMostSoldCategories: (
+    store_id: string,
+    query: string,
+    startDate: string,
+    endDate: string,
+    periodGroup?: string
+  ) => Promise<any>;
 };
 
 export const useProduct = create<ProductState>((set) => ({
@@ -25,6 +32,8 @@ export const useProduct = create<ProductState>((set) => ({
   setResume: (resume) => set({ resume }),
   getMostSoldProducts: (store_id, query, startDate, endDate, periodGroup) =>
     getMostSoldProducts(store_id, query, startDate, endDate, periodGroup),
+  getMostSoldCategories: (store_id, query, startDate, endDate, periodGroup) =>
+    getMostSoldCategories(store_id, query, startDate, endDate, periodGroup),
 }));
 
 const getMostSoldProducts = async (
@@ -44,6 +53,29 @@ const getMostSoldProducts = async (
       periodGroup
     );
     return data?.products;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getMostSoldCategories = async (
+  store_id: string,
+  query: string,
+  startDate: string,
+  endDate: string,
+  periodGroup?: string
+): Promise<any> => {
+  try {
+    const res = await api.getMostSoldCategories(
+      store_id,
+      query,
+      startDate,
+      endDate,
+      5,
+      periodGroup
+    );
+
+    return res.data?.categories;
   } catch (error) {
     return error;
   }
