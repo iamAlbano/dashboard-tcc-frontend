@@ -20,17 +20,18 @@ export default function InfoCards() {
   async function getProductsResume() {
     if (!selectedStore?.id) return;
 
-    const { data } = await api.getProductsResume(selectedStore?.id);
+    const { data } = await api.getCustomersResume(selectedStore?.id);
 
     const template = [...resumeTemplate];
 
-    template[0].value = data?.stats?.total_products ?? 0;
-    template[1].value =
-      typeof data?.stats?.avg_price === "number"
-        ? `R$ ${data?.stats?.avg_price.toFixed(2)}`
-        : 0;
-    template[2].value = data?.stats?.total_categories ?? 0;
-    template[3].value = data?.stats?.total_sold ?? 0;
+    console.log(data);
+
+    template[0].value = data?.stats?.total_customers ?? 0;
+    template[1].value = data?.stats?.total_buyers_this_month ?? 0;
+    template[2].value = data?.stats?.average_spent
+      ? data?.stats?.average_spent.toFixed(2)
+      : 0;
+    template[3].value = data?.stats?.average_age ?? "-";
 
     setResume(template);
   }
@@ -39,40 +40,32 @@ export default function InfoCards() {
     getProductsResume();
   }, [selectedStore]);
 
-  type ResumeTemplate = {
-    title: string;
-    color: string;
-    icon: string;
-    percentage: number;
-    value: number | string;
-  }[];
-
-  const resumeTemplate: ResumeTemplate = [
+  const resumeTemplate = [
     {
-      title: dict?.productsDict?.cards?.products,
+      title: "Clientes cadastrados",
       color: "rgba(15, 67,138,0.2)",
-      icon: "pi pi-box",
+      icon: "pi pi-users",
       percentage: 0,
       value: 0,
     },
     {
-      title: dict?.productsDict?.cards?.average_price,
+      title: "Compradores este mês",
       color: "rgba(255,167,38,0.2)",
+      icon: "pi pi-shopping-cart",
+      percentage: 0,
+      value: 0,
+    },
+    {
+      title: "Gasto médio por cliente",
+      color: "rgba(25,167,38,0.2)",
       icon: "pi pi-dollar",
       percentage: 0,
       value: 0,
     },
     {
-      title: dict?.productsDict?.cards?.categories,
-      color: "rgba(25,167,38,0.2)",
-      icon: "pi pi-tags",
-      percentage: 0,
-      value: 0,
-    },
-    {
-      title: dict?.productsDict?.cards?.sold,
+      title: "Faixa etária média",
       color: "rgba(235,67,238,0.2)",
-      icon: "pi pi-shopping-cart",
+      icon: "pi pi-calendar",
       percentage: 0,
       value: 0,
     },
@@ -92,18 +85,16 @@ export default function InfoCards() {
                 <span className="text-sm">{info.title}</span>
               </div>
               <div className="flex flex-row gap-3 align-items-center">
-                {info.percentage !== 0 && (
-                  <span
-                    className={`
+                <span
+                  className={`
                     desktop flex-row align-items-center justify-content-center 
                     p-2 border-round font-bold text-xl 
                     ${info.percentage > 0 ? "text-green-700" : "text-red-700"}
                   `}
-                  >
-                    {info.percentage > 0 ? "+" : ""}
-                    {info.percentage}%
-                  </span>
-                )}
+                >
+                  {info.percentage > 0 ? "+" : ""}
+                  {info.percentage}%
+                </span>
 
                 <i className={`desktop ${info.icon} text-4xl`} />
               </div>

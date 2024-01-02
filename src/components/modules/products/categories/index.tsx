@@ -1,40 +1,51 @@
 "use client";
+import { useAccessibility } from "@/context/accessibility";
 import { useProduct } from "@/context/product";
 import { useStore } from "@/context/store";
 import dynamic from "next/dynamic";
 import { useDebounce } from "primereact/hooks";
 import { useEffect, useState } from "react";
 
+import { parseDateToString } from "@/utils/functions/helpers";
 import { Period } from "@/utils/types/globals";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Nullable } from "primereact/ts-helpers";
-
-import { useAccessibility } from "@/context/accessibility";
+import { type chartData } from "./charts/mostSoldCategoriesChart";
 
 import DataAccordion from "@/components/modules/dataAccordion";
-import PeriodSelect from "@/components/utils/time/periodSelect";
-import TimeSelect from "@/components/utils/time/timeSelect";
-import { InputText } from "primereact/inputtext";
-import { type chartData } from "./chart";
-
-const ProductsList = dynamic(() => import("./table"), { ssr: false });
-const MostSoldProductsChart = dynamic(() => import("./chart"), { ssr: false });
+import MostSoldCategories from "./charts/mostSoldCategoriesChart";
 
 import {
-  calculateTotalSold,
   getCalendarView,
   handleGetChartLabels,
   handleGetPeriodChartData,
 } from "@/components/utils/chartFunctions";
-import { parseDateToString } from "@/utils/functions/helpers";
-import { ProgressSpinner } from "primereact/progressspinner";
 
-export default function MostSoldProductsSection() {
+const PeriodSelect = dynamic(
+  () => import("@/components/utils/time/periodSelect"),
+  { ssr: false }
+);
+const TimeSelect = dynamic(() => import("@/components/utils/time/timeSelect"), {
+  ssr: false,
+});
+const SellingRate = dynamic(() => import("./charts/categoriesSellingRate"), {
+  ssr: false,
+});
+const TotalCategories = dynamic(() => import("./charts/totalCategories"), {
+  ssr: false,
+});
+
+import { InputText } from "primereact/inputtext";
+
+export default function CategoriesSection() {
   const { selectedStore } = useStore();
-  const { getMostSoldProducts } = useProduct();
+  const { getMostSoldCategories } = useProduct();
+  const { getDict } = useAccessibility();
+  const dict = getDict();
+
   const [loading, setLoading] = useState(false);
 
-  const { getDict, theme } = useAccessibility();
-  const dict = getDict();
+  const [chartData, setChartData] = useState<chartData[]>([]);
 
   const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
   const [period, setPeriod] = useState<Period | null>("month");
@@ -43,14 +54,11 @@ export default function MostSoldProductsSection() {
     new Date("12/31/2023"),
   ]);
 
-  const [chartData, setChartData] = useState<chartData[]>([]);
-  const [products, setProducts] = useState([]);
-
-  const handleGetMostSoldProducts = async () => {
+  const handleGetMostSoldCategories = async () => {
     if (!selectedStore?.id) return;
     setLoading(true);
     try {
-      const data = await getMostSoldProducts(
+      const data = await getMostSoldCategories(
         selectedStore?.id,
         debouncedSearch.length > 3 ? debouncedSearch : "",
         dates && dates[0] ? parseDateToString(dates[0]) : "2023-01-01",
@@ -60,18 +68,9 @@ export default function MostSoldProductsSection() {
 
       if (!data.length) {
         setChartData([]);
-        setProducts([]);
         setLoading(false);
         return;
       }
-
-      setProducts(
-        data.map((item: any) => ({
-          name: item.product.name,
-          category: item.product.category,
-          totalSold: calculateTotalSold(item.sales) ?? 0,
-        }))
-      );
 
       const periodAux = period ?? "month";
       const startDate = dates && dates[0] ? dates[0] : new Date("01/01/2023");
@@ -81,7 +80,7 @@ export default function MostSoldProductsSection() {
         [
           {
             type: "line",
-            label: data[0]?.product?.name,
+            label: data[0]?.category,
             borderColor: "rgba(235, 19, 32, 1)",
             borderWidth: 2,
             fill: false,
@@ -95,7 +94,7 @@ export default function MostSoldProductsSection() {
           },
           {
             type: "line",
-            label: data[1]?.product?.name,
+            label: data[1]?.category,
             borderColor: "rgba(54, 62, 35, 1)",
             borderWidth: 2,
             fill: false,
@@ -109,7 +108,7 @@ export default function MostSoldProductsSection() {
           },
           {
             type: "line",
-            label: data[2]?.product?.name,
+            label: data[2]?.category,
             borderColor: "rgba(255, 206, 86, 1)",
             borderWidth: 2,
             fill: false,
@@ -125,7 +124,6 @@ export default function MostSoldProductsSection() {
       );
     } catch (e) {
       setChartData([]);
-      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -134,47 +132,50 @@ export default function MostSoldProductsSection() {
   useEffect(() => {
     if (!dates || !dates[0] || !dates[1]) return;
 
-    handleGetMostSoldProducts();
+    handleGetMostSoldCategories();
   }, [selectedStore, debouncedSearch, dates, period]);
 
   return (
     <DataAccordion
-      title={dict.productsDict.soldProducts.title}
-      icon="pi pi-shopping-cart"
+      title={dict.productsDict.categoriesSection.title}
+      icon="pi pi-tag"
     >
       <section className="flex flex-column gap-2">
-        <div className="flex flex-row gap-2">
+        <span className="flex flex-row gap-2">
           <span className="p-input-icon-left">
             <i className="pi pi-search" />
             <InputText
-              placeholder="Pesquisar produtos"
+              placeholder="Pesquisar categorias"
               onChange={(e) => setSearch(e.target.value)}
             />
           </span>
-          <PeriodSelect
-            value={period}
-            onChange={(e) => setPeriod(e.value)}
-            disabled={loading}
-          />
+          <PeriodSelect value={period} onChange={(e) => setPeriod(e.value)} />
           <TimeSelect
             value={dates}
             onChange={(e) => setDates(e.value)}
             dateFormat={period ?? "month"}
             view={getCalendarView(period ?? "month")}
-            disabled={loading}
             showIcon
             key={period}
           />
-        </div>
-        {loading && (
-          <div className="flex flex-row align-items-center w-full p-4">
-            <ProgressSpinner style={{ width: "50px", height: "50px" }} />
+        </span>
+
+        {!loading && chartData.length === 0 && (
+          <div className="w-full">
+            <p className="flex flex-row align-items-center justify-content-center w-full p-4 text-center">
+              {dict.noData}
+            </p>
           </div>
         )}
-        {!loading && chartData.length > 0 && (
-          <div className="flex flex-row w-full align-items-center">
-            <span className="w-full md:w-9">
-              <MostSoldProductsChart
+        <div className="flex flex-row w-full">
+          <section className="w-9">
+            {loading && (
+              <div className="flex flex-row align-items-center w-full p-4">
+                <ProgressSpinner style={{ width: "50px", height: "50px" }} />
+              </div>
+            )}
+            {!loading && chartData.length > 0 && (
+              <MostSoldCategories
                 data={chartData}
                 chartLabels={handleGetChartLabels(
                   period ?? "month",
@@ -186,17 +187,20 @@ export default function MostSoldProductsSection() {
                   debouncedSearch.length > 3 ? debouncedSearch : undefined
                 }
               />
-            </span>
-            <span className="hidden md:flex md:w-3">
-              <ProductsList products={products} />
-            </span>
-          </div>
-        )}
-        {!loading && chartData.length === 0 && (
-          <p className="flex flex-row align-items-center justify-content-center w-full p-4 text-center">
-            {dict.noData}
-          </p>
-        )}
+            )}
+          </section>
+          {!loading && chartData.length > 0 && (
+            <div className="flex flex-column w-3 gap-2">
+              <SellingRate
+                labels={chartData.map((item) => item.label)}
+                data={chartData.map((item) =>
+                  item.data.reduce((acc, curr) => acc + curr, 0)
+                )}
+              />
+              <TotalCategories />
+            </div>
+          )}
+        </div>
       </section>
     </DataAccordion>
   );

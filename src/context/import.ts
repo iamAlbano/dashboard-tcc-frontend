@@ -21,6 +21,18 @@ export type SalesColumnsType = {
   date: string | null;
 };
 
+export type CustomersColumnsType = {
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  birthday: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  zipCode: string | null;
+};
+
 export type ImportState = {
   openedModal: boolean;
   selectedModule: Module | null;
@@ -29,8 +41,11 @@ export type ImportState = {
   setSelectedModule: (module: Module | null) => void;
   isUploading: boolean;
   setIsUploading: (isUploading: boolean) => void;
+
   productsFile: File | null;
   salesFile: File | null;
+  customersFile: File | null;
+
   setFile: (type: string, file: File | null) => void;
 
   importFile: (store_id: string) => Promise<any>;
@@ -39,6 +54,8 @@ export type ImportState = {
   setProductsColumns: (columns: ProductsColumnsType) => void;
   salesColumns: SalesColumnsType;
   setSalesColumns: (columns: SalesColumnsType) => void;
+  customersColumns: CustomersColumnsType;
+  setCustomersColumns: (columns: CustomersColumnsType) => void;
 };
 
 export const useImport = create<ImportState>((set) => ({
@@ -51,6 +68,7 @@ export const useImport = create<ImportState>((set) => ({
   setIsUploading: (isUploading: boolean) => set({ isUploading: isUploading }),
   productsFile: null,
   salesFile: null,
+  customersFile: null,
   setFile: (type: string, file: File | null) => setFile(type, file),
   importFile: (store_id: string) => importFile(store_id),
 
@@ -78,6 +96,22 @@ export const useImport = create<ImportState>((set) => ({
   setSalesColumns: (columns: SalesColumnsType) => {
     set({ salesColumns: columns });
   },
+
+  customersColumns: {
+    name: null,
+    email: null,
+    phone: null,
+    birthday: null,
+    address: null,
+    city: null,
+    state: null,
+    country: null,
+    zipCode: null,
+  },
+
+  setCustomersColumns: (columns: CustomersColumnsType) => {
+    set({ customersColumns: columns });
+  },
 }));
 
 function handleOpenModal(module: Module | undefined) {
@@ -89,6 +123,7 @@ function handleCloseModal() {
     openedModal: false,
     selectedModule: null,
     productsFile: null,
+    customersFile: null,
     salesFile: null,
   });
 }
@@ -101,17 +136,27 @@ function setFile(type: string, file: File | null) {
     case "sales":
       useImport.setState({ salesFile: file });
       break;
+    case "customers":
+      useImport.setState({ customersFile: file });
+      break;
   }
 }
 
 async function importFile(store_id: string): Promise<any> {
   const productsFile = useImport.getState().productsFile;
+  const customersFile = useImport.getState().customersFile;
   const salesFile = useImport.getState().salesFile;
 
   useImport.setState({ openedModal: false });
-  await importProducts(store_id);
-  await importSales(store_id);
-  handleCloseModal();
+  try {
+    await importProducts(store_id);
+    await importCustomers(store_id);
+    await importSales(store_id);
+    handleCloseModal();
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 async function importSales(store_id: string) {
@@ -171,6 +216,46 @@ async function importProducts(store_id: string) {
       category: null,
       price: null,
       stock: null,
+    },
+  });
+}
+
+async function importCustomers(store_id: string) {
+  if (useImport.getState().isUploading) return;
+
+  const customersFile = useImport.getState().customersFile;
+  if (!customersFile) return;
+
+  const customersColumns = useImport.getState().customersColumns;
+
+  useImport.setState({ isUploading: true });
+  await api.importCustomers(
+    customersFile,
+    store_id,
+    customersColumns.name,
+    customersColumns.email,
+    customersColumns.phone,
+    customersColumns.birthday,
+    customersColumns.address,
+    customersColumns.city,
+    customersColumns.state,
+    customersColumns.country,
+    customersColumns.zipCode
+  );
+  useImport.setState({ isUploading: false });
+
+  useImport.setState({ customersFile: null });
+  useImport.setState({
+    customersColumns: {
+      name: null,
+      email: null,
+      phone: null,
+      birthday: null,
+      address: null,
+      city: null,
+      state: null,
+      country: null,
+      zipCode: null,
     },
   });
 }

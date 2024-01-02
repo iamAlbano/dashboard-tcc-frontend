@@ -99,20 +99,53 @@ const api = {
       });
   },
   async getProducts(
+    store_id: string,
     page: number,
     limit: number,
     search?: string | null
   ): Promise<AxiosResponse> {
     return request
-      .get(`/product/get?page=${page}&limit=${limit}&search=${search}`)
+      .get(
+        `/product/get?store_id=${store_id}&page=${page}&limit=${limit}&search=${search}`
+      )
       .catch((error) => {
         return error?.response;
       });
   },
-  async getProductsResume(): Promise<AxiosResponse> {
-    return request.get("/product/resume").catch((error) => {
-      return error?.response;
-    });
+  async getProductsResume(store_id: string): Promise<AxiosResponse> {
+    return request
+      .get(`/product/resume?store_id=${store_id}`)
+      .catch((error) => {
+        return error?.response;
+      });
+  },
+  async getCustomers(
+    store_id: string,
+    page: number,
+    limit: number,
+    search?: string | null
+  ): Promise<AxiosResponse> {
+    return request
+      .get(
+        `/customer/get?store_id=${store_id}&page=${page}&limit=${limit}&search=${search}`
+      )
+      .catch((error) => {
+        return error?.response;
+      });
+  },
+  async getCustomersStates(store_id: string): Promise<AxiosResponse> {
+    return request
+      .get(`/customer/states?store_id=${store_id}`)
+      .catch((error) => {
+        return error?.response;
+      });
+  },
+  async getCustomersResume(store_id: string): Promise<AxiosResponse> {
+    return request
+      .get(`/customer/resume?store_id=${store_id}`)
+      .catch((error) => {
+        return error?.response;
+      });
   },
   async getMostSoldProducts(
     store_id: string,
@@ -178,6 +211,37 @@ const api = {
         category_column,
         price_column,
         stock_column,
+      })
+      .catch((error) => {
+        return error?.response;
+      });
+  },
+  async importCustomers(
+    customers_file: File,
+    store_id: string,
+    name_column: string | null,
+    email_column?: string | null,
+    phone_column?: string | null,
+    birthday_column?: string | null,
+    address_column?: string | null,
+    city_column?: string | null,
+    state_column?: string | null,
+    country_column?: string | null,
+    zip_code_column?: string | null
+  ): Promise<AxiosResponse> {
+    return fileRequest
+      .post("/import/customers", {
+        file: customers_file,
+        store_id,
+        name_column,
+        email_column,
+        phone_column,
+        birthday_column,
+        address_column,
+        city_column,
+        state_column,
+        country_column,
+        zip_code_column,
       })
       .catch((error) => {
         return error?.response;

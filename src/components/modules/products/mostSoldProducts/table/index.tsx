@@ -37,7 +37,7 @@ export default function ProductsList({ ...props }: ProductListProps) {
                   <i className="pi pi-shopping-cart" />
                   <span>
                     Total vendido no período
-                    <strong>{product.totalSold}</strong>
+                    <strong>{product?.totalSold?.toFixed(2)}</strong>
                   </span>
                 </p>
               )}

@@ -1,4 +1,4 @@
-export type Module = "products" | "sales";
+export type Module = "products" | "sales" | "customers";
 
 export type Period = "year" | "month" | "week" | "day";
 

@@ -66,8 +66,8 @@ export default function Topbar() {
         )}
         <Avatar />
         <SelectStore />
-        <LanguageSelect />
-        <ThemeSwitch />
+        {/* <LanguageSelect />
+        <ThemeSwitch /> */}
         <Button icon="pi pi-sign-out" onClick={handleLogout} text rounded />
       </span>
     </nav>

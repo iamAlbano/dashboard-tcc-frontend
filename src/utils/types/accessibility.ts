@@ -20,6 +20,7 @@ export type Dict = {
   time: TimeDict;
   import: ImportDict;
   productsDict: ProductsDict;
+  customersDict: CustomersDict;
   salesDict: SalesDict;
   store: StoreDict;
 };

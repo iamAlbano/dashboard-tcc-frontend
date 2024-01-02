@@ -2,6 +2,7 @@
 import DataAccordion from "@/components/modules/dataAccordion";
 import { useAccessibility } from "@/context/accessibility";
 import { useProduct } from "@/context/product";
+import { useStore } from "@/context/store";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { useEffect, useState } from "react";
 import Table from "./table";
@@ -12,20 +13,25 @@ export default function ProductsTableSection() {
   const { getDict } = useAccessibility();
   const dict = getDict();
 
+  const { selectedStore } = useStore();
   const { products, setProducts } = useProduct();
 
+  const [totalProducts, setTotalProducts] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
   async function getProducts(page?: number) {
+    if (!selectedStore?.id) return;
+
     setLoading(true);
-    const { data } = await api.getProducts(page ?? 1, 10);
+    const { data } = await api.getProducts(selectedStore?.id, page ?? 1, 10);
     setProducts(data?.products ?? []);
+    setTotalProducts(data?.total_products ?? 0);
     setLoading(false);
   }
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [selectedStore]);
 
   return (
     <DataAccordion
@@ -33,19 +39,16 @@ export default function ProductsTableSection() {
       icon="pi pi-box"
     >
       <>
-        {loading && (
+        {loading && products?.length === 0 && (
           <div className="flex justify-center items-center">
             <ProgressSpinner />
           </div>
         )}
-        {!loading && products.length > 0 && (
-          <Table onPageChange={(page: number) => getProducts(page)} />
-        )}
-        {!loading && !products.length && (
-          <p className="text-center">
-            Nenhum produto cadastrado, faça a importação de seus dados para
-            visualizar as informações.
-          </p>
+        {!loading && (
+          <Table
+            totalProducts={totalProducts}
+            onPageChange={(page: number) => getProducts(page)}
+          />
         )}
       </>
     </DataAccordion>

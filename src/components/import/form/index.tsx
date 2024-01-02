@@ -2,6 +2,7 @@ import Upload from "@/components/import/upload";
 import { notify } from "@/components/utils/toast";
 import { useAccessibility } from "@/context/accessibility";
 import {
+  CustomersColumnsType,
   ProductsColumnsType,
   SalesColumnsType,
   useImport,
@@ -23,17 +24,27 @@ export default function ImportModal() {
     setProductsColumns,
     salesColumns,
     setSalesColumns,
+    customersColumns,
+    setCustomersColumns,
     selectedModule,
     setSelectedModule,
     productsFile,
     salesFile,
+    customersFile,
   } = useImport();
 
   const dict = getDict();
 
+  const moduleColumns = {
+    products: productsColumns,
+    sales: salesColumns,
+    customers: customersColumns,
+  };
+
   const [columns, setColumns] = useState<
-    ProductsColumnsType | SalesColumnsType
-  >(selectedModule === "products" ? productsColumns : salesColumns);
+    ProductsColumnsType | SalesColumnsType | CustomersColumnsType
+  >(selectedModule ? moduleColumns[selectedModule] : salesColumns);
+
   const [fileColumns, setFileColumns] = useState<string[]>([]);
   const [fileRows, setFileRows] = useState<any[]>([]);
 
@@ -48,7 +59,7 @@ export default function ImportModal() {
 
   useEffect(() => {
     handleGetFileColumns();
-  }, [productsFile, salesFile]);
+  }, [productsFile, salesFile, customersFile]);
 
   useEffect(() => {
     if (fileColumns.length === 0) return;
@@ -77,7 +88,7 @@ export default function ImportModal() {
     if (selectedModule === "sales") {
       const columns = {
         product:
-          productNameColumns.find((col) => fileColumns.includes(col)) ?? null,
+          saleProductColumns.find((col) => fileColumns.includes(col)) ?? null,
         quantity:
           productStockColumns.find((col) => fileColumns.includes(col)) ?? null,
         price: productPriceColumns.find((col) => fileColumns.includes(col)),
@@ -94,6 +105,43 @@ export default function ImportModal() {
       setSalesColumns(columns as SalesColumnsType);
       return;
     }
+
+    if (selectedModule === "customers") {
+      const columns = {
+        name:
+          customerNameColumns.find((col) => fileColumns.includes(col)) ?? null,
+        email:
+          customerEmailColumns.find((col) => fileColumns.includes(col)) ?? null,
+        phone:
+          customerPhoneColumns.find((col) => fileColumns.includes(col)) ?? null,
+        birthday:
+          customerBirthdayColumns.find((col) => fileColumns.includes(col)) ??
+          null,
+        address:
+          customerAddressColumns.find((col) => fileColumns.includes(col)) ??
+          null,
+        city:
+          customerCityColumns.find((col) => fileColumns.includes(col)) ??
+          customerAddressColumns.find((col) => fileColumns.includes(col)) ??
+          null,
+        state:
+          customerStateColumns.find((col) => fileColumns.includes(col)) ??
+          customerAddressColumns.find((col) => fileColumns.includes(col)) ??
+          null,
+        country:
+          customerCountryColumns.find((col) => fileColumns.includes(col)) ??
+          customerAddressColumns.find((col) => fileColumns.includes(col)) ??
+          null,
+        zipCode:
+          customerZipCodeColumns.find((col) => fileColumns.includes(col)) ??
+          customerAddressColumns.find((col) => fileColumns.includes(col)) ??
+          null,
+      };
+
+      setColumns(columns as CustomersColumnsType);
+      setCustomersColumns(columns as CustomersColumnsType);
+      return;
+    }
   }, [fileColumns]);
 
   const handleGetFileColumns = () => {
@@ -105,6 +153,9 @@ export default function ImportModal() {
         break;
       case "sales":
         file = salesFile;
+        break;
+      case "customers":
+        file = customersFile;
         break;
     }
 
@@ -176,6 +227,9 @@ export default function ImportModal() {
       case "sales":
         setSalesColumns(newColumns as SalesColumnsType);
         break;
+      case "customers":
+        setCustomersColumns(newColumns as CustomersColumnsType);
+        break;
     }
   };
 
@@ -185,7 +239,21 @@ export default function ImportModal() {
         return dict.productsDict.columns[column as keyof ProductsColumnsType];
       case "sales":
         return dict.salesDict.columns[column as keyof SalesColumnsType];
+      case "customers":
+        return dict.customersDict.columns[column as keyof CustomersColumnsType];
     }
+  };
+
+  const isValidColumns = (column: string) => {
+    const columnValue: string = columns[column as keyof typeof columns];
+
+    if (column === "name" && selectedModule === "products")
+      return columnValue?.length > 0;
+
+    if (column === "product" && selectedModule === "sales")
+      return columnValue?.length > 0;
+
+    return true;
   };
 
   return (
@@ -202,7 +270,7 @@ export default function ImportModal() {
             <Tooltip target=".custom-target-icon" />
           </span>
           <span className="flex flex-row flex-wrap gap-2">
-            {Object.keys(columns).map((column) => {
+            {Object.keys(columns).map((column: any) => {
               return (
                 <div className="flex flex-column gap-1" key={column}>
                   <label htmlFor={column}>{getColumnName(column)}</label>
@@ -211,13 +279,7 @@ export default function ImportModal() {
                     options={fileColumns}
                     value={columns[column as keyof typeof columns]}
                     onChange={(e) => handleSetColumn(column, e.value)}
-                    className={`${
-                      ((column === "name" &&
-                        !columns[column as keyof typeof columns]?.length) ||
-                        (column === "product" &&
-                          !columns[column as keyof typeof columns]?.length)) &&
-                      "border-red-500"
-                    }`}
+                    className={`${!isValidColumns(column) ? "p-invalid" : ""}`}
                     showClear
                   />
                 </div>
@@ -305,6 +367,7 @@ const productCategoryColumns = [
   "product category",
   "categoria do produto",
   "product category",
+  "product_category_name",
 ];
 const productPriceColumns = [
   "price",
@@ -335,9 +398,27 @@ const productStockColumns = [
   "quantidade do produto",
 ];
 
+const saleProductColumns = [
+  "product",
+  "produto",
+  "product_name",
+  "nome_produto",
+  "product_name",
+  "nome_produto",
+  "nome do produto",
+  "product name",
+  "nome do produto",
+  "product name",
+  "product_id",
+  "id_produto",
+];
+
 const saleCustomerColumns = [
   "customer",
   "cliente",
+  "customer_id",
+  "client_id",
+  "id_cliente",
   "customer_name",
   "nome_cliente",
   "customer_name",
@@ -359,6 +440,8 @@ const saleSellerColumns = [
   "seller name",
   "nome do vendedor",
   "seller name",
+  "seller_id",
+  "id_vendedor",
 ];
 
 const saleStatusColumns = [
@@ -385,4 +468,387 @@ const dateColumns = [
   "sale date",
   "data da venda",
   "sale date",
+];
+
+const customerNameColumns = [
+  "name",
+  "nome",
+  "customer_name",
+  "nome_cliente",
+  "customer_name",
+  "nome_cliente",
+  "nome do cliente",
+  "customer name",
+  "nome do cliente",
+  "customer name",
+  "client",
+  "cliente",
+  "client name",
+  "comprador",
+  "comprado por",
+  "cliente:",
+  "comprador:",
+  "comprado por:",
+  "nome do comprador",
+  "nome do comprador:",
+  "nome do cliente:",
+];
+
+const customerEmailColumns = [
+  "email",
+  "email",
+  "customer_email",
+  "email_cliente",
+  "customer_email",
+  "email_cliente",
+  "email do cliente",
+  "customer email",
+  "email do cliente",
+  "customer email",
+  "email",
+  "email",
+  "email do cliente:",
+];
+
+const customerPhoneColumns = [
+  "phone",
+  "telefone",
+  "customer_phone",
+  "telefone_cliente",
+  "customer_phone",
+  "telefone_cliente",
+  "telefone do cliente",
+  "customer phone",
+  "telefone do cliente",
+  "customer phone",
+  "telefone",
+  "telefone",
+  "telefone do cliente:",
+  "contato",
+  "contato do cliente",
+  "contato do cliente:",
+  "telefone do contato",
+  "telefone do contato:",
+  "telefone do comprador",
+  "telefone do comprador:",
+  "celular",
+  "numero do celular",
+  "numero do celular:",
+  "numero do telefone",
+  "numero do telefone:",
+  "celular do cliente",
+  "celular do cliente:",
+  "celular do comprador",
+  "celular do comprador:",
+  "numero do celular do cliente",
+  "numero do celular do cliente:",
+  "numero do celular do comprador",
+  "numero do celular do comprador:",
+];
+
+const customerBirthdayColumns = [
+  "birthday",
+  "aniversario",
+  "customer_birthday",
+  "aniversario_cliente",
+  "customer_birthday",
+  "aniversario_cliente",
+  "aniversario do cliente",
+  "customer birthday",
+  "aniversario do cliente",
+  "customer birthday",
+  "aniversario",
+  "aniversario",
+  "aniversario do cliente:",
+  "data de nascimento",
+  "data de nascimento:",
+  "data de aniversario",
+  "data de aniversario:",
+  "data de aniversário",
+  "data de aniversário:",
+  "data de nascimento do cliente",
+  "data de nascimento do cliente:",
+  "data de nascimento do comprador",
+  "data de nascimento do comprador:",
+  "data de aniversario do cliente",
+  "data de aniversario do cliente:",
+  "data de aniversario do comprador",
+  "data de aniversario do comprador:",
+  "data de aniversário do cliente",
+  "data de aniversário do cliente:",
+  "data de aniversário do comprador",
+  "data de aniversário do comprador:",
+];
+
+const customerAddressColumns = [
+  "address",
+  "endereco",
+  "endreço",
+  "customer_address",
+  "endereco_cliente",
+  "customer_address",
+  "endereco_cliente",
+  "endereco do cliente",
+  "customer address",
+  "endereco do cliente",
+  "customer address",
+  "endereco",
+  "endereco do cliente:",
+  "endereco do comprador",
+  "endereco do comprador:",
+  "endereco do contato",
+  "endereco do contato:",
+  "endereco do cliente",
+  "endereco do cliente:",
+  "endereco do comprador",
+  "endereco do comprador:",
+  "endereco do contato",
+  "endereco do contato:",
+  "endereco do cliente:",
+  "endereco do comprador:",
+  "endereco do contato:",
+  "endereco do cliente",
+  "endereco do comprador",
+  "endereco do contato",
+  "endereco do cliente:",
+  "endereco do comprador:",
+  "endereco do contato:",
+  "endereco do cliente",
+  "endereco do comprador",
+  "endereco do contato",
+  "endereco do cliente:",
+  "endereco do comprador:",
+  "endereco do contato:",
+  "endereco do cliente",
+  "endereco do comprador",
+  "endereco do contato",
+  "endereco do cliente:",
+  "endereco do comprador:",
+  "endereco do contato:",
+  "endereco do cliente",
+  "endereco do comprador",
+  "endereco do contato",
+  "endereco do cliente:",
+  "endereco do comprador:",
+  "endereco do contato:",
+  "endereco do cliente",
+  "endereco do comprador",
+  "endereco do contato",
+  "endereco do cliente:",
+  "endereco do comprador:",
+  "endereco do contato:",
+  "endereco do cliente",
+  "endereco do comprador",
+  "endereco do contato",
+  "endereco do cliente:",
+  "endereco do comprador:",
+  "endereco do contato:",
+  "endereco do cliente",
+  "endereco do comprador",
+  "endereco do contato",
+  "endereco do cliente:",
+  "endereco do comprador:",
+  "endereco do contato:",
+];
+
+const customerCityColumns = [
+  "city",
+  "cidade",
+  "customer_city",
+  "cidade_cliente",
+  "customer_city",
+  "cidade_cliente",
+  "cidade do cliente",
+  "customer city",
+  "cidade do cliente",
+  "customer city",
+  "cidade",
+  "cidade do cliente:",
+  "cidade do comprador",
+  "cidade do comprador:",
+  "cidade do contato",
+  "cidade do contato:",
+  "cidade do cliente",
+  "cidade do cliente:",
+  "cidade do comprador",
+  "cidade do comprador:",
+  "cidade do contato",
+  "cidade do contato:",
+  "cidade do cliente:",
+  "cidade do comprador:",
+  "cidade do contato:",
+  "cidade do cliente",
+  "cidade do comprador",
+  "cidade do contato",
+  "cidade do cliente:",
+  "cidade do comprador:",
+  "cidade do contato:",
+  "cidade do cliente",
+  "cidade do comprador",
+  "cidade do contato",
+  "cidade do cliente:",
+  "cidade do comprador:",
+  "cidade do contato:",
+  "cidade do cliente",
+  "cidade do comprador",
+  "cidade do contato",
+  "cidade do cliente:",
+  "cidade do comprador:",
+  "cidade do contato:",
+  "cidade do cliente",
+  "cidade do comprador",
+  "cidade do contato",
+  "cidade do cliente:",
+  "cidade do comprador:",
+  "cidade do contato:",
+  "cidade do cliente",
+  "cidade do comprador",
+  "cidade do contato",
+  "cidade do cliente:",
+  "cidade do comprador:",
+  "cidade do contato:",
+];
+
+const customerStateColumns = [
+  "state",
+  "estado",
+  "customer_state",
+  "estado_cliente",
+  "customer_state",
+  "estado_cliente",
+  "estado do cliente",
+  "customer state",
+  "estado do cliente",
+  "customer state",
+  "estado",
+  "estado do cliente:",
+  "estado do comprador",
+  "estado do comprador:",
+  "estado do contato",
+  "estado do contato:",
+  "estado do cliente",
+  "estado do cliente:",
+  "estado do comprador",
+  "estado do comprador:",
+  "estado do contato",
+  "estado do contato:",
+  "estado do cliente:",
+  "estado do comprador:",
+  "estado do contato:",
+  "estado do cliente",
+  "estado do comprador",
+  "estado do contato",
+  "estado do cliente:",
+  "estado do comprador:",
+  "estado do contato:",
+  "estado do cliente",
+  "estado do comprador",
+  "estado do contato",
+  "estado do cliente:",
+  "estado do comprador:",
+  "estado do contato:",
+  "estado do cliente",
+  "estado do comprador",
+  "estado do contato",
+  "estado do cliente:",
+  "estado do comprador:",
+  "estado do contato:",
+  "estado do cliente",
+  "estado do comprador",
+  "estado do contato",
+  "estado do cliente:",
+  "estado do comprador:",
+  "estado do contato:",
+];
+
+const customerCountryColumns = [
+  "country",
+  "pais",
+  "customer_country",
+  "pais_cliente",
+  "customer_country",
+  "pais_cliente",
+  "pais do cliente",
+  "customer country",
+  "pais do cliente",
+  "customer country",
+  "pais",
+  "pais do cliente:",
+  "pais do comprador",
+  "pais do comprador:",
+  "pais do contato",
+  "pais do contato:",
+  "pais do cliente",
+  "pais do cliente:",
+  "pais do comprador",
+  "pais do comprador:",
+  "pais do contato",
+  "pais do contato:",
+  "pais do cliente:",
+  "pais do comprador:",
+  "pais do contato:",
+  "pais do cliente",
+  "pais do comprador",
+  "pais do contato",
+  "pais do cliente:",
+  "pais do comprador:",
+  "pais do contato:",
+  "pais do cliente",
+  "pais do comprador",
+  "pais do contato",
+  "pais do cliente:",
+  "pais do comprador:",
+  "pais do contato:",
+  "pais do cliente",
+  "pais do comprador",
+  "pais do contato",
+  "pais do cliente:",
+  "pais do comprador:",
+  "pais do contato:",
+];
+
+const customerZipCodeColumns = [
+  "zip_code",
+  "cep",
+  "customer_zip_code",
+  "cep_cliente",
+  "customer_zip_code",
+  "cep_cliente",
+  "cep do cliente",
+  "customer zip code",
+  "cep do cliente",
+  "customer zip code",
+  "cep",
+  "cep do cliente:",
+  "cep do comprador",
+  "cep do comprador:",
+  "cep do contato",
+  "cep do contato:",
+  "cep do cliente",
+  "cep do cliente:",
+  "cep do comprador",
+  "cep do comprador:",
+  "cep do contato",
+  "cep do contato:",
+  "cep do cliente:",
+  "cep do comprador:",
+  "cep do contato:",
+  "cep do cliente",
+  "cep do comprador",
+  "cep do contato",
+  "cep do cliente:",
+  "cep do comprador:",
+  "cep do contato:",
+  "cep do cliente",
+  "cep do comprador",
+  "cep do contato",
+  "cep do cliente:",
+  "cep do comprador:",
+  "cep do contato:",
+  "cep do cliente",
+  "cep do comprador",
+  "cep do contato",
+  "cep do cliente:",
+  "cep do comprador:",
+  "cep do contato:",
 ];

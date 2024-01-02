@@ -31,10 +31,10 @@ export default function Login() {
       >
         <span className="flex flex-row w-full justify-content-between align-items-center">
           <h1 className="text-center text-primary">Login</h1>
-          <div className="flex flex-row justify-content-end align-items-center">
+          {/* <div className="flex flex-row justify-content-end align-items-center">
             <ThemeSwitch />
             <LanguageSelect />
-          </div>
+          </div> */}
         </span>
         <LoginForm className="gap-2" />
         <span className="flex flex-row align-items-center justify-content-center py-3">

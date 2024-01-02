@@ -3,10 +3,11 @@
 import { useAccessibility } from "@/context/accessibility";
 
 import { Period } from "@/utils/types/globals";
+import { endOfMonth, startOfMonth } from "date-fns";
+import { addLocale } from "primereact/api";
 import { Calendar } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
-
-import { addLocale } from "primereact/api";
+import { useState } from "react";
 
 const getFormat = {
   day: "dd",
@@ -15,7 +16,7 @@ const getFormat = {
   year: "yy",
 };
 
-type IProps = {
+type TimeSelectProps = {
   value: Nullable<(Date | null)[]> | null;
   onChange: (e: any) => void;
   selectionMode?: "single" | "range";
@@ -26,8 +27,12 @@ type IProps = {
   disabled?: boolean;
 };
 
-export default function TimeSelect({ ...props }: IProps) {
+export default function TimeSelect({ ...props }: TimeSelectProps) {
   const { language } = useAccessibility();
+
+  const [dates, setDates] = useState<Nullable<(Date | null)[]>>(
+    props?.value ?? null
+  );
 
   addLocale("pt", {
     firstDayOfWeek: 1,
@@ -74,10 +79,30 @@ export default function TimeSelect({ ...props }: IProps) {
     clear: "Limpar",
   });
 
+  const handleChange = (e: any) => {
+    setDates(e.value);
+
+    if (!e.value[1]) return;
+
+    let startDate = e.value[0];
+    let endDate = e.value[1];
+    if (props.view === "month") {
+      startDate = startOfMonth(e.value[0]);
+      startDate.setHours(0, 0, 0, 0);
+      endDate = endOfMonth(e.value[1]);
+    } else if (props.view === "year" && e.value[1]) {
+      endDate = new Date(e.value[1].getFullYear(), 11, 31, 23, 59, 59, 999);
+    }
+
+    e.value[0] = startDate;
+    e.value[1] = endDate;
+    props.onChange(e);
+  };
+
   return (
     <Calendar
-      value={props.value}
-      onChange={(e: any) => props.onChange(e)}
+      value={dates}
+      onChange={(e: any) => handleChange(e)}
       selectionMode="range"
       className={props.className}
       view={props.view ?? undefined}

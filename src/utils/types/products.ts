@@ -16,7 +16,7 @@ type ProductCardsDict = {
   products: string;
   categories: string;
   sold: string;
-  review: string;
+  average_price: string;
 };
 
 type SoldProductsDict = {

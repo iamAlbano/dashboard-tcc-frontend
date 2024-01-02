@@ -33,7 +33,14 @@ export default function ImportModal() {
 
     if (!selectedStore?.id) return;
 
-    await importFile(selectedStore?.id);
+    const imported = await importFile(selectedStore?.id);
+
+    if (!imported) {
+      notify(
+        "Houve um erro ao importar o arquivo, tente novamente mais tarde",
+        "error"
+      );
+    }
   };
 
   const footerContent = (

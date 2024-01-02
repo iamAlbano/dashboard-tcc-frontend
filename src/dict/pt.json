@@ -69,6 +69,17 @@
       "search": "Pesquisar por produtos",
       "noData": "Nenhum produto cadastrado, crie ou importe para visualizar os dados",
       "deleteConfirmation": "Tem certeza que deseja deletar este produto?"
+    },
+    "customers": {
+      "title": "Clientes",
+      "description": "Visualize insights detalhados sobre seus clientes",
+      "icon": "pi pi-users",
+      "add": "Adicionar Cliente",
+      "edit": "Editar Cliente",
+      "delete": "Deletar Cliente",
+      "search": "Pesquisar por clientes",
+      "noData": "Nenhum cliente cadastrado, crie ou importe para visualizar os dados",
+      "deleteConfirmation": "Tem certeza que deseja deletar este cliente?"
     }
   },
   "time": {
@@ -103,12 +114,25 @@
       "date": "Data"
     }
   },
+  "customersDict": {
+    "columns": {
+      "name": "Nome",
+      "phone": "Telefone",
+      "email": "E-mail",
+      "birthday": "Data de Nascimento",
+      "address": "Endereço",
+      "city": "Cidade",
+      "state": "Estado",
+      "country": "País",
+      "zipCode": "CEP"
+    }
+  },
   "productsDict": {
     "cards": {
       "products": "Produtos cadastrados",
       "categories": "Categorias",
       "sold": "Produtos vendidos este mês",
-      "review": "Nota média dos produtos"
+      "average_price": "Preço médio dos produtos"
     },
     "soldProducts": {
       "title": "Produtos mais vendidos",

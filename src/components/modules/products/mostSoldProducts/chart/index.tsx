@@ -11,14 +11,17 @@ export type chartData = {
   data: number[];
 };
 
-type IProps = {
+type MostSoldProductsChartProps = {
   search?: string;
   dates?: (Date | null)[];
   data: chartData[];
   chartLabels?: string[];
+  totalSoldData?: number[];
 };
 
-export default function MostSoldProductsChart({ ...props }: IProps) {
+export default function MostSoldProductsChart({
+  ...props
+}: MostSoldProductsChartProps) {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
 
@@ -38,15 +41,14 @@ export default function MostSoldProductsChart({ ...props }: IProps) {
             .toLowerCase()
             .includes(props.search?.toLowerCase() ?? "")
         ),
-        // TO DO - add total products sold
-        /* {
+        {
           type: "bar",
           label: "Total de produtos vendidos",
           backgroundColor: documentStyle.getPropertyValue("--blue-300"),
-          data: [61, 84, 84, 75, 97, 95, 84],
+          data: props.totalSoldData ?? [],
           borderColor: "white",
           borderWidth: 2,
-        }, */
+        },
       ],
     };
 

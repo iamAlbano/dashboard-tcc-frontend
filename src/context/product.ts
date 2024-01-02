@@ -1,7 +1,5 @@
 import { create } from "zustand";
 
-import productsData from "@/utils/data/products.json";
-
 import api from "@/server/api";
 
 type ProductState = {
@@ -26,7 +24,7 @@ type ProductState = {
 };
 
 export const useProduct = create<ProductState>((set) => ({
-  products: productsData,
+  products: [],
   setProducts: (products) => set({ products }),
   resume: [],
   setResume: (resume) => set({ resume }),
@@ -52,7 +50,7 @@ const getMostSoldProducts = async (
       5,
       periodGroup
     );
-    return data?.products;
+    return data;
   } catch (error) {
     return error;
   }

@@ -9,7 +9,7 @@ import { Tooltip } from "primereact/tooltip";
 import { Button } from "primereact/button";
 
 type IProps = {
-  module: "products";
+  module: "products" | "customers" | "sales";
   onCreate?: () => void;
 };
 

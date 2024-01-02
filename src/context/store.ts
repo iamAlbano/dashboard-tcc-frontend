@@ -48,7 +48,7 @@ const getUserStores = async (user_id: string) => {
 const createStore = async (name: string, users: string[]) => {
   try {
     const res = await api.createStore(name, users);
-    console.log(res);
+
     return res;
   } catch (error) {
     return error;
