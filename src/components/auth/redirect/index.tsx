@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Redirect() {
-  const { stores, isAuth } = useUser();
+  const { isAuth } = useUser();
   const pathname = usePathname();
   const router = useRouter();
 
