@@ -31,12 +31,12 @@ export function GetMenu(): menuOption[] {
     {
       label: dict["sidebar"]["sales"],
       icon: "pi pi-fw pi-shopping-cart",
-      route: "/dashboard/sales",
+      route: "/dashboard/vendas",
     },
-    {
+    /*   {
       label: dict["sidebar"]["import"],
       icon: "pi pi-fw pi-upload",
       route: "/dashboard/import",
-    },
+    }, */
   ];
 }

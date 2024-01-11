@@ -51,7 +51,7 @@ export default function Topbar() {
         ${openedSidebar ? styles.margin200 : styles.margin70}
       `}
       >
-        <Search />
+        {/* <Search /> */}
       </span>
       <span
         className={`

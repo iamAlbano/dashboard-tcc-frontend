@@ -1,46 +1,44 @@
 "use client";
 import DataAccordion from "@/components/modules/dataAccordion";
 import { useAccessibility } from "@/context/accessibility";
-import { useProduct } from "@/context/product";
+import { useSale } from "@/context/sale";
 import { useStore } from "@/context/store";
 import { useEffect, useState } from "react";
 import Table from "./table";
 
 import api from "@/server/api";
 
-export default function ProductsTableSection() {
+export default function SalesTableSection() {
   const { getDict } = useAccessibility();
   const dict = getDict();
 
   const { selectedStore } = useStore();
-  const { products, setProducts } = useProduct();
+  const { sales, setSales } = useSale();
 
-  const [totalProducts, setTotalProducts] = useState<number>(0);
+  const [totalSales, setTotalSales] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function getProducts(page?: number) {
+  async function handleGetSales(page?: number) {
     if (!selectedStore?.id) return;
 
     setLoading(true);
-    const { data } = await api.getProducts(selectedStore?.id, page ?? 1, 10);
-    setProducts(data?.products ?? []);
-    setTotalProducts(data?.total_products ?? 0);
+    const { data } = await api.getSales(selectedStore?.id, page ?? 1, 10);
+
+    setSales(data?.sales ?? []);
+    setTotalSales(data?.total_sales ?? 0);
     setLoading(false);
   }
 
   useEffect(() => {
-    getProducts();
+    handleGetSales();
   }, [selectedStore]);
 
   return (
-    <DataAccordion
-      title={dict.productsDict.productsTable.title}
-      icon="pi pi-box"
-    >
+    <DataAccordion title="Todas as vendas" icon="pi pi-shopping-cart">
       <Table
-        totalProducts={totalProducts}
+        totalSales={totalSales}
         isLoading={loading}
-        onPageChange={(page: number) => getProducts(page)}
+        onPageChange={(page: number) => handleGetSales(page)}
       />
     </DataAccordion>
   );

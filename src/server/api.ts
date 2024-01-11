@@ -193,6 +193,77 @@ const api = {
         return error?.response;
       });
   },
+  async getSalesResume(
+    store_id: string,
+    start_date = "2023-01-01",
+    end_date = "2023-12-31"
+  ): Promise<AxiosResponse> {
+    return request
+      .get(
+        `/sale/resume?store_id=${store_id}&start_date=${start_date}&end_date=${end_date}`
+      )
+      .catch((error) => {
+        return error?.response;
+      });
+  },
+  async getSales(
+    store_id: string,
+    page: number,
+    limit: number,
+    search?: string | null
+  ): Promise<AxiosResponse> {
+    return request
+      .get(
+        `/sale/get?store_id=${store_id}&page=${page}&limit=${limit}&search=${search}`
+      )
+      .catch((error) => {
+        return error?.response;
+      });
+  },
+  async getSalesByPeriod(
+    store_id: string,
+    query = "",
+    startDate = "2023-01-01",
+    endDate = "2023-12-31",
+    limit = 3,
+    periodGroup = "month"
+  ): Promise<AxiosResponse> {
+    return request
+      .get("/sale/get_by_period", {
+        params: {
+          store_id: store_id,
+          query: query,
+          start_date: startDate,
+          end_date: endDate,
+          limit: limit,
+          period_group: periodGroup,
+        },
+      })
+      .catch((error) => {
+        return error?.response;
+      });
+  },
+  async getTopProductsSoldTogether(
+    store_id: string,
+    startDate = "2023-01-01",
+    endDate = "2023-12-31",
+    limit = 3,
+    periodGroup = "month"
+  ): Promise<AxiosResponse> {
+    return request
+      .get("/sale/get_top_products_sold_together", {
+        params: {
+          store_id: store_id,
+          start_date: startDate,
+          end_date: endDate,
+          limit: limit,
+          period_group: periodGroup,
+        },
+      })
+      .catch((error) => {
+        return error?.response;
+      });
+  },
   async importProducts(
     products_file: File,
     store_id: string,

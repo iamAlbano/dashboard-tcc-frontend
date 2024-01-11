@@ -43,15 +43,17 @@ export default function ModuleHeader({ ...props }: IProps) {
           outlined={ theme === 'dark' }
           onClick={ props.onCreate }
         /> */}
-        <Button
-          label={`${dict?.import?.title} ${dict?.modules?.sales?.title}`}
-          icon="pi pi-upload"
-          severity="info"
-          outlined
-          disabled={isUploading}
-          loading={isUploading}
-          onClick={() => !isUploading && openImportModal("sales")}
-        />
+        {props.module !== "sales" && (
+          <Button
+            label={`${dict?.import?.title} ${dict?.modules?.sales?.title}`}
+            icon="pi pi-upload"
+            severity="info"
+            outlined
+            disabled={isUploading}
+            loading={isUploading}
+            onClick={() => !isUploading && openImportModal("sales")}
+          />
+        )}
         <Button
           label={`${dict?.import?.title} ${dict?.modules[props.module]?.title}`}
           icon="pi pi-upload"
