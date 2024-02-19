@@ -28,7 +28,6 @@ export default function PeriodSelect({ ...props }: IProps) {
       onChange={(e: DropdownChangeEvent) => props.onChange(e)}
       options={times}
       optionLabel="label"
-      style={{ backgroundColor: "transparent" }}
       className={props.className}
       disabled={props.disabled}
     />

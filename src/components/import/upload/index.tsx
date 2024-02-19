@@ -12,7 +12,6 @@ import {
 } from "primereact/fileupload";
 
 import { Button } from "primereact/button";
-import { Tag } from "primereact/tag";
 import { Tooltip } from "primereact/tooltip";
 
 export default function TemplateDemo() {
@@ -104,23 +103,17 @@ export default function TemplateDemo() {
   const itemTemplate = (inFile: object, props: ItemTemplateOptions) => {
     const file = inFile as File;
     return (
-      <div className="flex align-items-center flex-wrap">
-        <div className="flex align-items-center" style={{ width: "40%" }}>
-          <span className="flex flex-column text-left ml-3">
-            {file.name}
-            <small>{new Date().toLocaleDateString()}</small>
-          </span>
-        </div>
-        <Tag
-          value={props.formatSize}
-          severity="warning"
-          className="px-3 py-2"
-        />
+      <div className="flex flex-column align-items-center justify-content-center flex-wrap">
+        <p>
+          Não foi possível ler o arquivo selecionado. Verifique o formato do
+          arquivo e tente novamente.
+        </p>
         <Button
           type="button"
+          label="Remover arquivo"
           icon="pi pi-times"
-          className="p-button-outlined p-button-rounded p-button-danger ml-auto"
           onClick={() => onTemplateRemove(file, props.onRemove)}
+          className="p-button-outlined p-button-danger"
         />
       </div>
     );
@@ -138,11 +131,13 @@ export default function TemplateDemo() {
             color: "var(--surface-d)",
           }}
         ></i>
-        <span
-          style={{ fontSize: "1.2em", color: "var(--text-color-secondary)" }}
-          className="my-5"
-        >
-          {dict.import.uploadPlaceholder}
+        <span className="my-3">
+          <p className="text-center m-0">{dict.import.uploadPlaceholder}</p>
+
+          <p className="text-sm">
+            Para facilitar a importação, certifique-se que a planilha importada
+            esteja bem formatada.
+          </p>
         </span>
       </div>
     );

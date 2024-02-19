@@ -72,7 +72,6 @@ export default function CategoriesSection() {
         return;
       }
 
-      const periodAux = period ?? "month";
       const startDate = dates && dates[0] ? dates[0] : new Date("01/01/2023");
       const endDate = dates && dates[1] ? dates[1] : new Date("12/31/2023");
 
@@ -137,7 +136,7 @@ export default function CategoriesSection() {
 
   return (
     <DataAccordion
-      title={dict.productsDict.categoriesSection.title}
+      title="Categorias de produtos mais vendidas"
       icon="pi pi-tag"
     >
       <section className="flex flex-column gap-2">
@@ -197,7 +196,7 @@ export default function CategoriesSection() {
                   item.data.reduce((acc, curr) => acc + curr, 0)
                 )}
               />
-              <TotalCategories />
+              {/* <TotalCategories /> */}
             </div>
           )}
         </div>

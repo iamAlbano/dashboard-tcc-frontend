@@ -48,37 +48,46 @@ export default function MostPopularPlaces() {
 
   return (
     <DataAccordion title="Estados" icon="pi pi-map-marker">
-      {loading ? (
-        <div className="flex justify-center items-center">
-          <ProgressSpinner />
-        </div>
-      ) : (
-        <section className="flex flex-row gap-4">
-          <div className="w-8">
-            <StatesMap states={states} />
+      <>
+        {loading && (
+          <div className="flex justify-center items-center">
+            <ProgressSpinner />
           </div>
-          <div className="w-9 max-h-30rem overflow-auto w-full">
-            <table>
-              <thead>
-                <tr>
-                  <th>Estado</th>
-                  <th>Quantidade Total de Clientes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {states
-                  .sort((a, b) => b.value - a.value)
-                  .map((state) => (
-                    <tr key={state.name}>
-                      <td>{state.name}:</td>
-                      <td>{state.value}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+        )}
+
+        {!loading && states.length > 0 && (
+          <section className="flex flex-row gap-4">
+            <div className="w-8">
+              <StatesMap states={states} />
+            </div>
+            <div className="w-9 max-h-30rem overflow-auto w-full">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Estado</th>
+                    <th>Quantidade Total de Clientes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {states
+                    .sort((a, b) => b.value - a.value)
+                    .map((state) => (
+                      <tr key={state.name}>
+                        <td>{state.name}:</td>
+                        <td>{state.value}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+        {!loading && states.length === 0 && (
+          <div className="flex justify-content-center w-full">
+            <p>Não há dados para serem exibidos</p>
           </div>
-        </section>
-      )}
+        )}
+      </>
     </DataAccordion>
   );
 }

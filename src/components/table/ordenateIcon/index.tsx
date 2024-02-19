@@ -1,50 +1,54 @@
-'use client'
-import { useState } from 'react'
+"use client";
+import { useState } from "react";
 
-type IDirection = "up" | "down"
-type IType = "numeric" | "alpha" | "slash"
+export type Direction = "asc" | "desc";
+type Type = "numeric" | "alpha" | "slash";
 
 type IProps = {
-  column: string
-  direction?: IDirection
-  type?: IType
-  className?: string
-  onChange?: (column: string, direction: IDirection|undefined) => void
-}
+  column: string;
+  direction?: Direction;
+  type?: Type;
+  className?: string;
+  onChange?: (column: string, direction: Direction | undefined) => void;
+};
 
-export default function OrdenateIcon ({ ...props }: IProps) {
+export default function OrdenateIcon({ ...props }: IProps) {
+  const [type, setType] = useState<Type | undefined>(props.type);
+  const [direction, setDirection] = useState<Direction | undefined>(
+    props.direction
+  );
 
-  const [type, setType] = useState<IType|undefined>(props.type)
-  const [direction, setDirection] = useState<IDirection|undefined>(props.direction)
-
-  function getIcon () {
-    if (!direction) return `pi-sort-alt`
+  function getIcon() {
+    if (!direction) return `pi-sort-alt`;
 
     switch (type) {
       case "numeric":
-        return `pi-sort-numeric-${direction}`
+        return `pi-sort-numeric-${direction === "asc" ? "up" : "down"}`;
       case "alpha":
-        return `pi-sort-alpha-${direction}`
+        return `pi-sort-alpha-${direction === "asc" ? "up" : "down"}`;
       case "slash":
-        return `pi-sort-alt-slash`
+        return `pi-sort-alt-slash`;
       default:
-        return `pi-sort-amount-${direction}`
+        return `pi-sort-amount-${direction === "asc" ? "up" : "down"}`;
     }
   }
 
-  function changeDirection () {
-    const newDirection = 
-      direction === 'down' ? undefined : 
-        direction === undefined ? 'up' : 'down'
+  function changeDirection() {
+    const newDirection =
+      direction === "desc"
+        ? undefined
+        : direction === undefined
+        ? "asc"
+        : "desc";
 
-    setDirection(newDirection)
-    props.onChange?.(props.column, newDirection)
+    setDirection(newDirection);
+    props.onChange?.(props.column, newDirection);
   }
 
   return (
-    <i 
-      className={`pi ${getIcon()} cursor-pointer ${props.className}`} 
+    <i
+      className={`pi ${getIcon()} cursor-pointer ${props.className}`}
       onClick={changeDirection}
     />
-  )
+  );
 }

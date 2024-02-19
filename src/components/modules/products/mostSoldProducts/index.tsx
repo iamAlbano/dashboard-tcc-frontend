@@ -2,18 +2,18 @@
 import { useProduct } from "@/context/product";
 import { useStore } from "@/context/store";
 import dynamic from "next/dynamic";
-import { useDebounce } from "primereact/hooks";
 import { useEffect, useState } from "react";
 
-import { Period } from "@/utils/types/globals";
+import { Period, type Option } from "@/utils/types/globals";
 import { Nullable } from "primereact/ts-helpers";
 
 import { useAccessibility } from "@/context/accessibility";
 
 import DataAccordion from "@/components/modules/dataAccordion";
+import CategoriesFilter from "@/components/utils/categoriesFilter";
+import SearchProducts from "@/components/utils/searchProduct";
 import PeriodSelect from "@/components/utils/time/periodSelect";
 import TimeSelect from "@/components/utils/time/timeSelect";
-import { InputText } from "primereact/inputtext";
 import { type chartData } from "./chart";
 
 const ProductsList = dynamic(() => import("./table"), { ssr: false });
@@ -36,7 +36,10 @@ export default function MostSoldProductsSection() {
   const { getDict, theme } = useAccessibility();
   const dict = getDict();
 
-  const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [productIds, setProductIds] = useState<string[]>([]);
+  const [productsList, setProductsList] = useState<Option[]>([]);
+
   const [period, setPeriod] = useState<Period | null>("month");
   const [dates, setDates] = useState<Nullable<(Date | null)[]>>([
     new Date("01/01/2023"), // format: mm/dd/yyyy
@@ -50,14 +53,16 @@ export default function MostSoldProductsSection() {
   const handleGetMostSoldProducts = async () => {
     if (!selectedStore?.id || !period || !dates || !dates[0] || !dates[1])
       return;
+
     setLoading(true);
     try {
       const data = await getMostSoldProducts(
         selectedStore?.id,
-        debouncedSearch.length > 3 ? debouncedSearch : "",
         dates && dates[0] ? parseDateToString(dates[0]) : "2023-01-01",
         dates && dates[1] ? parseDateToString(dates[1]) : "2023-12-31",
-        period ?? "month"
+        period ?? "month",
+        productIds,
+        categories
       );
 
       if (!data?.products.length) {
@@ -69,14 +74,16 @@ export default function MostSoldProductsSection() {
       }
 
       setProducts(
-        data?.products.map((item: any) => ({
-          name: item.product.name,
-          category: item.product.category,
-          totalSold: calculateTotalSold(item.sales) ?? 0,
-        }))
+        data?.products
+          .slice(0, colors.length)
+          .map((item: any, index: number) => ({
+            name: item.product.name,
+            category: item.product.category,
+            totalSold: calculateTotalSold(item.sales) ?? 0,
+            color: colors[index],
+          }))
       );
 
-      const periodAux = period ?? "month";
       const startDate = dates && dates[0] ? dates[0] : new Date("01/01/2023");
       const endDate = dates && dates[1] ? dates[1] : new Date("12/31/2023");
 
@@ -85,52 +92,34 @@ export default function MostSoldProductsSection() {
           data.total_sellings.map((selling: any) => selling?.total ?? 0)
         );
 
-      setChartData(
-        [
-          {
-            type: "line",
-            label: data?.products[0]?.product?.name,
-            borderColor: "rgba(235, 19, 32, 1)",
-            borderWidth: 2,
-            fill: false,
-            tension: 0.4,
-            data: handleGetPeriodChartData(
-              period ?? "month",
-              data?.products[0]?.sales,
-              startDate,
-              endDate
-            ),
-          },
-          {
-            type: "line",
-            label: data?.products[1]?.product?.name,
-            borderColor: "rgba(54, 62, 35, 1)",
-            borderWidth: 2,
-            fill: false,
-            tension: 0.4,
-            data: handleGetPeriodChartData(
-              period ?? "month",
-              data?.products[1]?.sales,
-              startDate,
-              endDate
-            ),
-          },
-          {
-            type: "line",
-            label: data?.products[2]?.product?.name,
-            borderColor: "rgba(255, 206, 86, 1)",
-            borderWidth: 2,
-            fill: false,
-            tension: 0.4,
-            data: handleGetPeriodChartData(
-              period ?? "month",
-              data?.products[2]?.sales,
-              startDate,
-              endDate
-            ),
-          },
-        ].filter((item) => item?.label !== undefined) as chartData[]
-      );
+      const newChartData = data.products
+        .slice(0, colors.length)
+        .map((product: any, index: number) => ({
+          type: "line",
+          label: product?.product?.name,
+          borderColor: colors[index],
+          borderWidth: 2,
+          fill: false,
+          tension: 0.4,
+          data: handleGetPeriodChartData(
+            period ?? "month",
+            product?.sales,
+            startDate,
+            endDate
+          ),
+        }))
+        .filter(
+          (item: (typeof newChartData)[number]) => item?.label !== undefined
+        ) as chartData[];
+
+      setChartData(newChartData);
+
+      const newProductsList = data?.products.map((item: any) => ({
+        label: item.product.name,
+        value: item.product.id,
+      }));
+
+      setProductsList(newProductsList);
     } catch (e) {
       setChartData([]);
       setProducts([]);
@@ -142,7 +131,7 @@ export default function MostSoldProductsSection() {
 
   useEffect(() => {
     handleGetMostSoldProducts();
-  }, [selectedStore, debouncedSearch, dates, period]);
+  }, [selectedStore, productIds, dates, period, categories]);
 
   return (
     <DataAccordion
@@ -150,14 +139,22 @@ export default function MostSoldProductsSection() {
       icon="pi pi-shopping-cart"
     >
       <section className="flex flex-column gap-2">
-        <div className="flex flex-row gap-2">
-          <span className="p-input-icon-left">
-            <i className="pi pi-search" />
-            <InputText
-              placeholder="Pesquisar produtos"
-              onChange={(e) => setSearch(e.target.value)}
+        <div className="flex flex-row gap-2 flex-wrap">
+          {productsList.length > 0 && (
+            <SearchProducts
+              initialProducts={productsList}
+              onChange={(productIds) => setProductIds(productIds)}
+              className="max-w-30rem w-full"
+              loading={loading}
+              disabled={loading}
             />
-          </span>
+          )}
+
+          <CategoriesFilter
+            className="max-w-20rem w-full"
+            onChange={(categories) => setCategories(categories)}
+          />
+
           <PeriodSelect
             value={period}
             onChange={(e) => setPeriod(e.value)}
@@ -174,7 +171,7 @@ export default function MostSoldProductsSection() {
           />
         </div>
         {loading && (
-          <div className="flex flex-row align-items-center w-full p-4">
+          <div className="flex flex-row align-items-center h-30rem w-full p-4">
             <ProgressSpinner style={{ width: "50px", height: "50px" }} />
           </div>
         )}
@@ -190,12 +187,9 @@ export default function MostSoldProductsSection() {
                   dates && dates[1] ? dates[1] : new Date("12/31/2023"),
                   dict
                 )}
-                search={
-                  debouncedSearch.length > 3 ? debouncedSearch : undefined
-                }
               />
             </span>
-            <span className="hidden md:flex md:w-3">
+            <span className="hidden md:flex md:w-3 pl-2">
               <ProductsList products={products} />
             </span>
           </div>
@@ -209,3 +203,26 @@ export default function MostSoldProductsSection() {
     </DataAccordion>
   );
 }
+
+const colors = [
+  "rgba(235, 19, 32, 1)",
+  "rgba(54, 62, 35, 1)",
+  "rgba(255, 206, 86, 1)",
+  "rgba(75, 192, 192, 1)",
+  "rgba(153, 102, 255, 1)",
+  "rgba(255, 159, 64, 1)",
+  "rgba(255, 99, 132, 1)",
+  "rgba(54, 162, 235, 1)",
+  "rgba(255, 206, 86, 1)",
+  "rgba(75, 192, 192, 1)",
+  "rgba(153, 102, 255, 1)",
+  "rgba(255, 159, 64, 1)",
+  "rgba(235, 19, 32, 1)",
+  "rgba(54, 62, 35, 1)",
+  "rgba(255, 206, 86, 1)",
+  "rgba(75, 192, 192, 1)",
+  "rgba(153, 102, 255, 1)",
+  "rgba(255, 159, 64, 1)",
+  "rgba(255, 99, 132, 1)",
+  "rgba(54, 162, 235, 1)",
+];

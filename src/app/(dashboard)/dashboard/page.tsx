@@ -4,11 +4,12 @@ import { useImport } from "@/context/import";
 import { useStore } from "@/context/store";
 import { useUser } from "@/context/user";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { MenuItem } from "primereact/menuitem";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Steps } from "primereact/steps";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Panel = dynamic(() => import("@/components/container/panel"), {
   ssr: false,
@@ -19,16 +20,38 @@ const BreadCrumbs = dynamic(
 );
 
 export default function Home() {
+  const router = useRouter();
+
   const [step, setStep] = useState(0);
   const { name, surname } = useUser();
+  const [waitingForStore, setWaitingForStore] = useState(false);
+
+  // handle finish tutorial state
+  const [waitingImportSales, setWaitingImportSales] = useState(false);
+
   const { selectedStore, stores, setSelectedStore, setOpenedCreateModal } =
     useStore();
 
-  const { isUploading } = useImport();
-  const { theme, getDict } = useAccessibility();
-  const { openImportModal } = useImport();
+  const { isUploading, selectedModule } = useImport();
 
-  const dict = getDict();
+  useEffect(() => {
+    if (waitingForStore && selectedStore)
+      setTimeout(() => {
+        setStep(2);
+        setWaitingForStore(false);
+      }, 500);
+  }, [waitingForStore, selectedStore]);
+
+  useEffect(() => {
+    if (selectedModule === "sales" && isUploading && !waitingImportSales) {
+      setWaitingImportSales(true);
+    }
+
+    if (selectedModule === "sales" && !isUploading && waitingImportSales) {
+      setWaitingImportSales(false);
+      setStep(6);
+    }
+  }, [waitingImportSales, selectedModule, isUploading]);
 
   const items: MenuItem[] = [
     {
@@ -56,9 +79,14 @@ export default function Home() {
       label: "Vendas",
       template: (item) => itemRenderer(item, 5),
     },
+    {
+      icon: "pi pi-check",
+      label: "Pronto",
+      template: (item) => itemRenderer(item),
+    },
   ];
 
-  const itemRenderer = (item: MenuItem, itemIndex: number) => {
+  const itemRenderer = (item: MenuItem, itemIndex?: number) => {
     const isActiveItem = step === itemIndex;
     const backgroundColor = isActiveItem
       ? "var(--primary-color)"
@@ -76,7 +104,7 @@ export default function Home() {
             color: textColor,
             marginTop: "-25px",
           }}
-          onClick={() => setStep(itemIndex)}
+          onClick={() => itemIndex && setStep(itemIndex)}
         >
           <i className={`${item.icon} text-xl`} />
         </span>
@@ -110,7 +138,7 @@ export default function Home() {
               <Button label="Começar" onClick={() => setStep(1)} />
             </div>
           )}
-          {(!selectedStore || (!isUploading && step === 1)) && (
+          {!isUploading && step === 1 && (
             <div className="flex flex-column w-full justify-content-center align-items-center align-content-center">
               <p>
                 Para importar os dados, é preciso criar uma loja. Nela serão
@@ -121,7 +149,10 @@ export default function Home() {
                   label="Criar loja"
                   icon="pi pi-plus-circle"
                   iconPos="right"
-                  onClick={() => setOpenedCreateModal(true)}
+                  onClick={() => {
+                    setWaitingForStore(true);
+                    setOpenedCreateModal(true);
+                  }}
                 />
                 {selectedStore && (
                   <Button
@@ -145,18 +176,32 @@ export default function Home() {
           {!isUploading && step === 3 && (
             <OpenImportModal
               module="products"
-              onSkip={() => setStep(3)}
+              onSkip={() => setStep(4)}
               onOpenModal={() => setStep(4)}
             />
           )}
           {!isUploading && step === 4 && (
             <OpenImportModal
               module="customers"
-              onSkip={() => setStep(4)}
+              onSkip={() => setStep(5)}
               onOpenModal={() => setStep(5)}
             />
           )}
           {!isUploading && step === 5 && <OpenImportModal module="sales" />}
+          {!isUploading && step === 6 && (
+            <div className="flex flex-column w-full justify-content-center align-items-center align-content-center">
+              <p>
+                Pronto! Seus dados foram importados com sucesso. Você já pode
+                começar a utilizar a dashboard.
+              </p>
+              <Button
+                label="Visualizar dados"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                onClick={() => router.push("/dashboard/vendas")}
+              />
+            </div>
+          )}
         </div>
         <div className="py-4">
           <Steps

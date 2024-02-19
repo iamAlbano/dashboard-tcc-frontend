@@ -102,12 +102,23 @@ const api = {
     store_id: string,
     page: number,
     limit: number,
-    search?: string | null
+    search?: string | null,
+    category?: string | null,
+    columnSort?: string | null,
+    direction?: "asc" | "desc" | null
   ): Promise<AxiosResponse> {
     return request
-      .get(
-        `/product/get?store_id=${store_id}&page=${page}&limit=${limit}&search=${search}`
-      )
+      .get(`/product/get`, {
+        params: {
+          store_id: store_id,
+          page: page,
+          limit: limit,
+          search: search,
+          category: category,
+          order_by: columnSort,
+          order_direction: direction,
+        },
+      })
       .catch((error) => {
         return error?.response;
       });
@@ -123,12 +134,23 @@ const api = {
     store_id: string,
     page: number,
     limit: number,
-    search?: string | null
+    search?: string | null,
+    category?: string | null,
+    columnSort?: string | null,
+    direction?: "asc" | "desc" | null
   ): Promise<AxiosResponse> {
     return request
-      .get(
-        `/customer/get?store_id=${store_id}&page=${page}&limit=${limit}&search=${search}`
-      )
+      .get(`/customer/get`, {
+        params: {
+          store_id: store_id,
+          page: page,
+          limit: limit,
+          search: search,
+          category: category,
+          order_by: columnSort,
+          order_direction: direction,
+        },
+      })
       .catch((error) => {
         return error?.response;
       });
@@ -149,21 +171,23 @@ const api = {
   },
   async getMostSoldProducts(
     store_id: string,
-    query = "",
     startDate = "2023-01-01",
     endDate = "2023-12-31",
     limit = 3,
-    periodGroup = "month"
+    periodGroup = "month",
+    product_ids?: string[],
+    categories?: string[]
   ): Promise<AxiosResponse> {
     return request
       .get("/product/most_sold", {
         params: {
           store_id: store_id,
-          query: query,
           start_date: startDate,
           end_date: endDate,
           limit: limit,
           period_group: periodGroup,
+          product_ids: product_ids,
+          categories: categories,
         },
       })
       .catch((error) => {
@@ -189,6 +213,13 @@ const api = {
           period_group: periodGroup,
         },
       })
+      .catch((error) => {
+        return error?.response;
+      });
+  },
+  async getCategories(store_id: string): Promise<AxiosResponse> {
+    return request
+      .get(`/product/categories?store_id=${store_id}`)
       .catch((error) => {
         return error?.response;
       });
@@ -264,6 +295,21 @@ const api = {
         return error?.response;
       });
   },
+  async getMostProfitableProducts(): Promise<AxiosResponse> {
+    return request.get("/product/most_profitable").catch((error) => {
+      return error?.response;
+    });
+  },
+  async searchProducts(
+    store_id: string,
+    searchTerm: string
+  ): Promise<AxiosResponse> {
+    return request
+      .get(`/product/search?store_id=${store_id}&name=${searchTerm}`)
+      .catch((error) => {
+        return error?.response;
+      });
+  },
   async importProducts(
     products_file: File,
     store_id: string,
@@ -271,6 +317,7 @@ const api = {
     description_column?: string | null,
     category_column?: string | null,
     price_column?: string | null,
+    purchase_price_column?: string | null,
     stock_column?: string | null
   ): Promise<AxiosResponse> {
     return fileRequest
@@ -281,6 +328,7 @@ const api = {
         description_column,
         category_column,
         price_column,
+        purchase_price_column,
         stock_column,
       })
       .catch((error) => {

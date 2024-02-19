@@ -1,17 +1,18 @@
 "use client";
 
+import { notify } from "@/components/utils/toast";
 import { useAccessibility } from "@/context/accessibility";
 import { useImport } from "@/context/import";
 import { useStore } from "@/context/store";
-
-import { notify } from "@/components/utils/toast";
+import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 
 import Form from "@/components/import/form";
 
 export default function ImportModal() {
-  const { theme, getDict } = useAccessibility();
+  const router = useRouter();
+  const { getDict } = useAccessibility();
   const {
     selectedModule,
     openedModal,
@@ -40,6 +41,8 @@ export default function ImportModal() {
         "Houve um erro ao importar o arquivo, tente novamente mais tarde",
         "error"
       );
+
+      return;
     }
   };
 

@@ -151,6 +151,7 @@
       "description": "Description",
       "category": "Category",
       "price": "Price",
+      "purchasePrice": "Purchase Price",
       "stock": "Stock"
     }
   },

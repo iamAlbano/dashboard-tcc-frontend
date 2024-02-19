@@ -18,18 +18,39 @@ export default function ProductsTableSection() {
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function getProducts(page?: number) {
+  async function getProducts({
+    page = 1,
+    search = null,
+    columnSort = null,
+    direction = undefined,
+    category = null,
+  }: {
+    page?: number;
+    search?: string | null;
+    columnSort?: string | null;
+    direction?: "asc" | "desc" | undefined;
+    category?: string | null;
+  }) {
     if (!selectedStore?.id) return;
 
     setLoading(true);
-    const { data } = await api.getProducts(selectedStore?.id, page ?? 1, 10);
+
+    const { data } = await api.getProducts(
+      selectedStore?.id,
+      page,
+      10,
+      search,
+      category,
+      columnSort,
+      direction
+    );
     setProducts(data?.products ?? []);
     setTotalProducts(data?.total_products ?? 0);
     setLoading(false);
   }
 
   useEffect(() => {
-    getProducts();
+    getProducts({});
   }, [selectedStore]);
 
   return (
@@ -40,7 +61,13 @@ export default function ProductsTableSection() {
       <Table
         totalProducts={totalProducts}
         isLoading={loading}
-        onPageChange={(page: number) => getProducts(page)}
+        onChange={(
+          page: number,
+          search: string,
+          columnSort: string,
+          direction: "asc" | "desc" | undefined,
+          category: string | null
+        ) => getProducts({ page, search, columnSort, direction, category })}
       />
     </DataAccordion>
   );

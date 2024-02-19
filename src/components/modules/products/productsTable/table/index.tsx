@@ -1,27 +1,31 @@
 "use client";
-import dynamic from "next/dynamic";
 import { useDebounce } from "primereact/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useProduct } from "@/context/product";
 
-const OrdenateIcon = dynamic(() => import("@/components/table/ordenateIcon"));
+import OrdenateIcon, { Direction } from "@/components/table/ordenateIcon";
 
 import { Pagination } from "@/components/table/pagination";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { ProgressSpinner } from "primereact/progressspinner";
 
 type Props = {
   totalProducts?: number;
   isLoading?: boolean;
-  onPageChange: (page: number) => void;
+  onChange: (
+    page: number,
+    search: string,
+    columnSort: string,
+    direction: Direction | undefined,
+    category: string | null
+  ) => void;
 };
 
 export default function ProductsTable({
   totalProducts,
   isLoading,
-  onPageChange,
+  onChange,
 }: Props) {
   const { products } = useProduct();
 
@@ -30,7 +34,7 @@ export default function ProductsTable({
   const [category, setCategory] = useState<string | null>(null);
 
   const [sortedColumn, setSortedColumn] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<"up" | "down" | "">("");
+  const [sortOrder, setSortOrder] = useState<Direction | undefined>(undefined);
 
   const categories = [
     { label: "Alimentos", value: "Alimentos" },
@@ -39,6 +43,16 @@ export default function ProductsTable({
     { label: "Higiene", value: "Higiene" },
     { label: "Outros", value: "Outros" },
   ];
+
+  useEffect(() => {
+    onChange(page, debouncedSearch, sortedColumn, sortOrder, category);
+  }, [page]);
+
+  useEffect(() => {
+    // Reset page to 1 when search or category changes
+    if (page !== 1) setPage(1);
+    else onChange(page, debouncedSearch, sortedColumn, sortOrder, category);
+  }, [debouncedSearch, category, sortedColumn, sortOrder]);
 
   return (
     <section className="flex flex-column gap-2">
@@ -62,24 +76,70 @@ export default function ProductsTable({
         />
       </div>
 
-      {!isLoading && products.length > 0 && (
-        <table>
+      {products.length > 0 && (
+        <table className={isLoading ? "opacity-50" : ""}>
           <thead>
             <tr>
               <th>
-                Produto <OrdenateIcon column="name" />
+                Produto{" "}
+                <OrdenateIcon
+                  column="name"
+                  direction={sortedColumn === "name" ? sortOrder : undefined}
+                  onChange={(column, direction) => {
+                    setSortedColumn(column);
+                    setSortOrder(direction ?? undefined);
+                  }}
+                />
               </th>
               <th>
-                Categoria <OrdenateIcon column="category" />
+                Categoria{" "}
+                <OrdenateIcon
+                  column="category"
+                  onChange={(column, direction) => {
+                    setSortedColumn(column);
+                    setSortOrder(direction ?? undefined);
+                  }}
+                />
               </th>
               <th className="text-center">
-                Preço <OrdenateIcon column="price" />
+                Preço de venda{" "}
+                <OrdenateIcon
+                  column="price"
+                  onChange={(column, direction) => {
+                    setSortedColumn(column);
+                    setSortOrder(direction ?? undefined);
+                  }}
+                />
               </th>
               <th className="text-center">
-                Total vendidos <OrdenateIcon column="totalSold" />
+                Preço de compra{" "}
+                <OrdenateIcon
+                  column="purchase_price"
+                  onChange={(column, direction) => {
+                    setSortedColumn(column);
+                    setSortOrder(direction ?? undefined);
+                  }}
+                />
               </th>
               <th className="text-center">
-                Valor total <OrdenateIcon column="totalValue" />
+                Total vendidos{" "}
+                <OrdenateIcon
+                  column="total_sold"
+                  onChange={(column, direction) => {
+                    setSortedColumn(column);
+                    setSortOrder(direction ?? undefined);
+                  }}
+                />
+              </th>
+              <th className="text-center">
+                Valor total{" "}
+                <OrdenateIcon
+                  column="total_value"
+                  onChange={(column, direction) => {
+                    setSortedColumn(column);
+                    setSortOrder(direction ?? undefined);
+                  }}
+                />
               </th>
             </tr>
           </thead>
@@ -91,6 +151,11 @@ export default function ProductsTable({
                 <td>{product.category}</td>
                 <td className="text-center">
                   {isNaN(product.price) ? "" : `R$${product.price}`}
+                </td>
+                <td className="text-center">
+                  {isNaN(product.purchase_price)
+                    ? ""
+                    : `R$${product.purchase_price}`}
                 </td>
                 <td className="text-center">
                   {typeof product.total_sold === "number"
@@ -123,18 +188,12 @@ export default function ProductsTable({
           visualizar as informações.
         </p>
       )}
-      {isLoading && (
-        <div className="flex justify-content-center align-content-center align-items-center h-20rem">
-          <ProgressSpinner />
-        </div>
-      )}
       <Pagination
         currentPage={page}
         disabled={isLoading}
         totalPages={totalProducts ? Math.ceil(totalProducts / 10) : 1}
         onPageChange={(newPage: number) => {
           setPage(newPage);
-          onPageChange(newPage);
         }}
       />
     </section>

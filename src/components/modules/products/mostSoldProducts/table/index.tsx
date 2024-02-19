@@ -7,22 +7,25 @@ type ProductListProps = {
     name: string;
     category: string;
     totalSold?: number;
+    color: string;
   }[];
 };
 
 export default function ProductsList({ ...props }: ProductListProps) {
-  const [table, setTable] = useState(props.products.slice(0, 3));
+  const [table, setTable] = useState(props.products);
 
   return (
     <ul className={style.list} id="legend-container">
       {table.map((product, index) => (
         <li key={index}>
           <i
-            className={`pi pi-circle-fill ${style.dot} ${
-              style[`order${index + 1}`]
-            }`}
+            style={{ color: product.color }}
+            className={`pi pi-circle-fill ${style.dot}`}
           />
-          <hr className={`${style.border} ${style[`order${index + 1}`]}`} />
+          <hr
+            style={{ borderColor: product.color }}
+            className={`${style.border}`}
+          />
 
           <section className={style.product}>
             <h3>{product.name}</h3>

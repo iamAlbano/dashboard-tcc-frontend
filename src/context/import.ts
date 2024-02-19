@@ -8,6 +8,7 @@ export type ProductsColumnsType = {
   description: string | null;
   category: string | null;
   price: string | null;
+  purchasePrice: string | null;
   stock: string | null;
 };
 
@@ -77,6 +78,7 @@ export const useImport = create<ImportState>((set) => ({
     description: null,
     category: null,
     price: null,
+    purchasePrice: null,
     stock: null,
   },
   setProductsColumns: (columns: ProductsColumnsType) => {
@@ -143,10 +145,6 @@ function setFile(type: string, file: File | null) {
 }
 
 async function importFile(store_id: string): Promise<any> {
-  const productsFile = useImport.getState().productsFile;
-  const customersFile = useImport.getState().customersFile;
-  const salesFile = useImport.getState().salesFile;
-
   useImport.setState({ openedModal: false });
   try {
     await importProducts(store_id);
@@ -204,6 +202,7 @@ async function importProducts(store_id: string) {
     productsColumns.description,
     productsColumns.category,
     productsColumns.price,
+    productsColumns.purchasePrice,
     productsColumns.stock
   );
   useImport.setState({ isUploading: false });
@@ -215,6 +214,7 @@ async function importProducts(store_id: string) {
       description: null,
       category: null,
       price: null,
+      purchasePrice: null,
       stock: null,
     },
   });

@@ -38,7 +38,6 @@ export default function CreateStoreModal() {
       setStores(res.data.stores);
     else {
       setStores([]);
-      setOpenedCreateModal(true);
     }
   };
 
@@ -111,9 +110,12 @@ export default function CreateStoreModal() {
           {!addingStore && !loading && (
             <tr>
               <td className="text-center" colSpan={2}>
-                <i
-                  className="pi pi-plus-circle text-primary cursor-pointer text-lg"
+                <Button
+                  label={dict.store.newStore}
+                  icon="pi pi-plus-circle"
+                  iconPos="right"
                   onClick={() => setAddingStore(true)}
+                  text
                 />
               </td>
             </tr>

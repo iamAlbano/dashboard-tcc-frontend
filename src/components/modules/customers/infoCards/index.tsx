@@ -83,16 +83,19 @@ export default function InfoCards() {
                 <span className="text-sm">{info.title}</span>
               </div>
               <div className="flex flex-row gap-3 align-items-center">
-                <span
-                  className={`
+                {info?.percentage > 0 ||
+                  (info?.percentage < 0 && (
+                    <span
+                      className={`
                     desktop flex-row align-items-center justify-content-center 
                     p-2 border-round font-bold text-xl 
                     ${info.percentage > 0 ? "text-green-700" : "text-red-700"}
                   `}
-                >
-                  {info.percentage > 0 ? "+" : ""}
-                  {info.percentage}%
-                </span>
+                    >
+                      {info.percentage > 0 ? "+" : ""}
+                      {info.percentage}%
+                    </span>
+                  ))}
 
                 <i className={`desktop ${info.icon} text-4xl`} />
               </div>

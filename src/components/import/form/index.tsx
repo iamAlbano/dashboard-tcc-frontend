@@ -10,6 +10,7 @@ import {
 import Papa from "papaparse";
 import { Dropdown } from "primereact/dropdown";
 import { ProgressSpinner } from "primereact/progressspinner";
+import * as XLSX from "xlsx";
 
 import { Tooltip } from "primereact/tooltip";
 
@@ -76,6 +77,10 @@ export default function ImportModal() {
           null,
         price:
           productPriceColumns.find((col) => fileColumns.includes(col)) ?? null,
+        purchasePrice:
+          productPurchasePriceColumns.find((col) =>
+            fileColumns.includes(col)
+          ) ?? null,
         stock:
           productStockColumns.find((col) => fileColumns.includes(col)) ?? null,
       };
@@ -169,6 +174,9 @@ export default function ImportModal() {
       case "text/csv":
         handleGetCsvColumns(file);
         break;
+      case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        handleGetXlsxColumns(file);
+        break;
     }
   };
 
@@ -201,6 +209,68 @@ export default function ImportModal() {
       setFileColumns([]);
       setFileRows([]);
       notify(dict.errorMessage, "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGetXlsxColumns = async (file: File) => {
+    if (!file) return;
+
+    setLoading(true);
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const workbook = XLSX.read(new Uint8Array(arrayBuffer), {
+        type: "array",
+      });
+
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+
+      let data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+      if (!data || data.length === 0) {
+        throw new Error("No data found in the file.");
+      }
+
+      // @ts-expect-error unknown type
+      data = data.filter((row: string[]) => row.length > 2);
+
+      let [headerRow, ...rows] = data;
+      const cols = (headerRow as string[]).filter(
+        (col: string) => typeof col === "string"
+      );
+
+      const transformedRows: any[] = [];
+
+      for (let row of rows) {
+        const newRow = (row as string[]).filter(
+          (value: string) =>
+            typeof value === "string" || typeof value === "number"
+        );
+
+        // verifica se a linha é uma linha de total adicionada pelo usuário
+        const isTotalRow = newRow.some((value: string | number) => {
+          return (
+            typeof value === "string" && value.toLowerCase().includes("total")
+          );
+        });
+
+        if (newRow.length === cols.length && !isTotalRow)
+          transformedRows.push({
+            ...newRow.reduce((acc: any, value: any, index: number) => {
+              return { ...acc, [cols[index]]: value };
+            }, {}),
+          });
+      }
+
+      setFileColumns(cols);
+      setFileRows(transformedRows);
+    } catch (error) {
+      setFileColumns([]);
+      setFileRows([]);
+      notify("Erro: Não foi possível ler o arquivo.", "error");
     } finally {
       setLoading(false);
     }
@@ -382,7 +452,26 @@ const productPriceColumns = [
   "product_value",
   "valor_produto",
   "valor do produto",
+  "Preço de Venda Unitário",
+  "Preço de Venda Unitário:",
+  "preço de venda unitário",
+  "preço de venda unitário:",
+  "Preço de venda unitário",
+  "preço",
+  "preço",
 ];
+
+const productPurchasePriceColumns = [
+  "Preço de compra",
+  "Preço de compra:",
+  "preço de compra",
+  "preço de compra:",
+  "Preço de Venda Unitário",
+  "Preço de Venda Unitário:",
+  "preço de venda unitário",
+  "preço de venda unitário:",
+];
+
 const productStockColumns = [
   "stock",
   "estoque",
@@ -396,6 +485,11 @@ const productStockColumns = [
   "product_quantity",
   "quantidade_produto",
   "quantidade do produto",
+  "Quantidade Vendida",
+  "Quantidade Vendida:",
+  "quantidade vendida",
+  "quantidade vendida:",
+  "Quantidade vendida",
 ];
 
 const saleProductColumns = [
@@ -411,6 +505,13 @@ const saleProductColumns = [
   "product name",
   "product_id",
   "id_produto",
+  "Produto",
+  "Produto Vendido",
+  "Produto Vendido:",
+  "produto vendido",
+  "produto vendido:",
+  "Produto vendido",
+  "Produto vendido:",
 ];
 
 const saleCustomerColumns = [

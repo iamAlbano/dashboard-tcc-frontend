@@ -8,6 +8,7 @@ type ProductsDict = {
     description: string;
     category: string;
     price: string;
+    purchasePrice: string;
     stock: string;
   };
 };

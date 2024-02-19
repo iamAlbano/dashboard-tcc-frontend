@@ -1,28 +1,14 @@
 import ModuleHeader from "@/components/modules/header";
-import dynamic from "next/dynamic";
 
-const Panel = dynamic(() => import("@/components/container/panel"), {
-  ssr: false,
-});
-const BreadCrumbs = dynamic(
-  () => import("@/components/navigation/breadcrumbs"),
-  { ssr: false }
-);
+import Panel from "@/components/container/panel";
+import BreadCrumbs from "@/components/navigation/breadcrumbs";
 
 import InfoCards from "@/components/modules/products/infoCards";
 
-const ProductsTable = dynamic(
-  () => import("@/components/modules/products/productsTable"),
-  { ssr: false }
-);
-const SoldProductsSection = dynamic(
-  () => import("@/components/modules/products/mostSoldProducts"),
-  { ssr: false }
-);
-const CategoriesSection = dynamic(
-  () => import("@/components/modules/products/categories"),
-  { ssr: false }
-);
+import BestProfitProducts from "@/components/modules/products/bestProfitProducts";
+import CategoriesSection from "@/components/modules/products/categories";
+import SoldProductsSection from "@/components/modules/products/mostSoldProducts";
+import ProductsTable from "@/components/modules/products/productsTable";
 
 export default function Home() {
   return (
@@ -38,6 +24,8 @@ export default function Home() {
           <ProductsTable />
 
           <CategoriesSection />
+
+          <BestProfitProducts />
         </section>
       </Panel>
     </section>

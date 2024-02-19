@@ -19,6 +19,11 @@ export function GetMenu(): menuOption[] {
       route: "/dashboard",
     },
     {
+      label: dict["sidebar"]["sales"],
+      icon: "pi pi-fw pi-shopping-cart",
+      route: "/dashboard/vendas",
+    },
+    {
       label: dict["sidebar"]["products"],
       icon: "pi pi-fw pi-box",
       route: `/dashboard/produtos`,
@@ -27,11 +32,6 @@ export function GetMenu(): menuOption[] {
       label: dict["sidebar"]["customers"],
       icon: "pi pi-fw pi-users",
       route: "/dashboard/clientes",
-    },
-    {
-      label: dict["sidebar"]["sales"],
-      icon: "pi pi-fw pi-shopping-cart",
-      route: "/dashboard/vendas",
     },
     /*   {
       label: dict["sidebar"]["import"],

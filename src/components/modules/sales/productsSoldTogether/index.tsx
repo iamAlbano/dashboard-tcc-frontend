@@ -25,7 +25,6 @@ export default function ProductsSoldTogether() {
         const { data } = await api.getTopProductsSoldTogether(
           selectedStore?.id
         );
-        console.log(data.sales);
         setProductsSoldTogether(data.sales);
       } catch (err) {
         setProductsSoldTogether([]);
@@ -37,7 +36,7 @@ export default function ProductsSoldTogether() {
   }, [selectedStore?.id]);
 
   return (
-    <DataAccordion title="Produtos mais vendidos juntos" icon="pi pi-box">
+    <DataAccordion title="Carrinhos de compras mais repetidas" icon="pi pi-box">
       <>
         {loading && (
           <div className="flex flex-row justify-center items-center">

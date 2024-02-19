@@ -104,7 +104,7 @@ export default function TimeSelect({ ...props }: TimeSelectProps) {
       value={dates}
       onChange={(e: any) => handleChange(e)}
       selectionMode="range"
-      className={props.className}
+      className={`bg-white ${props.className}`}
       view={props.view ?? undefined}
       dateFormat={getFormat[props.dateFormat ?? "month"]}
       showIcon={props.showIcon ?? false}
