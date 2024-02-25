@@ -1,5 +1,5 @@
 "use client";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
+import { Dropdown } from "primereact/dropdown";
 import { useState } from "react";
 
 import { useAccessibility } from "@/context/accessibility";
@@ -55,7 +55,6 @@ export default function IconsDemo() {
     <span className="p-input-icon-left desktop">
       <i className="pi pi-search" />
       <Dropdown
-        onChange={(e: DropdownChangeEvent) => console.log(e.value)}
         options={options}
         optionLabel="label"
         editable

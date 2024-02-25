@@ -21,18 +21,13 @@ import {
   handleGetChartLabels,
   handleGetPeriodChartData,
 } from "@/components/utils/chartFunctions";
+import TotalCategories from "./charts/totalCategories";
 
 const PeriodSelect = dynamic(
   () => import("@/components/utils/time/periodSelect"),
   { ssr: false }
 );
 const TimeSelect = dynamic(() => import("@/components/utils/time/timeSelect"), {
-  ssr: false,
-});
-const SellingRate = dynamic(() => import("./charts/categoriesSellingRate"), {
-  ssr: false,
-});
-const TotalCategories = dynamic(() => import("./charts/totalCategories"), {
   ssr: false,
 });
 
@@ -124,11 +119,11 @@ export default function CategoriesSection() {
       title="Categorias de produtos mais vendidas"
       icon="pi pi-tag"
     >
-      <section className="flex flex-column gap-2">
-        <span className="flex flex-row gap-2">
+      <section className="flex flex-column gap-2 w-full">
+        <span className="flex flex-row gap-2 w-full flex-wrap">
           <CategoriesFilter
             initialCategories={categoriesList}
-            className="max-w-20rem w-full"
+            className="max-w-30rem w-full"
             key={categoriesList.join("")}
             onChange={(categories) => setSelectedCategories(categories)}
           />
@@ -152,8 +147,8 @@ export default function CategoriesSection() {
             </p>
           </div>
         )}
-        <div className="flex flex-column lg:flex-row w-full">
-          <section className="w-9">
+        <div className="flex flex-column w-full">
+          <section className="flex w-full">
             {loading && (
               <div className="flex flex-row align-items-center w-full p-4">
                 <ProgressSpinner style={{ width: "50px", height: "50px" }} />
@@ -173,14 +168,21 @@ export default function CategoriesSection() {
             )}
           </section>
           {!loading && chartData.length > 0 && (
-            <div className="flex flex-column w-5 gap-2">
-              <SellingRate
+            <div className="flex flex-column align-items-center lg:flex-row w-full gap-4">
+              {/*               <SellingRate
                 labels={chartData.map((item) => item.label)}
                 data={chartData.map((item) =>
                   item.data.reduce((acc, curr) => acc + curr, 0)
                 )}
+              /> */}
+              <TotalCategories
+                totalSellingsByCategory={chartData.map((item) => {
+                  return {
+                    category: item.label,
+                    total: item.data.reduce((acc, curr) => acc + curr, 0),
+                  };
+                })}
               />
-              {/* <TotalCategories /> */}
             </div>
           )}
         </div>

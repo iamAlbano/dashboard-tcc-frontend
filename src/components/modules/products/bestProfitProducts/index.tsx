@@ -31,7 +31,6 @@ export default function BestProfitProducts() {
 
   async function getMostProfitableProducts() {
     const { data } = await api.getMostProfitableProducts();
-    console.log(data);
   }
 
   useEffect(() => {

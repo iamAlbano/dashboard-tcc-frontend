@@ -94,8 +94,11 @@ export default function MultiChart({ ...props }: MultiChartProps) {
   }, []);
 
   return (
-    <div className="card">
-      <Chart type="line" data={chartData} options={chartOptions} unstyled />
-    </div>
+    <Chart
+      type="line"
+      data={chartData}
+      options={chartOptions}
+      className="w-full"
+    />
   );
 }

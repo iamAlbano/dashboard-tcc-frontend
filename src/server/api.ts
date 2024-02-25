@@ -224,6 +224,17 @@ const api = {
         return error?.response;
       });
   },
+  async getTotalProductsByCategory(store_id: string): Promise<AxiosResponse> {
+    return request
+      .get(`/product/total-by-categories`, {
+        params: {
+          store_id: store_id,
+        },
+      })
+      .catch((error) => {
+        return error?.response;
+      });
+  },
   async getSalesResume(
     store_id: string,
     start_date = "2023-01-01",

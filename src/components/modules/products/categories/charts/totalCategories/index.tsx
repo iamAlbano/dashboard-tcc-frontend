@@ -1,59 +1,137 @@
-import React, { useState, useEffect } from "react"
-import { Chart } from "primereact/chart"
+"use client";
+import { useStore } from "@/context/store";
+import api from "@/server/api";
+import { COLORS } from "@/utils/contants";
+import { Chart } from "primereact/chart";
+import { useEffect, useState } from "react";
 
-export default function PieChartDemo() {
-  const [chartData, setChartData] = useState({})
-  const [chartOptions, setChartOptions] = useState({})
+type CategoryData = {
+  category: string;
+  total: number;
+};
 
-  useEffect(() => {
-    const documentStyle = getComputedStyle(document.documentElement)
+type TotalCategoriesChartProps = {
+  totalSellingsByCategory: CategoryData[];
+};
+
+export default function TotalCategoriesChart({
+  totalSellingsByCategory,
+}: TotalCategoriesChartProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [chartData, setChartData] = useState({});
+  const [chartOptions, setChartOptions] = useState({});
+
+  const { selectedStore } = useStore();
+
+  const handleGetCategoriesTotal = async () => {
+    if (!selectedStore?.id) return;
+
+    try {
+      setIsLoading(true);
+      const { data } = await api.getTotalProductsByCategory(selectedStore.id);
+
+      const labels = data.categories
+        ?.map((categories: { _id: string }) => categories._id)
+        .filter(Boolean);
+
+      const values = data.categories?.map(
+        (categories: { total: number }) => categories.total
+      );
+
+      handleSetChartData(
+        data.categories.map((category: { _id: string; total: number }) => {
+          return {
+            category: category._id,
+            total: category.total,
+          };
+        })
+      );
+    } catch (error) {
+      handleSetChartData([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSetChartData = (categoriesData: CategoryData[]) => {
+    console.log(categoriesData, totalSellingsByCategory);
+
+    const chartData = categoriesData.map((category) => {
+      return {
+        category: category.category,
+        totalProducts: category.total,
+        totalSales:
+          totalSellingsByCategory.find(
+            (selling) => selling.category === category.category
+          )?.total ?? 0,
+      };
+    });
+
+    function orderByAlpha(
+      a: (typeof chartData)[number],
+      b: (typeof chartData)[number]
+    ): number {
+      if (a.category < b.category) {
+        return -1;
+      } else if (a.category > b.category) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    const orderedChartData = chartData.sort(orderByAlpha);
+
     const data = {
-      labels: ["Vestuário", "Acessórios", "Sapatos", "Outros"],
+      labels: orderedChartData.map((category) => category.category),
       datasets: [
         {
-          data: [110, 60, 120, 27],
-          backgroundColor: [
-            documentStyle.getPropertyValue("--yellow-500"),
-            documentStyle.getPropertyValue("--green-500"),
-            documentStyle.getPropertyValue("--red-500"),
-            documentStyle.getPropertyValue("--blue-500"),
-          ],
-          hoverBackgroundColor: [
-            documentStyle.getPropertyValue("--yellow-400"),
-            documentStyle.getPropertyValue("--green-400"),
-            documentStyle.getPropertyValue("--red-400"),
-            documentStyle.getPropertyValue("--blue-400"),
-          ],
+          label: "Total de produtos por categoria",
+          data: orderedChartData.map((category) => category.totalProducts),
+          backgroundColor: COLORS,
+          borderColor: getOpaqueColors,
+          borderWidth: 1,
+        },
+        {
+          label: "Total de vendas por categoria",
+          data: orderedChartData.map((selling) => selling.totalSales),
+          backgroundColor: getOpaqueColors,
+          borderColor: COLORS,
+          borderWidth: 1,
         },
       ],
-    }
+    };
     const options = {
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-          },
+      scales: {
+        y: {
+          beginAtZero: true,
         },
-        title: {
-          display: true,
-          text: "Total de produtos em cada categoria",
-        }
       },
-    }
+    };
 
-    setChartData(data)
-    setChartOptions(options)
-  }, [])
+    setChartData(data);
+    setChartOptions(options);
+  };
+
+  useEffect(() => {
+    handleGetCategoriesTotal();
+  }, []);
 
   return (
-    <div className="card flex justify-content-center">
-      <Chart
-        type="pie"
-        data={chartData}
-        options={chartOptions}
-        className="w-full md:w-24rem"
-      />
-    </div>
-  )
+    <Chart
+      type="bar"
+      data={chartData}
+      options={chartOptions}
+      key={isLoading.toString()}
+      className="w-full h-full"
+      style={{
+        height: "100%",
+        width: "50vw",
+      }}
+    />
+  );
+}
+
+function getOpaqueColors(): string[] {
+  return COLORS.map((cor) => cor.replace(/1\)$/, "0.3)"));
 }

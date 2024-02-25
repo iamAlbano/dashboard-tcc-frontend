@@ -57,7 +57,7 @@ export default function SearchProducts({
           });
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
         setSearching(false);
       }

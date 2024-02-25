@@ -17,12 +17,12 @@ export const COLORS = [
   "rgba(128, 0, 0, 1)", // Maroon
   "rgba(0, 128, 128, 1)", // Teal
   "rgba(128, 128, 128, 1)", // Gray
-  "rgba(255, 255, 255, 1)", // White
+  "rgba(0, 0, 0, 1)", // Black
   "rgba(255, 0, 0, 1)", // Bright Red
   "rgba(0, 255, 0, 1)", // Lime Green
   "rgba(255, 255, 0, 1)", // Yellow
   "rgba(0, 0, 128, 1)", // Navy Blue
-  "rgba(128, 0, 0, 0.5)", // Dark Red with 50% transparency
-  "rgba(0, 128, 128, 0.5)", // Teal with 50% transparency
-  "rgba(255, 69, 0, 0.7)", // Red-Orange with 70% transparency
+  "rgba(28, 0, 0, 1)", // Dark Red
+  "rgba(50, 128, 128, 1)",
+  "rgba(25, 69, 40, 1)",
 ];

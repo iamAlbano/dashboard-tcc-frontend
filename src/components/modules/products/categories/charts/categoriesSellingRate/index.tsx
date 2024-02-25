@@ -26,7 +26,8 @@ export default function DoughnutChartDemo({ ...props }: chartProps) {
       cutout: "60%",
       plugins: {
         legend: {
-          display: false,
+          display: true,
+          position: "right",
           labels: {
             usePointStyle: true,
           },
@@ -43,13 +44,11 @@ export default function DoughnutChartDemo({ ...props }: chartProps) {
   }, []);
 
   return (
-    <div className="card flex justify-content-center">
-      <Chart
-        type="doughnut"
-        data={chartData}
-        options={chartOptions}
-        className="w-full md:w-23rem"
-      />
-    </div>
+    <Chart
+      type="doughnut"
+      data={chartData}
+      options={chartOptions}
+      className="w-20rem px-8"
+    />
   );
 }
