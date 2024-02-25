@@ -1,19 +1,20 @@
 "use client";
+import CategoriesFilter from "@/components/utils/categoriesFilter";
 import { useAccessibility } from "@/context/accessibility";
 import { useProduct } from "@/context/product";
 import { useStore } from "@/context/store";
-import dynamic from "next/dynamic";
-import { useDebounce } from "primereact/hooks";
-import { useEffect, useState } from "react";
-
+import { COLORS } from "@/utils/contants";
 import { parseDateToString } from "@/utils/functions/helpers";
 import { Period } from "@/utils/types/globals";
+import dynamic from "next/dynamic";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Nullable } from "primereact/ts-helpers";
-import { type chartData } from "./charts/mostSoldCategoriesChart";
+import { useEffect, useState } from "react";
 
 import DataAccordion from "@/components/modules/dataAccordion";
-import MostSoldCategories from "./charts/mostSoldCategoriesChart";
+import MultiChart, {
+  type chartData,
+} from "@/components/utils/chart/multiChart";
 
 import {
   getCalendarView,
@@ -35,8 +36,6 @@ const TotalCategories = dynamic(() => import("./charts/totalCategories"), {
   ssr: false,
 });
 
-import { InputText } from "primereact/inputtext";
-
 export default function CategoriesSection() {
   const { selectedStore } = useStore();
   const { getMostSoldCategories } = useProduct();
@@ -44,10 +43,13 @@ export default function CategoriesSection() {
   const dict = getDict();
 
   const [loading, setLoading] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const [chartData, setChartData] = useState<chartData[]>([]);
+  const [totalData, setTotalData] = useState<number[]>([]);
 
-  const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
+  const [categoriesList, setCategoriesList] = useState<string[]>([]);
+
   const [period, setPeriod] = useState<Period | null>("month");
   const [dates, setDates] = useState<Nullable<(Date | null)[]>>([
     new Date("01/01/2023"), // format: mm/dd/yyyy
@@ -56,18 +58,20 @@ export default function CategoriesSection() {
 
   const handleGetMostSoldCategories = async () => {
     if (!selectedStore?.id) return;
+
     setLoading(true);
     try {
-      const data = await getMostSoldCategories(
+      const { categories, total_sellings } = await getMostSoldCategories(
         selectedStore?.id,
-        debouncedSearch.length > 3 ? debouncedSearch : "",
+        selectedCategories,
         dates && dates[0] ? parseDateToString(dates[0]) : "2023-01-01",
         dates && dates[1] ? parseDateToString(dates[1]) : "2023-12-31",
         period ?? "month"
       );
 
-      if (!data.length) {
+      if (!categories.length) {
         setChartData([]);
+        setTotalData([]);
         setLoading(false);
         return;
       }
@@ -75,54 +79,35 @@ export default function CategoriesSection() {
       const startDate = dates && dates[0] ? dates[0] : new Date("01/01/2023");
       const endDate = dates && dates[1] ? dates[1] : new Date("12/31/2023");
 
-      setChartData(
-        [
-          {
-            type: "line",
-            label: data[0]?.category,
-            borderColor: "rgba(235, 19, 32, 1)",
-            borderWidth: 2,
-            fill: false,
-            tension: 0.4,
-            data: handleGetPeriodChartData(
-              period ?? "month",
-              data[0]?.sales,
-              startDate,
-              endDate
-            ),
-          },
-          {
-            type: "line",
-            label: data[1]?.category,
-            borderColor: "rgba(54, 62, 35, 1)",
-            borderWidth: 2,
-            fill: false,
-            tension: 0.4,
-            data: handleGetPeriodChartData(
-              period ?? "month",
-              data[1]?.sales,
-              startDate,
-              endDate
-            ),
-          },
-          {
-            type: "line",
-            label: data[2]?.category,
-            borderColor: "rgba(255, 206, 86, 1)",
-            borderWidth: 2,
-            fill: false,
-            tension: 0.4,
-            data: handleGetPeriodChartData(
-              period ?? "month",
-              data[2]?.sales,
-              startDate,
-              endDate
-            ),
-          },
-        ].filter((item) => item?.label !== undefined) as chartData[]
-      );
+      setCategoriesList(categories.map((item: any) => item.category));
+
+      if (total_sellings?.length)
+        setTotalData(total_sellings.map((selling: any) => selling?.total ?? 0));
+
+      const newChartData = categories
+        .slice(0, COLORS.length)
+        .map((category: any, index: number) => ({
+          type: "line",
+          label: category?.category,
+          borderColor: COLORS[index],
+          borderWidth: 2,
+          fill: false,
+          tension: 0.4,
+          data: handleGetPeriodChartData(
+            period ?? "month",
+            category?.sales,
+            startDate,
+            endDate
+          ),
+        }))
+        .filter(
+          (item: (typeof newChartData)[number]) => item?.label !== undefined
+        ) as chartData[];
+
+      setChartData(newChartData);
     } catch (e) {
       setChartData([]);
+      setTotalData([]);
     } finally {
       setLoading(false);
     }
@@ -132,7 +117,7 @@ export default function CategoriesSection() {
     if (!dates || !dates[0] || !dates[1]) return;
 
     handleGetMostSoldCategories();
-  }, [selectedStore, debouncedSearch, dates, period]);
+  }, [selectedStore, dates, period, selectedCategories]);
 
   return (
     <DataAccordion
@@ -141,14 +126,15 @@ export default function CategoriesSection() {
     >
       <section className="flex flex-column gap-2">
         <span className="flex flex-row gap-2">
-          <span className="p-input-icon-left">
-            <i className="pi pi-search" />
-            <InputText
-              placeholder="Pesquisar categorias"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </span>
+          <CategoriesFilter
+            initialCategories={categoriesList}
+            className="max-w-20rem w-full"
+            key={categoriesList.join("")}
+            onChange={(categories) => setSelectedCategories(categories)}
+          />
+
           <PeriodSelect value={period} onChange={(e) => setPeriod(e.value)} />
+
           <TimeSelect
             value={dates}
             onChange={(e) => setDates(e.value)}
@@ -166,7 +152,7 @@ export default function CategoriesSection() {
             </p>
           </div>
         )}
-        <div className="flex flex-row w-full">
+        <div className="flex flex-column lg:flex-row w-full">
           <section className="w-9">
             {loading && (
               <div className="flex flex-row align-items-center w-full p-4">
@@ -174,22 +160,20 @@ export default function CategoriesSection() {
               </div>
             )}
             {!loading && chartData.length > 0 && (
-              <MostSoldCategories
+              <MultiChart
                 data={chartData}
+                totalSoldData={totalData}
                 chartLabels={handleGetChartLabels(
                   period ?? "month",
                   dates && dates[0] ? dates[0] : new Date("01/01/2023"),
                   dates && dates[1] ? dates[1] : new Date("12/31/2023"),
                   dict
                 )}
-                search={
-                  debouncedSearch.length > 3 ? debouncedSearch : undefined
-                }
               />
             )}
           </section>
           {!loading && chartData.length > 0 && (
-            <div className="flex flex-column w-3 gap-2">
+            <div className="flex flex-column w-5 gap-2">
               <SellingRate
                 labels={chartData.map((item) => item.label)}
                 data={chartData.map((item) =>

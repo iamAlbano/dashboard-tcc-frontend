@@ -103,7 +103,7 @@ const api = {
     page: number,
     limit: number,
     search?: string | null,
-    category?: string | null,
+    categories?: string[] | null,
     columnSort?: string | null,
     direction?: "asc" | "desc" | null
   ): Promise<AxiosResponse> {
@@ -114,7 +114,7 @@ const api = {
           page: page,
           limit: limit,
           search: search,
-          category: category,
+          categories: categories,
           order_by: columnSort,
           order_direction: direction,
         },
@@ -196,17 +196,17 @@ const api = {
   },
   async getMostSoldCategories(
     store_id: string,
-    query = "",
+    categories: string[] = [],
     startDate = "2023-01-01",
     endDate = "2023-12-31",
-    limit = 3,
+    limit = 5,
     periodGroup = "month"
   ): Promise<AxiosResponse> {
     return request
       .get("/product/most_sold_categories", {
         params: {
           store_id: store_id,
-          query: query,
+          categories: categories,
           start_date: startDate,
           end_date: endDate,
           limit: limit,

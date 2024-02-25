@@ -1,7 +1,7 @@
 import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
 
-export default function ProfitProductsChart() {
+export default function VerticalBarDemo() {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
 
@@ -13,24 +13,19 @@ export default function ProfitProductsChart() {
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
     const data = {
-      labels: [
-        "brinquedos",
-        "eletrodomesticos",
-        "moveis_decoracao",
-        "instrumentos_musicais",
-      ],
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
       datasets: [
         {
-          type: "bar",
-          label: "Gasto de compra",
+          label: "My First dataset",
           backgroundColor: documentStyle.getPropertyValue("--blue-500"),
-          data: [20, 10, 8, 14],
+          borderColor: documentStyle.getPropertyValue("--blue-500"),
+          data: [65, 59, 80, 81, 56, 55, 40],
         },
         {
-          type: "bar",
-          label: "Valor total de vendas",
-          backgroundColor: documentStyle.getPropertyValue("--green-500"),
-          data: [37, 27, 19, 15],
+          label: "My Second dataset",
+          backgroundColor: documentStyle.getPropertyValue("--pink-500"),
+          borderColor: documentStyle.getPropertyValue("--pink-500"),
+          data: [28, 48, 40, 19, 86, 27, 90],
         },
       ],
     };
@@ -38,33 +33,32 @@ export default function ProfitProductsChart() {
       maintainAspectRatio: false,
       aspectRatio: 0.8,
       plugins: {
-        tooltips: {
-          mode: "index",
-          intersect: false,
-        },
         legend: {
           labels: {
-            color: textColor,
+            fontColor: textColor,
           },
         },
       },
       scales: {
         x: {
-          stacked: true,
           ticks: {
             color: textColorSecondary,
+            font: {
+              weight: 500,
+            },
           },
           grid: {
-            color: surfaceBorder,
+            display: false,
+            drawBorder: false,
           },
         },
         y: {
-          stacked: true,
           ticks: {
             color: textColorSecondary,
           },
           grid: {
             color: surfaceBorder,
+            drawBorder: false,
           },
         },
       },

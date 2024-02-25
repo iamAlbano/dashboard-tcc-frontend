@@ -11,7 +11,7 @@ export type chartData = {
   data: number[];
 };
 
-type MostSoldProductsChartProps = {
+type MultiChartProps = {
   search?: string;
   dates?: (Date | null)[];
   data: chartData[];
@@ -19,9 +19,7 @@ type MostSoldProductsChartProps = {
   totalSoldData?: number[];
 };
 
-export default function MostSoldProductsChart({
-  ...props
-}: MostSoldProductsChartProps) {
+export default function MultiChart({ ...props }: MultiChartProps) {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
 
@@ -43,7 +41,7 @@ export default function MostSoldProductsChart({
         ),
         {
           type: "bar",
-          label: "Total de produtos vendidos",
+          label: "Total",
           backgroundColor: documentStyle.getPropertyValue("--blue-300"),
           data: props.totalSoldData ?? [],
           borderColor: "white",
@@ -97,13 +95,7 @@ export default function MostSoldProductsChart({
 
   return (
     <div className="card">
-      <Chart
-        type="line"
-        aria-label="most sold products by period"
-        data={chartData}
-        options={chartOptions}
-        unstyled
-      />
+      <Chart type="line" data={chartData} options={chartOptions} unstyled />
     </div>
   );
 }

@@ -29,7 +29,7 @@ export default function ProductsTableSection() {
     search?: string | null;
     columnSort?: string | null;
     direction?: "asc" | "desc" | undefined;
-    category?: string | null;
+    category?: string[] | null;
   }) {
     if (!selectedStore?.id) return;
 
@@ -66,7 +66,7 @@ export default function ProductsTableSection() {
           search: string,
           columnSort: string,
           direction: "asc" | "desc" | undefined,
-          category: string | null
+          category: string[] | null
         ) => getProducts({ page, search, columnSort, direction, category })}
       />
     </DataAccordion>

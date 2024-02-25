@@ -2,12 +2,12 @@
 import { useDebounce } from "primereact/hooks";
 import { useEffect, useState } from "react";
 
+import CategoriesFilter from "@/components/utils/categoriesFilter";
 import { useProduct } from "@/context/product";
 
 import OrdenateIcon, { Direction } from "@/components/table/ordenateIcon";
 
 import { Pagination } from "@/components/table/pagination";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
     search: string,
     columnSort: string,
     direction: Direction | undefined,
-    category: string | null
+    category: string[] | null
   ) => void;
 };
 
@@ -27,32 +27,37 @@ export default function ProductsTable({
   isLoading,
   onChange,
 }: Props) {
-  const { products } = useProduct();
+  const { products, categories } = useProduct();
 
   const [page, setPage] = useState<number>(1);
   const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
-  const [category, setCategory] = useState<string | null>(null);
+  const [selectedCategories, setCategories] = useState<string[]>([]);
 
   const [sortedColumn, setSortedColumn] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<Direction | undefined>(undefined);
 
-  const categories = [
-    { label: "Alimentos", value: "Alimentos" },
-    { label: "Bebidas", value: "Bebidas" },
-    { label: "Limpeza", value: "Limpeza" },
-    { label: "Higiene", value: "Higiene" },
-    { label: "Outros", value: "Outros" },
-  ];
-
   useEffect(() => {
-    onChange(page, debouncedSearch, sortedColumn, sortOrder, category);
+    onChange(
+      page,
+      debouncedSearch,
+      sortedColumn,
+      sortOrder,
+      selectedCategories
+    );
   }, [page]);
 
   useEffect(() => {
     // Reset page to 1 when search or category changes
     if (page !== 1) setPage(1);
-    else onChange(page, debouncedSearch, sortedColumn, sortOrder, category);
-  }, [debouncedSearch, category, sortedColumn, sortOrder]);
+    else
+      onChange(
+        page,
+        debouncedSearch,
+        sortedColumn,
+        sortOrder,
+        selectedCategories
+      );
+  }, [debouncedSearch, selectedCategories, sortedColumn, sortOrder]);
 
   return (
     <section className="flex flex-column gap-2">
@@ -61,18 +66,13 @@ export default function ProductsTable({
           <i className="pi pi-search" />
           <InputText
             placeholder="Pesquisar produtos"
+            className="bg-white"
             onChange={(e) => setSearch(e.target.value)}
           />
         </span>
-        <Dropdown
-          value={category}
-          onChange={(e: DropdownChangeEvent) => setCategory(e.value)}
-          options={categories}
-          optionLabel="label"
-          placeholder="Categoria"
-          className="w-full md:w-14rem bg-transparent"
-          clearIcon
-          filter
+        <CategoriesFilter
+          className="max-w-20rem w-full"
+          onChange={(selectedCategories) => setCategories(selectedCategories)}
         />
       </div>
 

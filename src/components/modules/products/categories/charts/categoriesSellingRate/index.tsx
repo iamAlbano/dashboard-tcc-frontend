@@ -1,3 +1,4 @@
+import { COLORS } from "@/utils/contants";
 import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
 
@@ -11,24 +12,13 @@ export default function DoughnutChartDemo({ ...props }: chartProps) {
   const [chartOptions, setChartOptions] = useState({});
 
   useEffect(() => {
-    const documentStyle = getComputedStyle(document.documentElement);
     const data = {
       labels: props.labels,
       datasets: [
         {
           data: props.data,
-          backgroundColor: [
-            documentStyle.getPropertyValue("--red-500"),
-            documentStyle.getPropertyValue("--green-500"),
-            documentStyle.getPropertyValue("--yellow-500"),
-            documentStyle.getPropertyValue("--blue-500"),
-          ],
-          hoverBackgroundColor: [
-            documentStyle.getPropertyValue("--red-400"),
-            documentStyle.getPropertyValue("--green-400"),
-            documentStyle.getPropertyValue("--yellow-400"),
-            documentStyle.getPropertyValue("--blue-400"),
-          ],
+          backgroundColor: props.labels?.map((_, index) => COLORS[index]),
+          hoverBackgroundColor: props.labels?.map((_, index) => COLORS[index]),
         },
       ],
     };

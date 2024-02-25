@@ -7,17 +7,18 @@ import { useEffect, useState } from "react";
 import { Period, type Option } from "@/utils/types/globals";
 import { Nullable } from "primereact/ts-helpers";
 
-import { useAccessibility } from "@/context/accessibility";
-
 import DataAccordion from "@/components/modules/dataAccordion";
 import CategoriesFilter from "@/components/utils/categoriesFilter";
+import MultiChart, {
+  type chartData,
+} from "@/components/utils/chart/multiChart";
 import SearchProducts from "@/components/utils/searchProduct";
 import PeriodSelect from "@/components/utils/time/periodSelect";
 import TimeSelect from "@/components/utils/time/timeSelect";
-import { type chartData } from "./chart";
+import { useAccessibility } from "@/context/accessibility";
+import { COLORS } from "@/utils/contants";
 
 const ProductsList = dynamic(() => import("./table"), { ssr: false });
-const MostSoldProductsChart = dynamic(() => import("./chart"), { ssr: false });
 
 import {
   calculateTotalSold,
@@ -75,12 +76,12 @@ export default function MostSoldProductsSection() {
 
       setProducts(
         data?.products
-          .slice(0, colors.length)
+          .slice(0, COLORS.length)
           .map((item: any, index: number) => ({
             name: item.product.name,
             category: item.product.category,
             totalSold: calculateTotalSold(item.sales) ?? 0,
-            color: colors[index],
+            color: COLORS[index],
           }))
       );
 
@@ -93,11 +94,11 @@ export default function MostSoldProductsSection() {
         );
 
       const newChartData = data.products
-        .slice(0, colors.length)
+        .slice(0, COLORS.length)
         .map((product: any, index: number) => ({
           type: "line",
           label: product?.product?.name,
-          borderColor: colors[index],
+          borderColor: COLORS[index],
           borderWidth: 2,
           fill: false,
           tension: 0.4,
@@ -178,7 +179,7 @@ export default function MostSoldProductsSection() {
         {!loading && chartData.length > 0 && (
           <div className="flex flex-row w-full align-items-center">
             <span className="w-full md:w-9">
-              <MostSoldProductsChart
+              <MultiChart
                 data={chartData}
                 totalSoldData={totalData}
                 chartLabels={handleGetChartLabels(
@@ -203,26 +204,3 @@ export default function MostSoldProductsSection() {
     </DataAccordion>
   );
 }
-
-const colors = [
-  "rgba(235, 19, 32, 1)",
-  "rgba(54, 62, 35, 1)",
-  "rgba(255, 206, 86, 1)",
-  "rgba(75, 192, 192, 1)",
-  "rgba(153, 102, 255, 1)",
-  "rgba(255, 159, 64, 1)",
-  "rgba(255, 99, 132, 1)",
-  "rgba(54, 162, 235, 1)",
-  "rgba(255, 206, 86, 1)",
-  "rgba(75, 192, 192, 1)",
-  "rgba(153, 102, 255, 1)",
-  "rgba(255, 159, 64, 1)",
-  "rgba(235, 19, 32, 1)",
-  "rgba(54, 62, 35, 1)",
-  "rgba(255, 206, 86, 1)",
-  "rgba(75, 192, 192, 1)",
-  "rgba(153, 102, 255, 1)",
-  "rgba(255, 159, 64, 1)",
-  "rgba(255, 99, 132, 1)",
-  "rgba(54, 162, 235, 1)",
-];

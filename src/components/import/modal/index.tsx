@@ -21,7 +21,7 @@ export default function ImportModal() {
     productsColumns,
     salesColumns,
   } = useImport();
-  const { selectedStore } = useStore();
+  const { selectedStore, setSelectedStore } = useStore();
 
   const dict = getDict();
 
@@ -44,6 +44,12 @@ export default function ImportModal() {
 
       return;
     }
+
+    // reset loja selecionada
+
+    const currentStore = selectedStore;
+    setSelectedStore(null);
+    setTimeout(() => setSelectedStore(currentStore), 500);
   };
 
   const footerContent = (
