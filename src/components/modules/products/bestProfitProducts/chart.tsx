@@ -1,7 +1,14 @@
 import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
 
-export default function VerticalBarDemo() {
+type ProfitsChartProps = {
+  productName: string;
+  total_sold: number;
+  total_bought?: number;
+  total_stock?: number;
+};
+
+export default function ProfitsChart({ ...props }: ProfitsChartProps) {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
 
@@ -13,19 +20,25 @@ export default function VerticalBarDemo() {
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
     const data = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      labels: [props.productName],
       datasets: [
         {
-          label: "My First dataset",
+          label: "Valor total de compra",
           backgroundColor: documentStyle.getPropertyValue("--blue-500"),
           borderColor: documentStyle.getPropertyValue("--blue-500"),
-          data: [65, 59, 80, 81, 56, 55, 40],
+          data: [props.total_bought],
         },
         {
-          label: "My Second dataset",
+          label: "Valor total de venda",
           backgroundColor: documentStyle.getPropertyValue("--pink-500"),
           borderColor: documentStyle.getPropertyValue("--pink-500"),
-          data: [28, 48, 40, 19, 86, 27, 90],
+          data: [props.total_sold],
+        },
+        {
+          label: "Valor total gasto com estoque",
+          backgroundColor: documentStyle.getPropertyValue("--red-500"),
+          borderColor: documentStyle.getPropertyValue("--red-500"),
+          data: [props.total_stock],
         },
       ],
     };

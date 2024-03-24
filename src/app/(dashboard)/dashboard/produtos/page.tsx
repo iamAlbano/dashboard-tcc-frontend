@@ -5,7 +5,6 @@ import BreadCrumbs from "@/components/navigation/breadcrumbs";
 
 import InfoCards from "@/components/modules/products/infoCards";
 
-import BestProfitProducts from "@/components/modules/products/bestProfitProducts";
 import CategoriesSection from "@/components/modules/products/categories";
 import SoldProductsSection from "@/components/modules/products/mostSoldProducts";
 import ProductsTable from "@/components/modules/products/productsTable";
@@ -24,8 +23,6 @@ export default function Home() {
           <ProductsTable />
 
           <CategoriesSection />
-
-          <BestProfitProducts />
         </section>
       </Panel>
     </section>

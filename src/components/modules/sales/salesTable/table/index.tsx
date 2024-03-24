@@ -1,14 +1,13 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useDebounce } from "primereact/hooks";
 import { useState } from "react";
 
 import { useSale } from "@/context/sale";
+import { Button } from "primereact/button";
 
 const OrdenateIcon = dynamic(() => import("@/components/table/ordenateIcon"));
 
 import { Pagination } from "@/components/table/pagination";
-import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 type Props = {
@@ -25,68 +24,83 @@ export default function ProductsTable({
   const { sales } = useSale();
 
   const [page, setPage] = useState<number>(1);
-  const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
-
-  const [sortedColumn, setSortedColumn] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<"up" | "down" | "">("");
-
-  const categories = [
-    { label: "Alimentos", value: "Alimentos" },
-    { label: "Bebidas", value: "Bebidas" },
-    { label: "Limpeza", value: "Limpeza" },
-    { label: "Higiene", value: "Higiene" },
-    { label: "Outros", value: "Outros" },
-  ];
+  const [openedIndex, setOpenedIndex] = useState<number>(-1);
 
   return (
     <section className="flex flex-column gap-2">
-      <div className="flex flex-row py-2 gap-3">
-        <span className="p-input-icon-left">
-          <i className="pi pi-search" />
-          <InputText
-            placeholder="Pesquisar vendas"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </span>
-      </div>
-
       {!isLoading && sales.length > 0 && (
         <table>
           <thead>
             <tr>
-              <th>
-                Produto <OrdenateIcon column="name" />
-              </th>
-              <th>
-                Quantidade <OrdenateIcon column="quantity" />
-              </th>
-              <th className="text-center">
-                Preço <OrdenateIcon column="price" />
-              </th>
-              <th className="text-center">
-                Status <OrdenateIcon column="totalSold" />
-              </th>
-              <th className="text-center">
-                Data <OrdenateIcon column="totalValue" />
-              </th>
+              <th></th>
+              <th>Produto(s)</th>
+              <th>Quantidade</th>
+              <th className="text-center">Valor</th>
+              <th className="text-center">Status</th>
+              <th className="text-center">Data</th>
             </tr>
           </thead>
-
-          <tbody>
-            {sales.map((sale, index) => (
-              <tr key={index}>
-                <td>{sale.product?.name}</td>
-                <td>{sale.quantity}</td>
-                <td className="text-center">
-                  {isNaN(sale.price) ? "" : `R$${sale.price}`}
+          {sales.map((sale, index) => (
+            <tbody key={index}>
+              <tr className={index % 2 !== 0 ? "bg-gray-100" : undefined}>
+                <td>
+                  {sale.products.length > 1 && (
+                    <Button
+                      size="small"
+                      className="w-2 py-1"
+                      outlined
+                      icon={
+                        openedIndex === index
+                          ? "pi pi-chevron-up"
+                          : "pi pi-chevron-down"
+                      }
+                      onClick={() => {
+                        openedIndex === index
+                          ? setOpenedIndex(-1)
+                          : setOpenedIndex(index);
+                      }}
+                    />
+                  )}
                 </td>
-                <td className="text-center">{sale.status}</td>
+                <td>
+                  {sale.products[0]?.name}
+                  {sale.products.length > 1 && (
+                    <span className="text-muted">
+                      {" "}
+                      +{sale.products.length - 1}
+                    </span>
+                  )}
+                </td>
+                <td className="text-center">{sale.quantity}</td>
+                <td className="text-center">
+                  {isNaN(sale.price) ? "" : `R$${sale.price.toFixed(2)}`}
+                </td>
+                <td className="text-center">{sale.status ?? "-"}</td>
                 <td className="text-center">
                   {sale.date ? new Date(sale.date).toLocaleDateString() : ""}
                 </td>
               </tr>
-            ))}
-          </tbody>
+
+              {openedIndex === index &&
+                sale.products.length > 1 &&
+                sale.products.map((product, i) => (
+                  <tr
+                    key={i}
+                    className={i % 2 === 0 ? "bg-primary-50" : undefined}
+                  >
+                    <td></td>
+                    <td className="text-muted">{product.name}</td>
+                    <td className="text-center">{product.quantity}</td>
+                    <td className="text-center">
+                      {isNaN(product.price)
+                        ? ""
+                        : `R$${product.price.toFixed(2)}`}
+                    </td>
+                    <td colSpan={3}></td>
+                  </tr>
+                ))}
+            </tbody>
+          ))}
           <tfoot>
             <tr>
               <td colSpan={2}>
@@ -98,7 +112,7 @@ export default function ProductsTable({
       )}
       {!isLoading && sales.length === 0 && (
         <p className="text-center">
-          Nenhum produto cadastrado, faça a importação de seus dados para
+          Nenhuma venda cadastrada, faça a importação de seus dados para
           visualizar as informações.
         </p>
       )}

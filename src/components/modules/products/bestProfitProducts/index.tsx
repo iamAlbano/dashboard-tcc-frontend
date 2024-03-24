@@ -1,17 +1,15 @@
 "use client";
 
 import { useStore } from "@/context/store";
-import { useDebounce } from "primereact/hooks";
 import { useEffect, useState } from "react";
 
-import { Period } from "@/utils/types/globals";
-import { Nullable } from "primereact/ts-helpers";
-
+import DataAccordion from "@/components/modules/dataAccordion";
+import SearchProducts from "@/components/utils/searchProduct";
 import PeriodSelect from "@/components/utils/time/periodSelect";
 import TimeSelect from "@/components/utils/time/timeSelect";
-import { InputText } from "primereact/inputtext";
-
-import DataAccordion from "@/components/modules/dataAccordion";
+import { parseDateToString } from "@/utils/functions/helpers";
+import { Option, Period } from "@/utils/types/globals";
+import { Nullable } from "primereact/ts-helpers";
 import ProfitProductsChart from "./chart";
 
 import { getCalendarView } from "@/components/utils/chartFunctions";
@@ -22,7 +20,22 @@ export default function BestProfitProducts() {
   const { selectedStore } = useStore();
   const [loading, setLoading] = useState(false);
 
-  const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
+  const [currentData, setCurrentData] = useState<
+    Nullable<{
+      category: string;
+      name: string;
+      price: number;
+      productId: string;
+      purchase_price: number;
+      quantity_sold: number;
+      stock: number;
+      total_sold: number;
+      total_bought: number;
+    }>
+  >(null);
+
+  const [selectedProduct, setSelectedProducts] = useState<Option | null>(null);
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
   const [period, setPeriod] = useState<Period | null>("month");
   const [dates, setDates] = useState<Nullable<(Date | null)[]>>([
     new Date("01/01/2023"), // format: mm/dd/yyyy
@@ -30,24 +43,51 @@ export default function BestProfitProducts() {
   ]);
 
   async function getMostProfitableProducts() {
-    const { data } = await api.getMostProfitableProducts();
+    if (!selectedStore?.id) return;
+
+    try {
+      setLoading(true);
+      const { data } = await api.getMostProfitableProducts(
+        selectedStore.id,
+        selectedProductIds,
+        dates && dates[0] ? parseDateToString(dates[0]) : "2023-01-01",
+        dates && dates[1] ? parseDateToString(dates[1]) : "2023-12-31",
+        period ?? "month",
+        1
+      );
+
+      setCurrentData(data?.products[0] ?? null);
+
+      setSelectedProducts(
+        data?.products[0]?.productId
+          ? {
+              label: data?.products[0]?.name,
+              value: data?.products[0]?.productId,
+            }
+          : null
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
     getMostProfitableProducts();
-  }, [selectedStore]);
+  }, [selectedStore, period, dates, selectedProductIds]);
 
   return (
-    <DataAccordion title="Produtos com maior lucro" icon="pi pi-shopping-cart">
+    <DataAccordion title="Lucratividade de produtos" icon="pi pi-shopping-cart">
       <section className="flex flex-column gap-2">
         <div className="flex flex-row gap-2">
-          <span className="p-input-icon-left">
-            <i className="pi pi-search" />
-            <InputText
-              placeholder="Pesquisar produtos"
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </span>
+          <SearchProducts
+            initialProducts={selectedProduct ? [selectedProduct] : []}
+            onChange={(productIds) => setSelectedProductIds(productIds)}
+            className="max-w-30rem w-full"
+            loading={loading}
+            key={selectedProductIds[0]}
+          />
           <PeriodSelect
             value={period}
             onChange={(e) => setPeriod(e.value)}
@@ -68,7 +108,14 @@ export default function BestProfitProducts() {
             <ProgressSpinner style={{ width: "50px", height: "50px" }} />
           </div>
         )}
-        {!loading && <ProfitProductsChart />}
+        {!loading && !!currentData && (
+          <ProfitProductsChart
+            productName={currentData.name}
+            total_sold={currentData.total_sold}
+            total_bought={currentData.total_bought}
+            total_stock={(currentData.stock ?? 0) * currentData.purchase_price}
+          />
+        )}
       </section>
     </DataAccordion>
   );

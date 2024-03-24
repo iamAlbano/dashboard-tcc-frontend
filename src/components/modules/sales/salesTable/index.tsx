@@ -23,7 +23,7 @@ export default function SalesTableSection() {
 
     setLoading(true);
     const { data } = await api.getSales(selectedStore?.id, page ?? 1, 10);
-
+    console.log(data);
     setSales(data?.sales ?? []);
     setTotalSales(data?.total_sales ?? 0);
     setLoading(false);

@@ -54,8 +54,6 @@ export default function TotalCategoriesChart({
   };
 
   const handleSetChartData = (categoriesData: CategoryData[]) => {
-    console.log(categoriesData, totalSellingsByCategory);
-
     const chartData = categoriesData.map((category) => {
       return {
         category: category.category,

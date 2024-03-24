@@ -306,10 +306,28 @@ const api = {
         return error?.response;
       });
   },
-  async getMostProfitableProducts(): Promise<AxiosResponse> {
-    return request.get("/product/most_profitable").catch((error) => {
-      return error?.response;
-    });
+  async getMostProfitableProducts(
+    store_id: string,
+    productIds: string[] = [],
+    startDate = "2023-01-01",
+    endDate = "2023-12-31",
+    periodGroup = "month",
+    limit = 10
+  ): Promise<AxiosResponse> {
+    return request
+      .get(`/product/most_profitable`, {
+        params: {
+          store_id: store_id,
+          product_ids: productIds,
+          start_date: startDate,
+          end_date: endDate,
+          periodGroup: periodGroup,
+          limit: limit,
+        },
+      })
+      .catch((error) => {
+        return error?.response;
+      });
   },
   async searchProducts(
     store_id: string,

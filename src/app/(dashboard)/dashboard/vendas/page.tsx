@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 
 import ModuleHeader from "@/components/modules/header";
+import BestProfitProducts from "@/components/modules/products/bestProfitProducts";
 import InfoCards from "@/components/modules/sales/infoCards";
 import ProductsSoldTogether from "@/components/modules/sales/productsSoldTogether";
 import SalesByPeriodSection from "@/components/modules/sales/salesByPeriod";
@@ -23,6 +24,7 @@ export default function Home() {
         <section className="flex flex-column">
           <InfoCards />
           <SalesTableSection />
+          <BestProfitProducts />
           <SalesByPeriodSection />
           <ProductsSoldTogether />
         </section>

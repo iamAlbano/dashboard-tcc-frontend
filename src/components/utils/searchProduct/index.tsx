@@ -87,6 +87,7 @@ export default function SearchProducts({
         className={className}
         showSelectAll={false}
         disabled={disabled}
+        maxSelectedLabels={1}
         virtualScrollerOptions={{ itemSize: 40 }}
         emptyFilterMessage={
           searching ? "Buscando..." : "Nenhum produto encontrado"
