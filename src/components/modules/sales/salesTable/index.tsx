@@ -18,11 +18,22 @@ export default function SalesTableSection() {
   const [totalSales, setTotalSales] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function handleGetSales(page?: number) {
+  async function handleGetSales(
+    page?: number,
+    startDate?: string | null,
+    endDate?: string | null
+  ) {
     if (!selectedStore?.id) return;
 
     setLoading(true);
-    const { data } = await api.getSales(selectedStore?.id, page ?? 1, 10);
+    const { data } = await api.getSales(
+      selectedStore?.id,
+      page ?? 1,
+      10,
+      null,
+      startDate,
+      endDate
+    );
     console.log(data);
     setSales(data?.sales ?? []);
     setTotalSales(data?.total_sales ?? 0);
@@ -31,14 +42,19 @@ export default function SalesTableSection() {
 
   useEffect(() => {
     handleGetSales();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore]);
 
   return (
-    <DataAccordion title="Todas as vendas" icon="pi pi-shopping-cart">
+    <DataAccordion title="Visualizar Vendas" icon="pi pi-shopping-cart">
       <Table
         totalSales={totalSales}
         isLoading={loading}
-        onPageChange={(page: number) => handleGetSales(page)}
+        onFilterChange={(
+          page: number,
+          startDate?: string | null,
+          endDate?: string | null
+        ) => handleGetSales(page, startDate, endDate)}
       />
     </DataAccordion>
   );

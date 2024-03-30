@@ -132,6 +132,7 @@ export default function MostSoldProductsSection() {
 
   useEffect(() => {
     handleGetMostSoldProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore, productIds, dates, period, categories]);
 
   return (

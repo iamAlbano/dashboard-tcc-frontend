@@ -14,7 +14,6 @@ import ProfitProductsChart from "./chart";
 
 import { getCalendarView } from "@/components/utils/chartFunctions";
 import api from "@/server/api";
-import { ProgressSpinner } from "primereact/progressspinner";
 
 export default function BestProfitProducts() {
   const { selectedStore } = useStore();
@@ -59,15 +58,17 @@ export default function BestProfitProducts() {
       setCurrentData(data?.products[0] ?? null);
 
       setSelectedProducts(
-        data?.products[0]?.productId
+        data?.products[0]?.id
           ? {
               label: data?.products[0]?.name,
-              value: data?.products[0]?.productId,
+              value: data?.products[0]?.id,
             }
           : null
       );
+
+      console.log("new Data", data?.products[0]);
     } catch (error) {
-      console.error(error);
+      setCurrentData(null);
     } finally {
       setLoading(false);
     }
@@ -75,6 +76,7 @@ export default function BestProfitProducts() {
 
   useEffect(() => {
     getMostProfitableProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore, period, dates, selectedProductIds]);
 
   return (
@@ -83,10 +85,13 @@ export default function BestProfitProducts() {
         <div className="flex flex-row gap-2">
           <SearchProducts
             initialProducts={selectedProduct ? [selectedProduct] : []}
-            onChange={(productIds) => setSelectedProductIds(productIds)}
+            onChange={(productIds) => {
+              setSelectedProductIds(productIds);
+            }}
             className="max-w-30rem w-full"
             loading={loading}
-            key={selectedProductIds[0]}
+            maxSelect={1}
+            key={selectedProduct?.value}
           />
           <PeriodSelect
             value={period}
@@ -103,13 +108,9 @@ export default function BestProfitProducts() {
             key={period}
           />
         </div>
-        {loading && (
-          <div className="flex flex-row align-items-center w-full p-4">
-            <ProgressSpinner style={{ width: "50px", height: "50px" }} />
-          </div>
-        )}
-        {!loading && !!currentData && (
+        {!!currentData && !loading && (
           <ProfitProductsChart
+            key={currentData.productId}
             productName={currentData.name}
             total_sold={currentData.total_sold}
             total_bought={currentData.total_bought}

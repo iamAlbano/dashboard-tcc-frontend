@@ -5,12 +5,14 @@ import { Option } from "@/utils/types/globals";
 import { useDebounce } from "primereact/hooks";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
 import { useEffect, useState } from "react";
+
 type SearchProductsProps = {
   onChange?: (productIds: string[]) => void;
   className?: string;
   initialProducts?: Option[];
   disabled?: boolean;
   loading?: boolean;
+  maxSelect?: number;
 };
 
 export default function SearchProducts({
@@ -19,6 +21,7 @@ export default function SearchProducts({
   className,
   initialProducts,
   loading,
+  maxSelect,
 }: SearchProductsProps) {
   const { selectedStore } = useStore();
   const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
@@ -78,16 +81,16 @@ export default function SearchProducts({
       <MultiSelect
         value={selectedProducts}
         onChange={(e: MultiSelectChangeEvent) => {
-          setSelectedProducts(e.value);
-          onChange?.(e.value as string[]);
+          const values = maxSelect ? e.value.slice(-maxSelect) : e.value;
+          setSelectedProducts(values as string[]);
+          onChange?.(values as string[]);
         }}
         options={options}
         optionLabel="label"
         placeholder="Produtos"
         className={className}
         showSelectAll={false}
-        disabled={disabled}
-        maxSelectedLabels={1}
+        disabled={disabled || loading}
         virtualScrollerOptions={{ itemSize: 40 }}
         emptyFilterMessage={
           searching ? "Buscando..." : "Nenhum produto encontrado"

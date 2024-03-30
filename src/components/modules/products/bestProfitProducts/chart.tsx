@@ -30,8 +30,8 @@ export default function ProfitsChart({ ...props }: ProfitsChartProps) {
         },
         {
           label: "Valor total de venda",
-          backgroundColor: documentStyle.getPropertyValue("--pink-500"),
-          borderColor: documentStyle.getPropertyValue("--pink-500"),
+          backgroundColor: documentStyle.getPropertyValue("--green-500"),
+          borderColor: documentStyle.getPropertyValue("--green-500"),
           data: [props.total_sold],
         },
         {

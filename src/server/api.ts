@@ -252,12 +252,21 @@ const api = {
     store_id: string,
     page: number,
     limit: number,
-    search?: string | null
+    search?: string | null,
+    startDate: string | null | undefined = "2023-01-01",
+    endDate: string | null | undefined = "2023-12-31"
   ): Promise<AxiosResponse> {
     return request
-      .get(
-        `/sale/get?store_id=${store_id}&page=${page}&limit=${limit}&search=${search}`
-      )
+      .get("/sale/get", {
+        params: {
+          store_id: store_id,
+          page: page,
+          limit: limit,
+          search: search,
+          start_date: startDate,
+          end_date: endDate,
+        },
+      })
       .catch((error) => {
         return error?.response;
       });

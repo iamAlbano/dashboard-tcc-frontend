@@ -1,33 +1,80 @@
 "use client";
-import dynamic from "next/dynamic";
-import { useState } from "react";
-
-import { useSale } from "@/context/sale";
-import { Button } from "primereact/button";
-
-const OrdenateIcon = dynamic(() => import("@/components/table/ordenateIcon"));
+import { useEffect, useState } from "react";
 
 import { Pagination } from "@/components/table/pagination";
+import { getCalendarView } from "@/components/utils/chartFunctions";
+import PeriodSelect from "@/components/utils/time/periodSelect";
+import TimeSelect from "@/components/utils/time/timeSelect";
+import { useSale } from "@/context/sale";
+import { Period } from "@/utils/types/globals";
+import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Nullable } from "primereact/ts-helpers";
 
 type Props = {
   totalSales?: number;
   isLoading?: boolean;
-  onPageChange: (page: number) => void;
+  onFilterChange: (
+    page: number,
+    startDate: string | null | undefined,
+    endDate: string | null | undefined
+  ) => void;
 };
 
 export default function ProductsTable({
   totalSales,
   isLoading,
-  onPageChange,
+  onFilterChange,
 }: Props) {
   const { sales } = useSale();
 
   const [page, setPage] = useState<number>(1);
+
+  const [period, setPeriod] = useState<Period | null>("month");
+  const [dates, setDates] = useState<Nullable<(Date | null)[]>>([
+    new Date("01/01/2023"), // format: mm/dd/yyyy
+    new Date("12/31/2023"),
+  ]);
+
   const [openedIndex, setOpenedIndex] = useState<number>(-1);
+
+  function formatDate(date?: Date | null) {
+    if (!date) return null;
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  useEffect(() => {
+    if (!dates?.[0] || !dates?.[1]) return;
+
+    onFilterChange(1, formatDate(dates[0]), formatDate(dates[1]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dates]);
 
   return (
     <section className="flex flex-column gap-2">
+      <div className="flex flex-row gap-2 flex-wrap">
+        <PeriodSelect
+          value={period}
+          onChange={(e) => setPeriod(e.value)}
+          disabled={isLoading}
+        />
+        <TimeSelect
+          value={dates}
+          onChange={(e) => {
+            setDates(e.value);
+          }}
+          dateFormat={period ?? "month"}
+          view={getCalendarView(period ?? "month")}
+          disabled={isLoading}
+          showIcon
+          key={period}
+        />
+      </div>
       {!isLoading && sales.length > 0 && (
         <table>
           <thead>
@@ -36,6 +83,7 @@ export default function ProductsTable({
               <th>Produto(s)</th>
               <th>Quantidade</th>
               <th className="text-center">Valor</th>
+              <th>Cliente</th>
               <th className="text-center">Status</th>
               <th className="text-center">Data</th>
             </tr>
@@ -75,6 +123,7 @@ export default function ProductsTable({
                 <td className="text-center">
                   {isNaN(sale.price) ? "" : `R$${sale.price.toFixed(2)}`}
                 </td>
+                <td>{sale.customer?.name ?? "-"}</td>
                 <td className="text-center">{sale.status ?? "-"}</td>
                 <td className="text-center">
                   {sale.date ? new Date(sale.date).toLocaleDateString() : ""}
@@ -83,22 +132,31 @@ export default function ProductsTable({
 
               {openedIndex === index &&
                 sale.products.length > 1 &&
-                sale.products.map((product, i) => (
-                  <tr
-                    key={i}
-                    className={i % 2 === 0 ? "bg-primary-50" : undefined}
-                  >
-                    <td></td>
-                    <td className="text-muted">{product.name}</td>
-                    <td className="text-center">{product.quantity}</td>
-                    <td className="text-center">
-                      {isNaN(product.price)
-                        ? ""
-                        : `R$${product.price.toFixed(2)}`}
-                    </td>
-                    <td colSpan={3}></td>
-                  </tr>
-                ))}
+                sale.products.map(
+                  (
+                    product: {
+                      name: string;
+                      quantity: number;
+                      price: number;
+                    },
+                    i: number
+                  ) => (
+                    <tr
+                      key={i}
+                      className={i % 2 === 0 ? "bg-primary-50" : undefined}
+                    >
+                      <td></td>
+                      <td className="text-muted">{product.name}</td>
+                      <td className="text-center">{product.quantity}</td>
+                      <td className="text-center">
+                        {isNaN(product.price)
+                          ? ""
+                          : `R$${product.price.toFixed(2)}`}
+                      </td>
+                      <td colSpan={3}></td>
+                    </tr>
+                  )
+                )}
             </tbody>
           ))}
           <tfoot>
@@ -127,7 +185,11 @@ export default function ProductsTable({
         totalPages={totalSales ? Math.ceil(totalSales / 10) : 1}
         onPageChange={(newPage: number) => {
           setPage(newPage);
-          onPageChange(newPage);
+          onFilterChange(
+            newPage,
+            formatDate(dates?.[0]),
+            formatDate(dates?.[1])
+          );
         }}
       />
     </section>
