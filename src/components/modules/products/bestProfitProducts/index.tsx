@@ -65,8 +65,6 @@ export default function BestProfitProducts() {
             }
           : null
       );
-
-      console.log("new Data", data?.products[0]);
     } catch (error) {
       setCurrentData(null);
     } finally {

@@ -13,6 +13,7 @@ type SearchProductsProps = {
   disabled?: boolean;
   loading?: boolean;
   maxSelect?: number;
+  placeholder?: string;
 };
 
 export default function SearchProducts({
@@ -22,6 +23,7 @@ export default function SearchProducts({
   initialProducts,
   loading,
   maxSelect,
+  placeholder,
 }: SearchProductsProps) {
   const { selectedStore } = useStore();
   const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
@@ -87,7 +89,7 @@ export default function SearchProducts({
         }}
         options={options}
         optionLabel="label"
-        placeholder="Produtos"
+        placeholder={placeholder || "Buscar produtos"}
         className={className}
         showSelectAll={false}
         disabled={disabled || loading}

@@ -273,21 +273,23 @@ const api = {
   },
   async getSalesByPeriod(
     store_id: string,
-    query = "",
     startDate = "2023-01-01",
     endDate = "2023-12-31",
     limit = 3,
-    periodGroup = "month"
+    periodGroup = "month",
+    productIds: string[] | null = [],
+    categories: string[] | null = []
   ): Promise<AxiosResponse> {
     return request
       .get("/sale/get_by_period", {
         params: {
           store_id: store_id,
-          query: query,
           start_date: startDate,
           end_date: endDate,
           limit: limit,
           period_group: periodGroup,
+          product_ids: productIds,
+          categories: categories,
         },
       })
       .catch((error) => {

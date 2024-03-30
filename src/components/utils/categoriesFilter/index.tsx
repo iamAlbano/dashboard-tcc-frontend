@@ -8,12 +8,14 @@ type CategoriesFilterProps = {
   initialCategories?: string[];
   className?: string;
   onChange?: (categories: string[]) => void;
+  loading?: boolean;
 };
 
 export default function CategoriesFilter({
   initialCategories,
   onChange,
   className,
+  loading,
 }: CategoriesFilterProps) {
   const { categories, setCategories } = useProduct();
   const { selectedStore } = useStore();
@@ -44,6 +46,7 @@ export default function CategoriesFilter({
     };
 
     fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore]);
 
   return (
@@ -59,7 +62,7 @@ export default function CategoriesFilter({
         emptyMessage="Nenhuma categoria encontrada"
         emptyFilterMessage="Nenhuma categoria encontrada"
         className={className}
-        disabled={isLoading}
+        disabled={isLoading || loading}
         virtualScrollerOptions={{ itemSize: 50 }}
         filter
       />

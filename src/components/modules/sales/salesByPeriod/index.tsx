@@ -1,8 +1,6 @@
 "use client";
-import { useProduct } from "@/context/product";
 import { useStore } from "@/context/store";
 import dynamic from "next/dynamic";
-import { useDebounce } from "primereact/hooks";
 import { useEffect, useState } from "react";
 
 import { Period } from "@/utils/types/globals";
@@ -11,6 +9,7 @@ import { Nullable } from "primereact/ts-helpers";
 import { useAccessibility } from "@/context/accessibility";
 
 import DataAccordion from "@/components/modules/dataAccordion";
+import SearchProducts from "@/components/utils/searchProduct";
 import PeriodSelect from "@/components/utils/time/periodSelect";
 import TimeSelect from "@/components/utils/time/timeSelect";
 import { type chartData } from "./chart";
@@ -28,13 +27,13 @@ import { ProgressSpinner } from "primereact/progressspinner";
 
 export default function SalesByPeriodSection() {
   const { selectedStore } = useStore();
-  const { getMostSoldProducts } = useProduct();
   const [loading, setLoading] = useState(false);
 
   const { getDict, theme } = useAccessibility();
   const dict = getDict();
 
-  const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
+  const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [period, setPeriod] = useState<Period | null>("month");
   const [dates, setDates] = useState<Nullable<(Date | null)[]>>([
     new Date("01/01/2023"), // format: mm/dd/yyyy
@@ -47,15 +46,18 @@ export default function SalesByPeriodSection() {
   const handleGetSalesByPeriod = async () => {
     if (!selectedStore?.id || !period || !dates || !dates[0] || !dates[1])
       return;
+
     setLoading(true);
+
     try {
       const { data } = await api.getSalesByPeriod(
         selectedStore?.id,
-        debouncedSearch.length > 3 ? debouncedSearch : "",
         dates && dates[0] ? parseDateToString(dates[0]) : "2023-01-01",
         dates && dates[1] ? parseDateToString(dates[1]) : "2023-12-31",
         3,
-        period ?? "month"
+        period ?? "month",
+        selectedProductIds,
+        selectedCategories
       );
 
       if (!data?.sales.length) {
@@ -65,7 +67,6 @@ export default function SalesByPeriodSection() {
         return;
       }
 
-      const periodAux = period ?? "month";
       const startDate = dates && dates[0] ? dates[0] : new Date("01/01/2023");
       const endDate = dates && dates[1] ? dates[1] : new Date("12/31/2023");
 
@@ -103,12 +104,27 @@ export default function SalesByPeriodSection() {
 
   useEffect(() => {
     handleGetSalesByPeriod();
-  }, [selectedStore, debouncedSearch, dates, period]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStore, dates, period, selectedProductIds, selectedCategories]);
 
   return (
     <DataAccordion title="Total de vendas" icon="pi pi-shopping-cart">
       <section className="flex flex-column gap-2">
         <div className="flex flex-row gap-2">
+          <SearchProducts
+            onChange={(productIds) => {
+              setSelectedProductIds(productIds);
+            }}
+            placeholder="Todos os produtos"
+            className="max-w-30rem w-full"
+            loading={loading}
+          />
+          {/* <CategoriesFilter
+            onChange={(categories) => {
+              setSelectedCategories(categories);
+            }}
+            className="max-w-30rem w-full"
+          /> */}
           <PeriodSelect
             value={period}
             onChange={(e) => setPeriod(e.value)}
