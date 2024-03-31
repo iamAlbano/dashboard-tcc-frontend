@@ -25,6 +25,7 @@ export default function ProductsSoldTogether() {
         const { data } = await api.getTopProductsSoldTogether(
           selectedStore?.id
         );
+
         setProductsSoldTogether(data.sales);
       } catch (err) {
         setProductsSoldTogether([]);

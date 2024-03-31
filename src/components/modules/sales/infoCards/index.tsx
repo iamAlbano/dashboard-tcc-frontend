@@ -28,14 +28,17 @@ export default function InfoCards() {
     template[1].value = data?.resume?.total_price
       ? `R$ ${data?.resume?.total_price?.toFixed(2) ?? 0}`
       : 0;
-    template[2].value = "R$ 13.603,26";
-    template[3].value = data?.stats?.total_sold ?? 0;
+    template[2].value = data?.resume?.month_average
+      ? `R$ ${data?.resume?.month_average?.toFixed(2) ?? 0}`
+      : 0;
+    template[3].value = data?.resume?.sold_this_month ?? 0;
 
     setResume(template);
   }
 
   useEffect(() => {
     getProductsResume();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore]);
 
   type ResumeTemplate = {
@@ -64,14 +67,14 @@ export default function InfoCards() {
     {
       title: "Média de venda por mês",
       color: "rgba(25,167,38,0.2)",
-      icon: "pi pi-tags",
+      icon: "pi pi-calendar",
       percentage: 0,
       value: 0,
     },
     {
       title: dict?.productsDict?.cards?.sold,
       color: "rgba(235,67,238,0.2)",
-      icon: "pi pi-shopping-cart",
+      icon: "pi pi-calendar",
       percentage: 0,
       value: 0,
     },
