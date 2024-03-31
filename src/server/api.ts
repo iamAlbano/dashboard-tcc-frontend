@@ -135,7 +135,6 @@ const api = {
     page: number,
     limit: number,
     search?: string | null,
-    category?: string | null,
     columnSort?: string | null,
     direction?: "asc" | "desc" | null
   ): Promise<AxiosResponse> {
@@ -146,7 +145,6 @@ const api = {
           page: page,
           limit: limit,
           search: search,
-          category: category,
           order_by: columnSort,
           order_direction: direction,
         },

@@ -1,42 +1,33 @@
 "use client";
-import dynamic from "next/dynamic";
 import { useDebounce } from "primereact/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useCustomer } from "@/context/customer";
 
-const OrdenateIcon = dynamic(() => import("@/components/table/ordenateIcon"));
-
 import { Pagination } from "@/components/table/pagination";
 import { InputText } from "primereact/inputtext";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 type Props = {
   totalCustomers?: number;
   isLoading?: boolean;
-  onPageChange: (page: number) => void;
+  onFilterChange: (page: number, search?: string) => void;
 };
 
 export default function CustomersTable({
   totalCustomers,
   isLoading,
-  onPageChange,
+  onFilterChange,
 }: Props) {
   const { customers } = useCustomer();
 
   const [page, setPage] = useState<number>(1);
   const [search, debouncedSearch, setSearch] = useDebounce("", 1000);
-  const [category, setCategory] = useState<string | null>(null);
 
-  const [sortedColumn, setSortedColumn] = useState<string>("");
-  const [sortOrder, setSortOrder] = useState<"up" | "down" | "">("");
-
-  const categories = [
-    { label: "Alimentos", value: "Alimentos" },
-    { label: "Bebidas", value: "Bebidas" },
-    { label: "Limpeza", value: "Limpeza" },
-    { label: "Higiene", value: "Higiene" },
-    { label: "Outros", value: "Outros" },
-  ];
+  useEffect(() => {
+    onFilterChange(1, debouncedSearch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
 
   return (
     <section className="flex flex-column gap-2">
@@ -50,31 +41,26 @@ export default function CustomersTable({
         </span>
       </div>
 
+      {isLoading && customers.length === 0 && (
+        <div className="flex justify-center items-center">
+          <ProgressSpinner
+            className="m-0"
+            style={{ width: "40px", height: "40px" }}
+          />
+        </div>
+      )}
+
       {customers.length > 0 ? (
         <table>
           <thead>
             <tr>
-              <th>
-                Nome <OrdenateIcon column="name" />
-              </th>
-              <th>
-                Email <OrdenateIcon column="email" />
-              </th>
-              <th className="text-center">
-                Data de nascimento <OrdenateIcon column="birthday" />
-              </th>
-              <th className="text-center">
-                Endereço <OrdenateIcon column="address" />
-              </th>
-              <th className="text-center">
-                Cidade <OrdenateIcon column="city" />
-              </th>
-              <th className="text-center">
-                Estado <OrdenateIcon column="state" />
-              </th>
-              <th className="text-center">
-                CEP <OrdenateIcon column="cep" />
-              </th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th className="text-center">Data de nascimento</th>
+              <th className="text-center">Endereço</th>
+              <th className="text-center">Cidade</th>
+              <th className="text-center">Estado</th>
+              <th className="text-center">CEP</th>
             </tr>
           </thead>
 
@@ -114,7 +100,7 @@ export default function CustomersTable({
         totalPages={totalCustomers ? Math.ceil(totalCustomers / 10) : 1}
         onPageChange={(newPage: number) => {
           setPage(newPage);
-          onPageChange(newPage);
+          onFilterChange(newPage);
         }}
       />
     </section>

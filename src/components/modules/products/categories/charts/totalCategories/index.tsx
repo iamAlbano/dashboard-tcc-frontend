@@ -30,13 +30,13 @@ export default function TotalCategoriesChart({
       setIsLoading(true);
       const { data } = await api.getTotalProductsByCategory(selectedStore.id);
 
-      const labels = data.categories
-        ?.map((categories: { _id: string }) => categories._id)
-        .filter(Boolean);
+      // const labels = data.categories
+      //   ?.map((categories: { _id: string }) => categories._id)
+      //   .filter(Boolean);
 
-      const values = data.categories?.map(
-        (categories: { total: number }) => categories.total
-      );
+      // const values = data.categories?.map(
+      //   (categories: { total: number }) => categories.total
+      // );
 
       handleSetChartData(
         data.categories.map((category: { _id: string; total: number }) => {
@@ -113,7 +113,8 @@ export default function TotalCategoriesChart({
 
   useEffect(() => {
     handleGetCategoriesTotal();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStore?.id]);
 
   return (
     <Chart
@@ -124,7 +125,7 @@ export default function TotalCategoriesChart({
       className="w-full h-full"
       style={{
         height: "100%",
-        width: "50vw",
+        width: "90vw",
       }}
     />
   );

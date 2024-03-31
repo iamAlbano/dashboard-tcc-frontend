@@ -112,6 +112,7 @@ export default function CategoriesSection() {
     if (!dates || !dates[0] || !dates[1]) return;
 
     handleGetMostSoldCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore, dates, period, selectedCategories]);
 
   return (

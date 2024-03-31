@@ -51,6 +51,7 @@ export default function ProductsTableSection() {
 
   useEffect(() => {
     getProducts({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore]);
 
   return (

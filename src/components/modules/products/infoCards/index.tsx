@@ -37,6 +37,7 @@ export default function InfoCards() {
 
   useEffect(() => {
     getProductsResume();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore]);
 
   type ResumeTemplate = {

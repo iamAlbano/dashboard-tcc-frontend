@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import CategoriesFilter from "@/components/utils/categoriesFilter";
 import { useProduct } from "@/context/product";
 
-import OrdenateIcon, { Direction } from "@/components/table/ordenateIcon";
+import { /*OrdenateIcon, */ Direction } from "@/components/table/ordenateIcon";
 
 import { Pagination } from "@/components/table/pagination";
 import { InputText } from "primereact/inputtext";
@@ -44,6 +44,7 @@ export default function ProductsTable({
       sortOrder,
       selectedCategories
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function ProductsTable({
         sortOrder,
         selectedCategories
       );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, selectedCategories, sortedColumn, sortOrder]);
 
   return (
@@ -82,64 +84,64 @@ export default function ProductsTable({
             <tr>
               <th>
                 Produto{" "}
-                <OrdenateIcon
+                {/* <OrdenateIcon
                   column="name"
                   direction={sortedColumn === "name" ? sortOrder : undefined}
                   onChange={(column, direction) => {
                     setSortedColumn(column);
                     setSortOrder(direction ?? undefined);
                   }}
-                />
+                /> */}
               </th>
               <th>
                 Categoria{" "}
-                <OrdenateIcon
+                {/* <OrdenateIcon
                   column="category"
                   onChange={(column, direction) => {
                     setSortedColumn(column);
                     setSortOrder(direction ?? undefined);
                   }}
-                />
+                /> */}
               </th>
               <th className="text-center">
                 Preço de venda{" "}
-                <OrdenateIcon
+                {/* <OrdenateIcon
                   column="price"
                   onChange={(column, direction) => {
                     setSortedColumn(column);
                     setSortOrder(direction ?? undefined);
                   }}
-                />
+                /> */}
               </th>
               <th className="text-center">
                 Preço de compra{" "}
-                <OrdenateIcon
+                {/* <OrdenateIcon
                   column="purchase_price"
                   onChange={(column, direction) => {
                     setSortedColumn(column);
                     setSortOrder(direction ?? undefined);
                   }}
-                />
+                /> */}
               </th>
               <th className="text-center">
                 Total vendidos{" "}
-                <OrdenateIcon
+                {/* <OrdenateIcon
                   column="total_sold"
                   onChange={(column, direction) => {
                     setSortedColumn(column);
                     setSortOrder(direction ?? undefined);
                   }}
-                />
+                /> */}
               </th>
               <th className="text-center">
                 Valor total{" "}
-                <OrdenateIcon
+                {/* <OrdenateIcon
                   column="total_value"
                   onChange={(column, direction) => {
                     setSortedColumn(column);
                     setSortOrder(direction ?? undefined);
                   }}
-                />
+                /> */}
               </th>
             </tr>
           </thead>
