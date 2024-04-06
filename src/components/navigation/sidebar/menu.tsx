@@ -14,7 +14,7 @@ export function GetMenu(): menuOption[] {
 
   return [
     {
-      label: dict["sidebar"]["overview"],
+      label: "Importação",
       icon: "pi pi-fw pi-home",
       route: "/dashboard",
     },
