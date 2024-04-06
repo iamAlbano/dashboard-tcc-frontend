@@ -35,21 +35,45 @@ export type StateObject = {
   value: number;
 };
 
+function divideInSix(value: number): number[] {
+  const numbers: number[] = [];
+  const part = value / 6;
+
+  for (let i = 1; i <= 6; i++) {
+    numbers.push(part * i);
+  }
+
+  return numbers;
+}
+
 type StateMapProps = {
   states: StateObject[];
 };
 
-const getColorByValue = (value: number) => {
-  if (value < 100) return "#fff";
-  if (value < 500) return "#e1f5fe";
-  if (value < 1000) return "#b3e5fc";
-  if (value < 5000) return "#0094d9";
-  if (value < 10000) return "#007ac1";
-  if (value < 20000) return "#0060a9";
+const getColorByValue = (value: number, maxValue: number) => {
+  const numbers = divideInSix(maxValue);
+
+  if (value < numbers[0]) return "#fff";
+  if (value < numbers[1]) return "#e1f5fe";
+  if (value < numbers[2]) return "#b3e5fc";
+  if (value < numbers[3]) return "#0094d9";
+  if (value < numbers[4]) return "#007ac1";
+  if (value < numbers[5]) return "#0060a9";
   return "#003399";
 };
 
+const getStateBiggestValue = (states: StateObject[]) => {
+  return (
+    states.reduce((prev, current) =>
+      prev.value > current.value ? prev : current
+    )?.value ?? 0
+  );
+};
+
 export default function StatesMap({ states }: StateMapProps) {
+  const biggestValue = getStateBiggestValue(states);
+  const numbers = divideInSix(biggestValue);
+
   return (
     <div className="bg-surface-100">
       <svg
@@ -74,7 +98,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "TO")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -96,7 +121,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "BA")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -123,7 +149,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "SE")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -151,7 +178,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "PE")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -177,7 +205,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "AL")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -205,7 +234,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "RN")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -233,7 +263,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "CE")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -259,7 +290,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "PI")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -285,7 +317,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "MA")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -316,7 +349,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "AP")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -340,7 +374,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "PA")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -373,7 +408,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "RR")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -400,7 +436,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "AM")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -436,7 +473,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "AC")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -461,7 +499,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "RO")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -489,7 +528,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "MT")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -520,7 +560,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "MS")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -548,7 +589,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "GO")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -580,7 +622,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "PR")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -604,7 +647,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "SC")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -628,7 +672,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "RS")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -655,7 +700,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "SP")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -683,7 +729,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "MG")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -718,7 +765,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "RJ")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -750,7 +798,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "ES")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -780,7 +829,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "DF")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -807,7 +857,8 @@ export default function StatesMap({ states }: StateMapProps) {
                   states
                     ? states.find((s: StateObject) => s.name === "PB")?.value ??
                         0
-                    : 0
+                    : 0,
+                  biggestValue
                 ),
               }}
               stroke="#FFFFFF"
@@ -841,42 +892,42 @@ export default function StatesMap({ states }: StateMapProps) {
               className={style.legendColor}
               style={{ background: "#e1f5fe" }}
             />
-            <span>{"> 100 "}</span>
+            <span>{`< ${numbers[0]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#b3e5fc" }}
             />
-            <span>{"> 500"}</span>
+            <span>{`< ${numbers[1]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#0094d9" }}
             />
-            <span>{"> 1.000"}</span>
+            <span>{`< ${numbers[2]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#007ac1" }}
             />
-            <span>{"> 5.000"}</span>
+            <span>{`< ${numbers[3]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#0060a9" }}
             />
-            <span>{"> 10.000"}</span>
+            <span>{`< ${numbers[4]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#003399" }}
             />
-            <span>{"> 20.000"}</span>
+            <span>{`< ${numbers[5]}`}</span>
           </div>
         </div>
       </span>
