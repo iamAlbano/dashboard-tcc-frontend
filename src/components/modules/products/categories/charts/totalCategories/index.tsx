@@ -53,46 +53,57 @@ export default function TotalCategoriesChart({
     }
   };
 
+  const totalSales = totalSellingsByCategory.reduce(
+    (acc, curr) => acc + curr.total,
+    0
+  );
+
   const handleSetChartData = (categoriesData: CategoryData[]) => {
     const chartData = categoriesData.map((category) => {
+      const totalCategorySales =
+        totalSellingsByCategory.find(
+          (selling) => selling.category === category.category
+        )?.total ?? 0;
+
       return {
         category: category.category,
         totalProducts: category.total,
-        totalSales:
-          totalSellingsByCategory.find(
-            (selling) => selling.category === category.category
-          )?.total ?? 0,
+        totalSales: totalCategorySales,
+        percentage: (totalCategorySales / totalSales) * 100,
       };
     });
 
-    function orderByAlpha(
+    function orderByPercentage(
       a: (typeof chartData)[number],
       b: (typeof chartData)[number]
     ): number {
-      if (a.category < b.category) {
-        return -1;
-      } else if (a.category > b.category) {
+      if (a.percentage < b.percentage) {
         return 1;
+      } else if (a.percentage > b.percentage) {
+        return -1;
       } else {
         return 0;
       }
     }
 
-    const orderedChartData = chartData.sort(orderByAlpha);
+    const orderedChartData = chartData
+      .sort(orderByPercentage)
+      .filter((data) => data.percentage > 0)
+      .slice(0, 5);
 
     const data = {
       labels: orderedChartData.map((category) => category.category),
       datasets: [
         {
-          label: "Total de produtos por categoria",
-          data: orderedChartData.map((category) => category.totalProducts),
+          label: "% total de vendas",
+          data: orderedChartData.map((selling) => selling.percentage),
           backgroundColor: COLORS,
           borderColor: getOpaqueColors,
           borderWidth: 1,
         },
         {
-          label: "Total de vendas por categoria",
-          data: orderedChartData.map((selling) => selling.totalSales),
+          label: "Total de produtos por categoria",
+          data: orderedChartData.map((category) => category.totalProducts),
           backgroundColor: getOpaqueColors,
           borderColor: COLORS,
           borderWidth: 1,
@@ -100,9 +111,15 @@ export default function TotalCategoriesChart({
       ],
     };
     const options = {
+      indexAxis: "y",
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
       scales: {
         y: {
           beginAtZero: true,
+          font: {
+            weight: 900,
+          },
         },
       },
     };
@@ -124,7 +141,7 @@ export default function TotalCategoriesChart({
       key={isLoading.toString()}
       className="w-full h-full"
       style={{
-        height: "100%",
+        height: "100vh",
         width: "90vw",
       }}
     />
@@ -132,5 +149,5 @@ export default function TotalCategoriesChart({
 }
 
 function getOpaqueColors(): string[] {
-  return COLORS.map((cor) => cor.replace(/1\)$/, "0.3)"));
+  return COLORS.map((cor) => cor.replace(/1\)$/, "0.4)"));
 }
