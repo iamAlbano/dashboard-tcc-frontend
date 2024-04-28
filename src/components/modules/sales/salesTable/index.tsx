@@ -34,7 +34,7 @@ export default function SalesTableSection() {
       startDate,
       endDate
     );
-    console.log(data);
+
     setSales(data?.sales ?? []);
     setTotalSales(data?.total_sales ?? 0);
     setLoading(false);

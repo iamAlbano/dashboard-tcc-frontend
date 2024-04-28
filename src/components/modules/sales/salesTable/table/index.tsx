@@ -6,6 +6,7 @@ import { getCalendarView } from "@/components/utils/chartFunctions";
 import PeriodSelect from "@/components/utils/time/periodSelect";
 import TimeSelect from "@/components/utils/time/timeSelect";
 import { useSale } from "@/context/sale";
+import { tableColumnHasValue } from "@/utils/functions/helpers";
 import { Period } from "@/utils/types/globals";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -81,11 +82,19 @@ export default function ProductsTable({
             <tr>
               <th></th>
               <th>Produto(s)</th>
-              <th>Quantidade</th>
-              <th className="text-center">Valor</th>
-              <th>Cliente</th>
-              <th className="text-center">Status</th>
-              <th className="text-center">Data</th>
+              {tableColumnHasValue("quantity", sales) && (
+                <th className="text-center">Quantidade</th>
+              )}
+              {tableColumnHasValue("price", sales) && (
+                <th className="text-center">Valor</th>
+              )}
+              {tableColumnHasValue("customer", sales) && <th>Cliente</th>}
+              {tableColumnHasValue("status", sales) && (
+                <th className="text-center">Status</th>
+              )}
+              {tableColumnHasValue("date", sales) && (
+                <th className="text-center">Data</th>
+              )}
             </tr>
           </thead>
           {sales.map((sale, index) => (
@@ -119,15 +128,25 @@ export default function ProductsTable({
                     </span>
                   )}
                 </td>
-                <td className="text-center">{sale.quantity}</td>
-                <td className="text-center">
-                  {isNaN(sale.price) ? "" : `R$${sale.price.toFixed(2)}`}
-                </td>
-                <td>{sale.customer?.name ?? "-"}</td>
-                <td className="text-center">{sale.status ?? "-"}</td>
-                <td className="text-center">
-                  {sale.date ? new Date(sale.date).toLocaleDateString() : ""}
-                </td>
+                {tableColumnHasValue("quantity", sales) && (
+                  <td className="text-center">{sale.quantity}</td>
+                )}
+                {tableColumnHasValue("price", sales) && (
+                  <td className="text-center">
+                    {isNaN(sale.price) ? "" : `R$${sale.price.toFixed(2)}`}
+                  </td>
+                )}
+                {tableColumnHasValue("customer", sales) && (
+                  <td>{sale.customer?.name ?? "-"}</td>
+                )}
+                {tableColumnHasValue("status", sales) && (
+                  <td className="text-center">{sale.status ?? "-"}</td>
+                )}
+                {tableColumnHasValue("date", sales) && (
+                  <td className="text-center">
+                    {sale.date ? new Date(sale.date).toLocaleDateString() : ""}
+                  </td>
+                )}
               </tr>
 
               {openedIndex === index &&

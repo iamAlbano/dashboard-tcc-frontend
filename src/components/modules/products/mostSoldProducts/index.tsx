@@ -8,7 +8,6 @@ import { Period, type Option } from "@/utils/types/globals";
 import { Nullable } from "primereact/ts-helpers";
 
 import DataAccordion from "@/components/modules/dataAccordion";
-import CategoriesFilter from "@/components/utils/categoriesFilter";
 import MultiChart, {
   type chartData,
 } from "@/components/utils/chart/multiChart";
@@ -151,11 +150,6 @@ export default function MostSoldProductsSection() {
               disabled={loading}
             />
           )}
-
-          <CategoriesFilter
-            className="max-w-20rem w-full"
-            onChange={(categories) => setCategories(categories)}
-          />
 
           <PeriodSelect
             value={period}

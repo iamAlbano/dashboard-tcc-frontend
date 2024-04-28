@@ -14,7 +14,7 @@ type TotalCategoriesChartProps = {
   totalSellingsByCategory: CategoryData[];
 };
 
-export default function TotalCategoriesChart({
+export default function ScatterCategoriesChart({
   totalSellingsByCategory,
 }: TotalCategoriesChartProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,14 +29,6 @@ export default function TotalCategoriesChart({
     try {
       setIsLoading(true);
       const { data } = await api.getTotalProductsByCategory(selectedStore.id);
-
-      // const labels = data.categories
-      //   ?.map((categories: { _id: string }) => categories._id)
-      //   .filter(Boolean);
-
-      // const values = data.categories?.map(
-      //   (categories: { total: number }) => categories.total
-      // );
 
       handleSetChartData(
         data.categories.map((category: { _id: string; total: number }) => {
@@ -97,33 +89,30 @@ export default function TotalCategoriesChart({
       .slice(0, 5);
 
     const data = {
-      labels: orderedChartData.map((category) => category.category),
-      datasets: [
-        {
-          label: "% total de vendas",
-          data: orderedChartData.map((selling) => selling.percentage),
-          backgroundColor: COLORS,
-          borderColor: getOpaqueColors,
+      labels: orderedChartData.map((category) => `${category.category}%`),
+      datasets: orderedChartData.map((selling, index) => {
+        return {
+          label: selling.category,
+          data: [
+            {
+              x: selling.totalProducts,
+              y: selling.percentage,
+            },
+          ],
+          backgroundColor: getOpaqueColors()[index],
+          borderColor: COLORS[index],
           borderWidth: 1,
-        },
-        {
-          label: "% de relação ao total de produtos",
-          data: orderedChartData.map((category) => category.totalProducts),
-          backgroundColor: getOpaqueColors,
-          borderColor: COLORS,
-          borderWidth: 1,
-        },
-      ],
+        };
+      }),
     };
     const options = {
-      indexAxis: "y",
-      maintainAspectRatio: false,
-      aspectRatio: 0.8,
-      scales: {
-        y: {
-          beginAtZero: true,
-          font: {
-            weight: 900,
+      type: "scatter",
+      data: data,
+      options: {
+        scales: {
+          x: {
+            type: "linear",
+            position: "bottom",
           },
         },
       },
@@ -139,17 +128,25 @@ export default function TotalCategoriesChart({
   }, [selectedStore?.id]);
 
   return (
-    <Chart
-      type="bar"
-      data={chartData}
-      options={chartOptions}
-      key={isLoading.toString()}
-      className="w-full h-full"
-      style={{
-        height: "100vh",
-        width: "90vw",
-      }}
-    />
+    <div className="flex flex-column gap-4">
+      <Chart
+        type="scatter"
+        data={chartData}
+        options={chartOptions}
+        key={isLoading.toString()}
+        className="w-full h-full"
+        style={{
+          height: "100vh",
+          width: "90vw",
+        }}
+      />
+      <div className="flex flex-row gap-4 justify-content-center">
+        <span className="text-sm">
+          Eixo X: Porcentagem de produtos na categoria
+        </span>
+        <span className="text-sm">Eixo Y: Porcentagem total vendas</span>
+      </div>
+    </div>
   );
 }
 

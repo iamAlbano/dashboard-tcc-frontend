@@ -14,3 +14,8 @@ export function parseDateToString(date?: Date): string {
 
   return formatedDate;
 }
+
+// verifica se pelo menos um item de uma base de dados possui valor da coluna passada como parâmetro
+export function tableColumnHasValue(column: string, data: any[]): boolean {
+  return data.some((item) => item[column] && item[column] !== "");
+}

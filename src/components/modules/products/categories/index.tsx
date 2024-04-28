@@ -8,8 +8,10 @@ import { parseDateToString } from "@/utils/functions/helpers";
 import { Period } from "@/utils/types/globals";
 import dynamic from "next/dynamic";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { TabPanel, TabView } from "primereact/tabview";
 import { Nullable } from "primereact/ts-helpers";
 import { useEffect, useState } from "react";
+import ScatterCategoriesChart from "./charts/scatterCategories";
 
 import DataAccordion from "@/components/modules/dataAccordion";
 import MultiChart, {
@@ -169,21 +171,32 @@ export default function CategoriesSection() {
             )}
           </section>
           {!loading && chartData.length > 0 && (
-            <div className="flex flex-column align-items-center lg:flex-row w-full gap-4">
-              {/*               <SellingRate
-                labels={chartData.map((item) => item.label)}
-                data={chartData.map((item) =>
-                  item.data.reduce((acc, curr) => acc + curr, 0)
-                )}
-              /> */}
-              <TotalCategories
-                totalSellingsByCategory={chartData.map((item) => {
-                  return {
-                    category: item.label,
-                    total: item.data.reduce((acc, curr) => acc + curr, 0),
-                  };
-                })}
-              />
+            <div className="flex flex-column align-items-start w-full">
+              <h4 className="vertical-align-middle">
+                Porcentagem de produtos e vendas por categoria
+              </h4>
+              <TabView className="w-full">
+                <TabPanel header="Dispersão">
+                  <ScatterCategoriesChart
+                    totalSellingsByCategory={chartData.map((item) => {
+                      return {
+                        category: item.label,
+                        total: item.data.reduce((acc, curr) => acc + curr, 0),
+                      };
+                    })}
+                  />
+                </TabPanel>
+                <TabPanel header="Barras">
+                  <TotalCategories
+                    totalSellingsByCategory={chartData.map((item) => {
+                      return {
+                        category: item.label,
+                        total: item.data.reduce((acc, curr) => acc + curr, 0),
+                      };
+                    })}
+                  />
+                </TabPanel>
+              </TabView>
             </div>
           )}
         </div>

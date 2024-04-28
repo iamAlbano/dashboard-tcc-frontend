@@ -1,9 +1,9 @@
 "use client";
-import { useDebounce } from "primereact/hooks";
-import { useEffect, useState } from "react";
-
 import CategoriesFilter from "@/components/utils/categoriesFilter";
 import { useProduct } from "@/context/product";
+import { tableColumnHasValue } from "@/utils/functions/helpers";
+import { useDebounce } from "primereact/hooks";
+import { useEffect, useState } from "react";
 
 import { /*OrdenateIcon, */ Direction } from "@/components/table/ordenateIcon";
 
@@ -82,67 +82,21 @@ export default function ProductsTable({
         <table className={isLoading ? "opacity-50" : ""}>
           <thead>
             <tr>
-              <th>
-                Produto{" "}
-                {/* <OrdenateIcon
-                  column="name"
-                  direction={sortedColumn === "name" ? sortOrder : undefined}
-                  onChange={(column, direction) => {
-                    setSortedColumn(column);
-                    setSortOrder(direction ?? undefined);
-                  }}
-                /> */}
-              </th>
-              <th>
-                Categoria{" "}
-                {/* <OrdenateIcon
-                  column="category"
-                  onChange={(column, direction) => {
-                    setSortedColumn(column);
-                    setSortOrder(direction ?? undefined);
-                  }}
-                /> */}
-              </th>
-              <th className="text-center">
-                Preço de venda{" "}
-                {/* <OrdenateIcon
-                  column="price"
-                  onChange={(column, direction) => {
-                    setSortedColumn(column);
-                    setSortOrder(direction ?? undefined);
-                  }}
-                /> */}
-              </th>
-              <th className="text-center">
-                Preço de compra{" "}
-                {/* <OrdenateIcon
-                  column="purchase_price"
-                  onChange={(column, direction) => {
-                    setSortedColumn(column);
-                    setSortOrder(direction ?? undefined);
-                  }}
-                /> */}
-              </th>
-              <th className="text-center">
-                Total vendidos{" "}
-                {/* <OrdenateIcon
-                  column="total_sold"
-                  onChange={(column, direction) => {
-                    setSortedColumn(column);
-                    setSortOrder(direction ?? undefined);
-                  }}
-                /> */}
-              </th>
-              <th className="text-center">
-                Valor total{" "}
-                {/* <OrdenateIcon
-                  column="total_value"
-                  onChange={(column, direction) => {
-                    setSortedColumn(column);
-                    setSortOrder(direction ?? undefined);
-                  }}
-                /> */}
-              </th>
+              <th>Produto</th>
+
+              {tableColumnHasValue("category", products) && <th>Categoria</th>}
+              {tableColumnHasValue("price", products) && (
+                <th className="text-center">Preço de venda</th>
+              )}
+              {tableColumnHasValue("purchase_price", products) && (
+                <th className="text-center">Preço de compra</th>
+              )}
+              {tableColumnHasValue("total_sold", products) && (
+                <th className="text-center">Total vendidos</th>
+              )}
+              {tableColumnHasValue("price", products) && (
+                <th className="text-center">Valor total</th>
+              )}
             </tr>
           </thead>
 
@@ -150,25 +104,35 @@ export default function ProductsTable({
             {products.map((product, index) => (
               <tr key={index}>
                 <td>{product.name}</td>
-                <td>{product.category}</td>
-                <td className="text-center">
-                  {isNaN(product.price) ? "" : `R$${product.price}`}
-                </td>
-                <td className="text-center">
-                  {isNaN(product.purchase_price)
-                    ? ""
-                    : `R$${product.purchase_price}`}
-                </td>
-                <td className="text-center">
-                  {typeof product.total_sold === "number"
-                    ? product.total_sold.toFixed(2)
-                    : product?.total_sold}
-                </td>
-                <td className="text-center">
-                  {isNaN(product.price)
-                    ? ""
-                    : `R$${(product.price * product.total_sold)?.toFixed(2)}`}
-                </td>
+                {tableColumnHasValue("category", products) && (
+                  <td>{product.category}</td>
+                )}
+                {tableColumnHasValue("price", products) && (
+                  <td className="text-center">
+                    {isNaN(product.price) ? "" : `R$${product.price}`}
+                  </td>
+                )}
+                {tableColumnHasValue("purchase_price", products) && (
+                  <td className="text-center">
+                    {isNaN(product.purchase_price)
+                      ? ""
+                      : `R$${product.purchase_price}`}
+                  </td>
+                )}
+                {tableColumnHasValue("total_sold", products) && (
+                  <td className="text-center">
+                    {typeof product.total_sold === "number"
+                      ? product.total_sold.toFixed(2)
+                      : product?.total_sold}
+                  </td>
+                )}
+                {tableColumnHasValue("price", products) && (
+                  <td className="text-center">
+                    {isNaN(product.price)
+                      ? ""
+                      : `R$${(product.price * product.total_sold)?.toFixed(2)}`}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
