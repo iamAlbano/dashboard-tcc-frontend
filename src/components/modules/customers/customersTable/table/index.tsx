@@ -2,9 +2,9 @@
 import { useDebounce } from "primereact/hooks";
 import { useEffect, useState } from "react";
 
-import { useCustomer } from "@/context/customer";
-
 import { Pagination } from "@/components/table/pagination";
+import { useCustomer } from "@/context/customer";
+import { tableColumnHasValue } from "@/utils/functions/helpers";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 
@@ -55,12 +55,22 @@ export default function CustomersTable({
           <thead>
             <tr>
               <th>Nome</th>
-              <th>Email</th>
-              <th className="text-center">Data de nascimento</th>
-              <th className="text-center">Endereço</th>
-              <th className="text-center">Cidade</th>
-              <th className="text-center">Estado</th>
-              <th className="text-center">CEP</th>
+              {tableColumnHasValue("email", customers) && <th>Email</th>}
+              {tableColumnHasValue("birthday", customers) && (
+                <th className="text-center">Data de nascimento</th>
+              )}
+              {tableColumnHasValue("address", customers) && (
+                <th className="text-center">Endereço</th>
+              )}
+              {tableColumnHasValue("city", customers) && (
+                <th className="text-center">Cidade</th>
+              )}
+              {tableColumnHasValue("state", customers) && (
+                <th className="text-center">Estado</th>
+              )}
+              {tableColumnHasValue("cep", customers) && (
+                <th className="text-center">CEP</th>
+              )}
             </tr>
           </thead>
 
@@ -68,12 +78,24 @@ export default function CustomersTable({
             {customers.map((customer, index) => (
               <tr key={index}>
                 <td>{customer.name ?? "-"}</td>
-                <td>{customer.email ?? "-"}</td>
-                <td className="text-center">{customer.birthday ?? "-"}</td>
-                <td className="text-center">{customer.address ?? "-"}</td>
-                <td className="text-center">{customer.city ?? "-"}</td>
-                <td className="text-center">{customer.state ?? "-"}</td>
-                <td className="text-center">{customer.cep ?? "-"}</td>
+                {tableColumnHasValue("email", customers) && (
+                  <td>{customer.email ?? "-"}</td>
+                )}
+                {tableColumnHasValue("birthday", customers) && (
+                  <td className="text-center">{customer.birthday ?? "-"}</td>
+                )}
+                {tableColumnHasValue("address", customers) && (
+                  <td className="text-center">{customer.address ?? "-"}</td>
+                )}
+                {tableColumnHasValue("city", customers) && (
+                  <td className="text-center">{customer.city ?? "-"}</td>
+                )}
+                {tableColumnHasValue("state", customers) && (
+                  <td className="text-center">{customer.state ?? "-"}</td>
+                )}
+                {tableColumnHasValue("cep", customers) && (
+                  <td className="text-center">{customer.cep ?? "-"}</td>
+                )}
               </tr>
             ))}
           </tbody>
