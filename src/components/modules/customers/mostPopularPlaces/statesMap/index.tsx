@@ -40,7 +40,7 @@ function divideInSix(value: number): number[] {
   const part = value / 6;
 
   for (let i = 1; i <= 6; i++) {
-    numbers.push(part * i);
+    numbers.push(Math.floor(part * i));
   }
 
   return numbers;
@@ -53,13 +53,14 @@ type StateMapProps = {
 const getColorByValue = (value: number, maxValue: number) => {
   const numbers = divideInSix(maxValue);
 
-  if (value < numbers[0]) return "#fff";
-  if (value < numbers[1]) return "#e1f5fe";
-  if (value < numbers[2]) return "#b3e5fc";
-  if (value < numbers[3]) return "#0094d9";
-  if (value < numbers[4]) return "#007ac1";
-  if (value < numbers[5]) return "#0060a9";
-  return "#003399";
+  if (value >= numbers[5]) return "#003399";
+  if (value <= numbers[0]) return "#fff";
+  if (value > numbers[4]) return "#0060a9";
+  if (value > numbers[3]) return "#007ac1";
+  if (value > numbers[2]) return "#0094d9";
+  if (value > numbers[1]) return "#b3e5fc";
+  if (value > numbers[0]) return "#e1f5fe";
+  return "#03a9f4";
 };
 
 const getStateBiggestValue = (states: StateObject[]) => {
@@ -71,6 +72,7 @@ const getStateBiggestValue = (states: StateObject[]) => {
 };
 
 export default function StatesMap({ states }: StateMapProps) {
+  console.log(states);
   const biggestValue = getStateBiggestValue(states);
   const numbers = divideInSix(biggestValue);
 
@@ -96,8 +98,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "TO")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "TO"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -119,8 +123,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "BA")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "BA"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -147,8 +153,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "SE")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "SE"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -176,8 +184,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "PE")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "PE"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -203,8 +213,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "AL")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "AL"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -232,8 +244,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "RN")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "RN"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -261,8 +275,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "CE")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "CE"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -288,8 +304,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "PI")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "PI"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -315,8 +333,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "MA")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "MA"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -347,8 +367,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "AP")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "AP"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -372,8 +394,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "PA")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "PA"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -406,8 +430,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "RR")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "RR"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -434,8 +460,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "AM")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "AM"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -471,8 +499,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "AC")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "AC"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -497,8 +527,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "RO")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "RO"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -526,8 +558,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "MT")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "MT"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -558,8 +592,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "MS")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "MS"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -587,8 +623,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "GO")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "GO"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -620,8 +658,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "PR")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "PR"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -645,8 +685,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "SC")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "SC"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -670,8 +712,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "RS")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "RS"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -698,8 +742,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "SP")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "SP"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -727,8 +773,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "MG")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "MG"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -763,8 +811,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "RJ")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "RJ"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -796,8 +846,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "ES")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "ES"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -827,8 +879,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "DF")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "DF"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -855,8 +909,10 @@ export default function StatesMap({ states }: StateMapProps) {
               style={{
                 fill: getColorByValue(
                   states
-                    ? states.find((s: StateObject) => s.name === "PB")?.value ??
-                        0
+                    ? states.find(
+                        (s: StateObject) =>
+                          s.name?.trim()?.toLocaleUpperCase() === "PB"
+                      )?.value ?? 0
                     : 0,
                   biggestValue
                 ),
@@ -892,42 +948,49 @@ export default function StatesMap({ states }: StateMapProps) {
               className={style.legendColor}
               style={{ background: "#e1f5fe" }}
             />
-            <span>{`< ${numbers[0]}`}</span>
+            <span>{`<= ${numbers[0]}`}</span>
+          </div>
+          <div className={style.legendItem}>
+            <div
+              className={style.legendColor}
+              style={{ background: "#e1f5fe" }}
+            />
+            <span>{`> ${numbers[0]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#b3e5fc" }}
             />
-            <span>{`< ${numbers[1]}`}</span>
+            <span>{`> ${numbers[1]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#0094d9" }}
             />
-            <span>{`< ${numbers[2]}`}</span>
+            <span>{`> ${numbers[2]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#007ac1" }}
             />
-            <span>{`< ${numbers[3]}`}</span>
+            <span>{`> ${numbers[3]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#0060a9" }}
             />
-            <span>{`< ${numbers[4]}`}</span>
+            <span>{`> ${numbers[4]}`}</span>
           </div>
           <div className={style.legendItem}>
             <div
               className={style.legendColor}
               style={{ background: "#003399" }}
             />
-            <span>{`< ${numbers[5]}`}</span>
+            <span>{`>= ${numbers[5]}`}</span>
           </div>
         </div>
       </span>

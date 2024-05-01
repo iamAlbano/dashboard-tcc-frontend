@@ -26,30 +26,38 @@ export default function ImportModal() {
   const dict = getDict();
 
   const onSubmit = async () => {
-    if (selectedModule === "products" && !productsColumns.name?.length)
-      return notify(dict.import.missingNameColumn, "error");
+    try {
+      if (selectedModule === "products" && !productsColumns.name?.length)
+        return notify(dict.import.missingNameColumn, "error");
 
-    if (selectedModule === "sales" && !salesColumns.product?.length)
-      return notify(dict.import.missingProductColumn, "error");
+      if (selectedModule === "sales" && !salesColumns.product?.length)
+        return notify(dict.import.missingProductColumn, "error");
 
-    if (!selectedStore?.id) return;
+      if (!selectedStore?.id) return;
 
-    const imported = await importFile(selectedStore?.id);
+      const imported = await importFile(selectedStore?.id);
 
-    if (!imported) {
+      if (!imported) {
+        notify(
+          "Houve um erro ao importar o arquivo, tente novamente mais tarde",
+          "error"
+        );
+
+        return;
+      }
+
+      // reset loja selecionada
+
+      notify("Dados importados com sucesso!", "success");
+      const currentStore = selectedStore;
+      setSelectedStore(null);
+      setTimeout(() => setSelectedStore(currentStore), 1000);
+    } catch (error) {
       notify(
-        "Houve um erro ao importar o arquivo, tente novamente mais tarde",
+        "Houve um erro ao importar o arquivo, verifique o formato dos seus dados e tente novamente",
         "error"
       );
-
-      return;
     }
-
-    // reset loja selecionada
-
-    const currentStore = selectedStore;
-    setSelectedStore(null);
-    setTimeout(() => setSelectedStore(currentStore), 500);
   };
 
   const footerContent = (

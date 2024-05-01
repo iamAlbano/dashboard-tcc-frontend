@@ -174,8 +174,8 @@ async function importSales(store_id: string) {
     null,
     salesColumns.quantity,
     salesColumns.price,
-    salesColumns.customer,
     salesColumns.seller,
+    salesColumns.customer,
     salesColumns.status,
     salesColumns.date
   );

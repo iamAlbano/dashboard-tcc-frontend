@@ -1,10 +1,9 @@
 "use client";
+import DataAccordion from "@/components/modules/dataAccordion";
 import { useStore } from "@/context/store";
 import api from "@/server/api";
-import { useEffect, useState } from "react";
-
-import DataAccordion from "@/components/modules/dataAccordion";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { useEffect, useState } from "react";
 
 export default function ProductsSoldTogether() {
   const { selectedStore } = useStore();
@@ -58,7 +57,7 @@ export default function ProductsSoldTogether() {
               </tr>
             </thead>
             <tbody>
-              {productsSoldTogether.map((sale, index) => (
+              {productsSoldTogether.slice(0, 10).map((sale, index) => (
                 <tr key={index}>
                   <td>
                     {sale.products.map((product) => product.name).join(", ")}

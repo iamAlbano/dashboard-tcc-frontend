@@ -44,6 +44,7 @@ export default function MostPopularPlaces() {
 
   useEffect(() => {
     getStates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore]);
 
   return (
