@@ -60,6 +60,7 @@ export default function ImportModal() {
 
   useEffect(() => {
     handleGetFileColumns();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productsFile, salesFile, customersFile]);
 
   useEffect(() => {
@@ -139,7 +140,6 @@ export default function ImportModal() {
           null,
         zipCode:
           customerZipCodeColumns.find((col) => fileColumns.includes(col)) ??
-          customerAddressColumns.find((col) => fileColumns.includes(col)) ??
           null,
       };
 
@@ -147,6 +147,7 @@ export default function ImportModal() {
       setCustomersColumns(columns as CustomersColumnsType);
       return;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileColumns]);
 
   const handleGetFileColumns = () => {
@@ -470,6 +471,8 @@ const productPurchasePriceColumns = [
   "Preço de Venda Unitário:",
   "preço de venda unitário",
   "preço de venda unitário:",
+  "preco_compra",
+  "compra",
 ];
 
 const productStockColumns = [
