@@ -144,7 +144,9 @@ export default function ProductsTable({
                 )}
                 {tableColumnHasValue("date", sales) && (
                   <td className="text-center">
-                    {sale.date ? new Date(sale.date).toLocaleDateString() : ""}
+                    {sale.date?.$date
+                      ? new Date(sale.date.$date).toLocaleDateString()
+                      : "-"}
                   </td>
                 )}
               </tr>
@@ -168,9 +170,9 @@ export default function ProductsTable({
                       <td className="text-muted">{product.name}</td>
                       <td className="text-center">{product.quantity}</td>
                       <td className="text-center">
-                        {isNaN(product.price)
-                          ? ""
-                          : `R$${product.price.toFixed(2)}`}
+                        {isNaN(product.price) || !product.price
+                          ? "-"
+                          : `R$${product.price}`}
                       </td>
                       <td colSpan={3}></td>
                     </tr>

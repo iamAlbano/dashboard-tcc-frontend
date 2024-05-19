@@ -64,7 +64,7 @@ export default function ScatterCategoriesChart({
 
       return {
         category: category.category,
-        totalProducts: (category.total * 100) / totalProducts,
+        totalProducts: category.total,
         totalSales: totalCategorySales,
         percentage: (totalCategorySales * 100) / totalSales,
       };
@@ -142,7 +142,7 @@ export default function ScatterCategoriesChart({
       />
       <div className="flex flex-row gap-4 justify-content-center">
         <span className="text-sm">
-          Eixo X: Porcentagem de produtos na categoria
+          Eixo X: Quantidade de produtos cadastrados na categoria
         </span>
         <span className="text-sm">Eixo Y: Porcentagem total vendas</span>
       </div>

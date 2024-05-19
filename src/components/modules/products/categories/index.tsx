@@ -8,7 +8,6 @@ import { parseDateToString } from "@/utils/functions/helpers";
 import { Period } from "@/utils/types/globals";
 import dynamic from "next/dynamic";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { TabPanel, TabView } from "primereact/tabview";
 import { Nullable } from "primereact/ts-helpers";
 import { useEffect, useState } from "react";
 import ScatterCategoriesChart from "./charts/scatterCategories";
@@ -23,7 +22,6 @@ import {
   handleGetChartLabels,
   handleGetPeriodChartData,
 } from "@/components/utils/chartFunctions";
-import TotalCategories from "./charts/totalCategories";
 
 const PeriodSelect = dynamic(
   () => import("@/components/utils/time/periodSelect"),
@@ -175,28 +173,17 @@ export default function CategoriesSection() {
               <h4 className="vertical-align-middle">
                 Porcentagem de produtos e vendas por categoria
               </h4>
-              <TabView className="w-full">
-                <TabPanel header="Dispersão">
-                  <ScatterCategoriesChart
-                    totalSellingsByCategory={chartData.map((item) => {
-                      return {
-                        category: item.label,
-                        total: item.data.reduce((acc, curr) => acc + curr, 0),
-                      };
-                    })}
-                  />
-                </TabPanel>
-                <TabPanel header="Barras">
-                  <TotalCategories
-                    totalSellingsByCategory={chartData.map((item) => {
-                      return {
-                        category: item.label,
-                        total: item.data.reduce((acc, curr) => acc + curr, 0),
-                      };
-                    })}
-                  />
-                </TabPanel>
-              </TabView>
+
+              <div className="w-full">
+                <ScatterCategoriesChart
+                  totalSellingsByCategory={chartData.map((item) => {
+                    return {
+                      category: item.label,
+                      total: item.data.reduce((acc, curr) => acc + curr, 0),
+                    };
+                  })}
+                />
+              </div>
             </div>
           )}
         </div>

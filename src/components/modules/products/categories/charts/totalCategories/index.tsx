@@ -72,7 +72,7 @@ export default function TotalCategoriesChart({
 
       return {
         category: category.category,
-        totalProducts: (category.total * 100) / totalProducts,
+        totalProducts: totalProducts,
         totalSales: totalCategorySales,
         percentage: (totalCategorySales * 100) / totalSales,
       };
@@ -107,7 +107,7 @@ export default function TotalCategoriesChart({
           borderWidth: 1,
         },
         {
-          label: "% de relação ao total de produtos",
+          label: "Quantidade de produtos cadastrados na categoria",
           data: orderedChartData.map((category) => category.totalProducts),
           backgroundColor: getOpaqueColors,
           borderColor: COLORS,
