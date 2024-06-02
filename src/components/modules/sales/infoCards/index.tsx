@@ -107,7 +107,7 @@ export default function InfoCards() {
                   </span>
                 )}
 
-                <i className={`desktop ${info.icon} text-4xl`} />
+                <i className={`desktop ${info.icon} text-2xl`} />
               </div>
             </Card>
           </div>

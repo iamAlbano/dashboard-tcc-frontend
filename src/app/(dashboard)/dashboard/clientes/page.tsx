@@ -15,14 +15,16 @@ import MostPopularPlaces from "@/components/modules/customers/mostPopularPlaces"
 
 export default function Home() {
   return (
-    <section className="flex flex-column h-full w-full gap-2">
+    <section className="flex flex-column h-full w-full gap-2 lg:p-2 xl:p-4">
       <BreadCrumbs />
       <Panel>
-        <ModuleHeader module="customers" />
+        <section className="flex flex-column lg:px-4 xl:px-6">
+          <ModuleHeader module="customers" />
 
-        <section className="flex flex-column">
           <InfoCards />
+
           <MostPopularPlaces />
+
           <CustomersTableSection />
         </section>
       </Panel>
