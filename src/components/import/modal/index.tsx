@@ -83,11 +83,13 @@ export default function ImportModal() {
       header={`${dict?.import?.title} ${
         selectedModule ? dict.modules[selectedModule].title : ""
       }`}
+      headerClassName="pb-0"
       visible={openedModal}
       style={{ width: "95vw" }}
       onHide={() => closeImportModal()}
       footer={footerContent}
     >
+      <p>Tipo de arquivos suportados: .csv e .xlsx</p>
       <Form />
     </Dialog>
   );

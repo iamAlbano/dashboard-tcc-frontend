@@ -30,6 +30,7 @@ export default function BestProfitProducts() {
       stock: number;
       total_sold: number;
       total_bought: number;
+      total_stock: number;
     }>
   >(null);
 
@@ -55,7 +56,26 @@ export default function BestProfitProducts() {
         1
       );
 
-      setCurrentData(data?.products[0] ?? null);
+      let chartData = data?.products[0] ?? null;
+
+      if (chartData) {
+        chartData = {
+          ...chartData,
+          total_stock:
+            parseFloat(chartData.stock) *
+              parseFloat(chartData.purchase_price) ?? 0,
+          total_sold:
+            parseFloat(chartData.quantity_sold) * parseFloat(chartData.price) ??
+            0,
+          total_bought:
+            parseFloat(chartData.quantity_sold) *
+              parseFloat(chartData.purchase_price) ?? 0,
+        };
+      }
+
+      console.log("chartData", chartData);
+
+      setCurrentData(chartData);
 
       setSelectedProducts(
         data?.products[0]?.id
@@ -76,6 +96,8 @@ export default function BestProfitProducts() {
     getMostProfitableProducts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStore, period, dates, selectedProductIds]);
+
+  if (!currentData) return null;
 
   return (
     <DataAccordion title="Lucratividade de produtos" icon="pi pi-shopping-cart">
@@ -112,7 +134,7 @@ export default function BestProfitProducts() {
             productName={currentData.name}
             total_sold={currentData.total_sold}
             total_bought={currentData.total_bought}
-            total_stock={(currentData.stock ?? 0) * currentData.purchase_price}
+            total_stock={currentData.total_stock}
           />
         )}
       </section>

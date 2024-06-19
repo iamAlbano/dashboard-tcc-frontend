@@ -26,7 +26,7 @@ export default function ProfitsChart({ ...props }: ProfitsChartProps) {
           label: "Valor total de compra",
           backgroundColor: documentStyle.getPropertyValue("--blue-500"),
           borderColor: documentStyle.getPropertyValue("--blue-500"),
-          data: [props.total_stock],
+          data: [props.total_bought],
         },
         {
           label: "Valor total de venda",
@@ -34,12 +34,12 @@ export default function ProfitsChart({ ...props }: ProfitsChartProps) {
           borderColor: documentStyle.getPropertyValue("--green-500"),
           data: [props.total_sold],
         },
-        // {
-        //   label: "Valor total gasto com estoque",
-        //   backgroundColor: documentStyle.getPropertyValue("--red-500"),
-        //   borderColor: documentStyle.getPropertyValue("--red-500"),
-        //   data: [props.total_stock],
-        // },
+        {
+          label: "Valor total gasto com estoque",
+          backgroundColor: documentStyle.getPropertyValue("--red-500"),
+          borderColor: documentStyle.getPropertyValue("--red-500"),
+          data: [props.total_stock],
+        },
       ],
     };
     const options = {

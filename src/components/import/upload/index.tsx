@@ -106,7 +106,7 @@ export default function TemplateDemo() {
       <div className="flex flex-column align-items-center justify-content-center flex-wrap">
         <p>
           Não foi possível ler o arquivo selecionado. Verifique o formato do
-          arquivo e tente novamente.
+          arquivo e tente novamente. Arquivos suportados: .xlsx e .csv
         </p>
         <Button
           type="button"
@@ -136,7 +136,7 @@ export default function TemplateDemo() {
 
           <p className="text-sm">
             Para facilitar a importação, certifique-se que a planilha importada
-            esteja bem formatada.
+            esteja bem formatada, sem espaços extras ou linhas em branco.
           </p>
         </span>
       </div>

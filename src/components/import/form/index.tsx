@@ -340,6 +340,10 @@ export default function ImportModal() {
             />
             <Tooltip target=".custom-target-icon" />
           </span>
+          <p className="my-0 py-0">
+            Escolha quais colunas de sua planilha correspondem aos dados a
+            seguir.
+          </p>
           <span className="flex flex-row flex-wrap gap-2">
             {Object.keys(columns).map((column: any) => {
               return (
