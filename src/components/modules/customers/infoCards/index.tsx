@@ -2,6 +2,7 @@
 import { useAccessibility } from "@/context/accessibility";
 import { useProduct } from "@/context/product";
 import { useStore } from "@/context/store";
+import { formatToCurrency } from "@/utils/functions/helpers";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 
@@ -27,8 +28,8 @@ export default function InfoCards() {
     template[0].value = data?.stats?.total_customers ?? 0;
     template[1].value = data?.stats?.total_buyers_this_month ?? 0;
     template[2].value = data?.stats?.average_spent
-      ? data?.stats?.average_spent.toFixed(2)
-      : 0;
+      ? formatToCurrency(data?.stats?.average_spent)
+      : "-";
     template[3].value = data?.stats?.average_age ?? "-";
 
     setResume(template);
@@ -59,7 +60,7 @@ export default function InfoCards() {
       color: "rgba(25,167,38,0.2)",
       icon: "pi pi-dollar",
       percentage: 0,
-      value: 0,
+      value: "-",
     },
     {
       title: "Faixa etária média",

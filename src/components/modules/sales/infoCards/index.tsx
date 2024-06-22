@@ -2,6 +2,7 @@
 import { useAccessibility } from "@/context/accessibility";
 import { useProduct } from "@/context/product";
 import { useStore } from "@/context/store";
+import { formatToCurrency } from "@/utils/functions/helpers";
 import dynamic from "next/dynamic";
 import { useEffect } from "react";
 
@@ -26,10 +27,10 @@ export default function InfoCards() {
 
     template[0].value = data?.resume?.total_quantity ?? 0;
     template[1].value = data?.resume?.total_price
-      ? `R$ ${data?.resume?.total_price?.toFixed(2) ?? 0}`
+      ? formatToCurrency(data?.resume?.total_price)
       : 0;
     template[2].value = data?.resume?.month_average
-      ? `R$ ${data?.resume?.month_average?.toFixed(2) ?? 0}`
+      ? formatToCurrency(data?.resume?.month_average)
       : 0;
     template[3].value = data?.resume?.sold_this_month ?? 0;
 

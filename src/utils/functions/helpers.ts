@@ -19,3 +19,12 @@ export function parseDateToString(date?: Date): string {
 export function tableColumnHasValue(column: string, data: any[]): boolean {
   return data.some((item) => item[column] && item[column] !== "");
 }
+
+export function formatToCurrency(valor: number): string {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(valor);
+}
