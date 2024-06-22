@@ -134,7 +134,7 @@ export default function TemplateDemo() {
         <span className="my-3">
           <p className="text-center m-0">{dict.import.uploadPlaceholder}</p>
 
-          <p className="text-sm">
+          <p className="text-sm px-4">
             Para facilitar a importação, certifique-se que a planilha importada
             esteja bem formatada, sem espaços extras ou linhas em branco.
           </p>
@@ -170,7 +170,7 @@ export default function TemplateDemo() {
         name="demo[]"
         url="/api/upload"
         multiple
-        accept="sheet/*"
+        accept=".xlsx,.csv"
         maxFileSize={10000000000}
         onSelect={onSelectFile}
         onUpload={onTemplateUpload}

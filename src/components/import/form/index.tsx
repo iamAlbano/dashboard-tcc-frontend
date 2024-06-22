@@ -342,7 +342,7 @@ export default function ImportModal() {
           </span>
           <p className="my-0 py-0">
             Escolha quais colunas de sua planilha correspondem aos dados a
-            seguir.
+            seguir. Os campos obrigatórios estão marcados com um asterisco (*).
           </p>
           <span className="flex flex-row flex-wrap gap-2">
             {Object.keys(columns).map((column: any) => {

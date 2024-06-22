@@ -115,7 +115,6 @@ export default function CreateStoreModal() {
                   icon="pi pi-plus-circle"
                   iconPos="right"
                   onClick={() => setAddingStore(true)}
-                  text
                 />
               </td>
             </tr>
