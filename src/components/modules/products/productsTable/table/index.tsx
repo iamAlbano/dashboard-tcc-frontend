@@ -95,7 +95,7 @@ export default function ProductsTable({
                 <th className="text-center">Total vendidos</th>
               )}
               {tableColumnHasValue("price", products) && (
-                <th className="text-center">Valor total</th>
+                <th className="text-center">Valor total de vendas</th>
               )}
             </tr>
           </thead>
